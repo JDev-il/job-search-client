@@ -1,0 +1,27 @@
+.spinner-container {
+  width: 100%;
+  position: absolute;
+  display: flex;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+  .mat-mdc-progress-spinner {
+    max-width: 8%;
+  }
+  ::ng-deep {
+    .mdc-circular-progress__indeterminate-circle-graphic {
+      stroke: cyan !important; /* Set your color here */
+    }
+  }
+}
+.overlay {
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  background: #000000b1;
+  backdrop-filter: blur(3px);
+  position: absolute;
+}

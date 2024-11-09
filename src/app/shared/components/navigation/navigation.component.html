@@ -1,0 +1,18 @@
+<nav class="nav-container">
+  <div class="nav-flex-wrapper">
+    <ul>
+      <li>
+        <a [routerLink]="'/'" [class.active]="isActive('/')">Dashboard</a>
+      </li>
+      <li>
+        <a [routerLink]="'/activity'" [class.active]="isActive('/activity')"
+          >Activity Table</a
+        >
+      </li>
+    </ul>
+    <div class="buttons-wrapper">
+      <button mat-raised-button (click)="logout()">Logout</button>
+      <button mat-raised-button (click)="myAccount()">My Account</button>
+    </div>
+  </div>
+</nav>
