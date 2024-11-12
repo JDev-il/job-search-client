@@ -1,4 +1,4 @@
-<h1>{{notificationMessage}}</h1>
+<!-- <h1>{{notificationMessage}}</h1> -->
 <section class="login-form-container">
   <form [formGroup]="loginForm" custom-mat-form (submit)="submitLogin()">
     <mat-form-field appearance="outline">
@@ -27,3 +27,4 @@
   </form>
   <app-spinner [isSpinner]="spinnerState"></app-spinner>
 </section>
+<div SnackBar #snackBarRef="SnackBar"></div>

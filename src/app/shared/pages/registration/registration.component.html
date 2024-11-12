@@ -73,9 +73,5 @@
     </div>
   </form>
   <app-spinner [isSpinner]="spinnerState"></app-spinner>
-  <div class="additional-info-wrapper">
-    @if (registerationForm.hasError('isConfirmed')) {
-    <p>Passwords do not match</p>
-    }
-  </div>
 </section>
+<div SnackBar #snackBarRef="SnackBar"></div>

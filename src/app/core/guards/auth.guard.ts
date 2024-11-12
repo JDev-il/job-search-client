@@ -5,7 +5,7 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   const router = inject(Router);
   if (typeof localStorage !== 'undefined') {
     const token = localStorage.getItem('authToken');
-    const isToken = token === 'TEST';
+    const isToken = token === 'TEMP';
     if (isToken) { //! USE JWT AUTHORIZATION!!!!
       return true;
     }

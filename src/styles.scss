@@ -54,6 +54,8 @@ $client-theme: mat.define-theme(
   -moz-osx-font-smoothing: grayscale;
 }
 
+@import '../src/app/shared/style/variables.scss';
+
 html,
 body {
   margin: 0;

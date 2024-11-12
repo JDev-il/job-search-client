@@ -1,19 +1,20 @@
 import { Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
   private isAuthenticated$ = signal<boolean>(false);
 
-  constructor() {
+  constructor(private router: Router) {
     this.isAuthenticated$.set(this.hasToken());
   }
 
   // Login method, which sets the token in localStorage and updates the signal
-  public login(token: string): void {
+  public loginValidation(): void {
     if (this.isLocalStorage) {
-      localStorage.setItem('authToken', token);
-      this.isAuthenticated$.set(true); // Update the signal to reflect logged-in status
+      localStorage.setItem('authToken', 'TEMP');
+      this.isAuthenticated$.set(true);
     }
   }
 

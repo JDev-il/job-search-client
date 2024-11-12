@@ -1,0 +1,16 @@
+.snack-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  .mat-mdc-snack-bar-container,
+  .mat-mdc-snackbar-surface {
+    .mat-mdc-snack-bar-action {
+      transition: all 0.1s ease-in-out;
+      &:hover {
+        background-color: cyan;
+        color: var(--gray-700) !important;
+      }
+    }
+  }
+}

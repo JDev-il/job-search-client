@@ -10,7 +10,7 @@ export const loadGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   if (typeof localStorage !== 'undefined') {
     const router = inject(Router);
     const token = localStorage.getItem('authToken');
-    const isToken = token === 'TEST';
+    const isToken = token === 'TEMP';
     if (isLogin && isToken)
       return router.navigate(['']);
   }
