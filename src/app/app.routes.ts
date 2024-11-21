@@ -8,32 +8,20 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () =>
       import('./shared/pages/login/login.component').then((c) => c.LoginComponent),
-    canActivate: [loadGuard], // Redirects logged-in users to the dashboard if token is present
+    canActivate: [loadGuard], // Redirect logged-in users to the dashboard
   },
   {
     path: 'register',
     loadComponent: () =>
       import('./shared/pages/registration/registration.component').then((c) => c.RegistrationComponent),
-    canActivate: [loadGuard], // Allows access to registration for all users, redirecting logged-in users if necessary
+    canActivate: [loadGuard], // Redirect logged-in users to the dashboard
   },
-  {
-    path: 'account',
-    loadComponent: () =>
-      import('./shared/pages/my-account/my-account.component').then((c) => c.MyAccountComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'not-found',
-    loadComponent: () =>
-      import('./shared/pages/not-found/not-found.component').then((c) => c.NotFoundComponent),
-    // This route is accessible by all users
-  },
-  // Protected Routes: Dashboard and Activity Table
+  // Protected Routes
   {
     path: '',
     loadComponent: () =>
       import('./shared/pages/layout/layout.component').then((c) => c.LayoutComponent),
-    canActivate: [authGuard], // Restricts access to authenticated users only
+    canActivate: [authGuard], // Only authenticated users
     children: [
       {
         path: '',
@@ -47,9 +35,20 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'account',
+    loadComponent: () =>
+      import('./shared/pages/my-account/my-account.component').then((c) => c.MyAccountComponent),
+    canActivate: [authGuard], // Only authenticated users
+  },
   // Fallback Route for Undefined Paths
   {
     path: '**',
-    redirectTo: 'not-found', // Redirects to a dedicated NotFound component
+    redirectTo: 'not-found',
+  },
+  {
+    path: 'not-found',
+    loadComponent: () =>
+      import('./shared/pages/not-found/not-found.component').then((c) => c.NotFoundComponent),
   },
 ];

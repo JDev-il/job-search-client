@@ -1,10 +1,12 @@
-.snack-container {
+.snack-bar-container {
   position: absolute !important;
   top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  .mat-mdc-snack-bar-container,
   .mat-mdc-snackbar-surface {
+    position: relative !important;
+    top: 125px;
     .mat-mdc-snack-bar-action {
       transition: all 0.1s ease-in-out;
       &:hover {

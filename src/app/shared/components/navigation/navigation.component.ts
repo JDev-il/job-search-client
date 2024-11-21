@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 import { RoutingService } from '../../services/routing.service';
+import { StateService } from '../../services/state.service';
 import { AuthService } from './../../../core/services/auth.service';
 
 @Component({
@@ -12,7 +13,12 @@ import { AuthService } from './../../../core/services/auth.service';
   styleUrl: './navigation.component.scss'
 })
 export class NavigationComponent {
-  constructor(private router: Router, private authServie: AuthService, private routingService: RoutingService) { }
+  constructor(private router: Router, private authServie: AuthService, private routingService: RoutingService, private stateService: StateService,
+    private authService: AuthService,
+    private cd: ChangeDetectorRef
+  ) {
+    this.verifyToken();
+  }
 
   public isActive(route: string): boolean {
     return this.router.url === route;
@@ -24,5 +30,24 @@ export class NavigationComponent {
   }
   public myAccount() {
     // Send request to server to recieve authorization token
+  }
+
+
+  ngOnInit(): void {
+  }
+
+
+  private verifyToken() {
+    this.stateService.verifyUserToken()
+      .subscribe({
+        next: () => {
+          this.stateService.spinnerState = false;
+          this.cd.markForCheck();
+        },
+        error: () => {
+          this.authService.logout();
+          this.routingService.toLogin();
+        }
+      })
   }
 }

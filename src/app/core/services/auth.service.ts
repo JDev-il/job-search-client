@@ -1,20 +1,29 @@
 import { Injectable, signal } from '@angular/core';
-import { Router } from '@angular/router';
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   private isAuthenticated$ = signal<boolean>(false);
+  constructor() { }
 
-  constructor(private router: Router) {
-    this.isAuthenticated$.set(this.hasToken());
+  public setToken(token: string): void {
+    if (this.isLocalStorage) {
+      localStorage.setItem('authToken', token);
+      this.isAuthenticated$.set(true);
+    }
   }
 
-  // Login method, which sets the token in localStorage and updates the signal
-  public loginValidation(): void {
+  public getToken(): string | null {
     if (this.isLocalStorage) {
-      localStorage.setItem('authToken', 'TEMP');
-      this.isAuthenticated$.set(true);
+      const token = localStorage.getItem("authToken");
+      return token;
+    }
+    return null;
+  }
+
+  public removeToken(): void {
+    if (this.isLocalStorage) {
+      localStorage.removeItem('authToken')
     }
   }
 
@@ -26,23 +35,12 @@ export class AuthService {
     }
   }
 
-  private hasToken(): boolean {
-    if (this.isLocalStorage) {
-      const token = localStorage.getItem('authToken');
-      return token !== null;
-    }
-    return false;
-  }
-
   // Getter to expose the authentication status
   public get isAuthenticated(): boolean {
-    const hasToken = this.hasToken();
-    this.isAuthenticated$.set(hasToken);
-    return this.isAuthenticated$();
+    return (typeof this.isLocalStorage && !!this.getToken()) || this.isAuthenticated$();
   }
 
   private get isLocalStorage(): boolean {
     return typeof localStorage !== 'undefined'
   }
-
 }

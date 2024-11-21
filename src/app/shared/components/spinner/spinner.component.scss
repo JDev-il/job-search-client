@@ -1,11 +1,17 @@
 .spinner-container {
-  width: 100%;
   position: absolute;
-  display: flex;
+  width: 100%;
+  height: 100%;
   left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 4;
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 4;
+  justify-self: center;
   .mat-mdc-progress-spinner {
     max-width: 8%;
   }

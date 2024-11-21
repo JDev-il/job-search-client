@@ -5,7 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RegisterFormModel } from '../../../core/models/forms.interface';
 
-import { UserRequest } from '../../../core/models/users.interface';
+import { catchError, of, switchMap, takeUntil } from 'rxjs';
+import { UserRequest, UserToken } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { MaterialDirective } from '../../directives/material.directive';
@@ -27,12 +28,11 @@ import { StateService } from '../../services/state.service';
     SnackBarDirective
   ],
   templateUrl: './registration.component.html',
-  styleUrl: './registration.component.scss'
+  styleUrls: ['./registration.component.scss', '../../style/form-layout.style.scss']
 })
 export class RegistrationComponent {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
   public registerationForm!: FormGroup<RegisterFormModel>;
-
 
   public get spinnerState(): boolean {
     return this.stateService.spinnerState;
@@ -53,17 +53,29 @@ export class RegistrationComponent {
 
   public submitRegistrationForm(): void {
     if (this.registerationForm.valid) {
-      this.stateService.spinnerState = true;
+      this.spinnerState = true;
       const { confirm_password, ...userData } = this.registerationForm.value;
-      this.stateService.addNewUser(userData as UserRequest)
-        .subscribe((user: UserRequest) => {
-          this.stateService.spinnerState = false;
+      this.stateService.addNewUser(<UserRequest>userData).pipe(
+        switchMap(user => {
           if (user) {
-            this.authService.loginValidation();
-            this.routingService.toDashboard();
+            return this.stateService.generateUserToken(user);
           }
-        });
+          return of(null);
+        }), takeUntil(this.stateService.destroy$),
+        catchError(error => {
+          return of(error);
+        })
+      ).subscribe((token: UserToken | null) => {
+        if (token) {
+          this.authService.setToken(token.auth_token);
+          this.routingService.toDashboard();
+        }
+      });
     }
+  }
+
+  public toLogin(): void {
+    this.routingService.toLogin();
   }
 
   private _initializeForm(): void {

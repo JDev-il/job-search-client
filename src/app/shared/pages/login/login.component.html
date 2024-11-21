@@ -1,30 +1,47 @@
-<!-- <h1>{{notificationMessage}}</h1> -->
-<section class="login-form-container">
-  <form [formGroup]="loginForm" custom-mat-form (submit)="submitLogin()">
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" placeholder="Enter your email" />
-      @if (loginForm.get('email')?.hasError('required')) {
-      <mat-error>Email is required</mat-error>
-      } @if (loginForm.get('email')?.hasError('email')) {
-      <mat-error>Enter a valid email</mat-error>
-      }
-    </mat-form-field>
+<div class="forms-host">
+  <section class="login-form-container">
+    <form [formGroup]="loginForm" custom-mat-form (submit)="submitLogin()">
+      <div class="form-wrapper">
+        @if (formError() && !loginForm.dirty) {
+        <p>Login failed..</p>
+        <!--CONVERT INTO A SNACK OR DIALOG BOX-->
+        }
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            formControlName="email"
+            placeholder="Enter your email"
+          />
+          @if (loginForm.get('email')?.hasError('required')) {
+          <mat-error>Email is required</mat-error>
+          } @if (loginForm.get('email')?.hasError('email')) {
+          <mat-error>Enter a valid email</mat-error>
+          }
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input
-        matInput
-        type="password"
-        formControlName="password"
-        placeholder="Enter your password"
-      />
-      @if (loginForm.get('password')?.hasError('required')) {
-      <mat-error>Password is required</mat-error>
-      }
-    </mat-form-field>
-    <button mat-raised-button [disabled]="loginForm.invalid">Login</button>
-  </form>
-  <app-spinner [isSpinner]="spinnerState"></app-spinner>
-</section>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="password"
+            placeholder="Enter your password"
+          />
+          @if (loginForm.get('password')?.hasError('required')) {
+          <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
+        <button mat-raised-button [disabled]="loginForm.invalid">Login</button>
+      </div>
+    </form>
+    <button mat-raised-button (click)="toRegister()">
+      Don't have an account?
+    </button>
+  </section>
+</div>
+
 <div SnackBar #snackBarRef="SnackBar"></div>
+@if (spinnerState) {
+<app-spinner [isSpinner]="spinnerState"></app-spinner>
+}

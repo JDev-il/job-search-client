@@ -1,32 +1,54 @@
 import { Injectable, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { catchError, Observable, of, Subject, take, tap } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
-import { UserLogin, UserRequest, UserResponse } from './../../core/models/users.interface';
+import { UserLogin, UserRequest, UserResponse, UserToken } from './../../core/models/users.interface';
 
 @Injectable({ providedIn: 'root' })
 export class StateService {
 
   private usersResponse = signal<UserResponse[]>(<UserResponse[]>{});
   private spinner = signal<boolean>(false);
-  private message = signal<string>('');
+  public destroy$: Subject<boolean> = new Subject<boolean>();
 
-
-  constructor(private apiService: ApiService, private authService: AuthService, private router: Router) { }
-
-
-
-  public loginUser(loginForm: UserLogin): Observable<UserResponse | null> {
-    if (this.authService.isAuthenticated) {
-      return this.apiService.loginUserRequest(loginForm);
-    }
-    return of(null)
+  constructor(private apiService: ApiService, private authService: AuthService) {
   }
 
-  public addNewUser(users: UserRequest): Observable<UserRequest> {
-    this.spinnerState = false;
-    return this.apiService.addNewUserRequest(users);
+  public loginUser(loginForm: UserLogin): Observable<UserLogin | null> {
+    loginForm.auth_token = this.authService.getToken();
+    return this.apiService.loginUserRequest(loginForm)
+  }
+
+  public addNewUser(user: UserRequest): Observable<UserResponse> {
+    return this.apiService.addNewUserRequest(user).pipe(
+      tap((userResponse: UserResponse) => {
+        if (userResponse) {
+          this.apiService.currentUserRequest$.set(userResponse); // Update signal variable
+        }
+      }),
+      catchError(error => {
+        console.error('Error while adding new user:', error);
+        return of(error);
+      })
+    );
+  }
+
+  public verifyUserToken(userToken?: string): Observable<string> {
+    let token!: string;
+    if (!userToken) {
+      token = this.authService.getToken() || '';
+    }
+    return this.apiService.verifyToken(token);
+  }
+
+  public generateUserToken(user: UserLogin): Observable<UserToken> {
+    return this.apiService.generateToken(user).pipe(
+      take(1),
+      catchError(error => {
+        console.error('Token generation error:', error);
+        return of(error);
+      })
+    );
   }
 
   public get spinnerState(): boolean {
@@ -35,7 +57,6 @@ export class StateService {
   public set spinnerState(state: boolean) {
     this.spinner.set(state);
   }
-
 
   public get usersResponseArray(): UserResponse[] {
     return this.usersResponse();

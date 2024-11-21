@@ -1,15 +1,13 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const router = inject(Router);
-  if (typeof localStorage !== 'undefined') {
-    const token = localStorage.getItem('authToken');
-    const isToken = token === 'TEMP';
-    if (isToken) { //! USE JWT AUTHORIZATION!!!!
-      return true;
-    }
-    return router.navigate(['login']);
+  const authService = inject(AuthService);
+  const isAuth = authService.isAuthenticated;
+  if (isAuth) {
+    return true;
   }
-  return false;
+  return router.createUrlTree(['login']); // Redirect unauthenticated users
 };

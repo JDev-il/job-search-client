@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { ApiService } from './../../core/services/api.service';
 
 export interface Tile {
   color: string;
@@ -14,7 +13,8 @@ export interface Tile {
   standalone: true,
   imports: [MatGridListModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
   tiles: Tile[] = [
@@ -23,5 +23,9 @@ export class DashboardComponent {
     { text: 'Three', cols: 1, rows: 1, color: 'lightpink' },
     { text: 'Four', cols: 2, rows: 1, color: '' },
   ];
-  constructor(private apiService: ApiService) { }
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
 }

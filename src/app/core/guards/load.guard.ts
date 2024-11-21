@@ -1,18 +1,17 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
+import { StateService } from '../../shared/services/state.service';
+import { AuthService } from '../services/auth.service';
 
 export const loadGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  const isLogin = state.url.substring(1) === 'login'
-  const isRegister = state.url.substring(1) === 'register'
-  if (isRegister) {
-    return true;
+  const router = inject(Router);
+  const authService = inject(AuthService);
+  const stateService = inject(StateService);
+  const isAuth = authService.isAuthenticated;
+  const isLoginOrRegister = ['login', 'register'].includes(state.url.substring(1));
+  console.log('Guard executed with spinner state:', stateService.spinnerState);
+  if (isAuth && isLoginOrRegister) {
+    return router.createUrlTree(['']); // Redirect authenticated users
   }
-  if (typeof localStorage !== 'undefined') {
-    const router = inject(Router);
-    const token = localStorage.getItem('authToken');
-    const isToken = token === 'TEMP';
-    if (isLogin && isToken)
-      return router.navigate(['']);
-  }
-  return true;
+  return true; // Allow access for unauthenticated users
 };

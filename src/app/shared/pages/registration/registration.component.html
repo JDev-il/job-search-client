@@ -1,77 +1,85 @@
-<section class="register-form-container">
-  <form
-    [formGroup]="registerationForm"
-    custom-mat-form
-    (submit)="submitRegistrationForm()"
-  >
-    <div class="form-wrapper">
-      <mat-form-field appearance="outline">
-        <mat-label>First Name</mat-label>
-        <input
-          matInput
-          formControlName="firstname"
-          placeholder="Type your first name"
-        />
-        @if (registerationForm.get('firstname')?.hasError('required')) {
-        <mat-error>First name is required</mat-error>
-        } @if (registerationForm.get('firstname')?.hasError('pattern')) {
-        <mat-error>Your first name includes invalid characters</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Last Name</mat-label>
-        <input
-          matInput
-          formControlName="lastname"
-          placeholder="And your last name"
-        />
-        @if (registerationForm.get('lastname')?.hasError('required')) {
-        <mat-error>Last name is required</mat-error>
-        } @if (registerationForm.get('lastname')?.hasError('pattern')) {
-        <mat-error>Your last includes invalid characters</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input
-          matInput
-          formControlName="email"
-          placeholder="Type your email address"
-        />
-        @if (registerationForm.get('email')?.hasError('required')) {
-        <mat-error>Email address is required</mat-error>
-        } @else if (registerationForm.get('email')?.hasError('minlength')) {
-        <mat-error>Email must include at least 3 characters</mat-error>
-        } @else if (registerationForm.get('email')?.hasError('email')) {
-        <mat-error>Invalid email address</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input
-          matInput
-          formControlName="password"
-          placeholder="Choose a password"
-        />
-        @if (registerationForm.get('password')?.hasError('required')) {
-        <mat-error>A password is required</mat-error>
-        } @else if (registerationForm.get('password')?.hasError('minlength')){
-        <mat-error>Your password must include at least 3 characters</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Confirm Password</mat-label>
-        <input
-          matInput
-          formControlName="confirm_password"
-          placeholder="Confirm your password"
-        />
-      </mat-form-field>
-      <button mat-raised-button [disabled]="registerationForm.invalid">
-        Register Now
-      </button>
-    </div>
-  </form>
-  <app-spinner [isSpinner]="spinnerState"></app-spinner>
-</section>
+<div class="forms-host">
+  <section class="register-form-container">
+    <form
+      [formGroup]="registerationForm"
+      custom-mat-form
+      (submit)="submitRegistrationForm()"
+    >
+      <div class="form-wrapper">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input
+            matInput
+            formControlName="firstname"
+            placeholder="Type your first name"
+          />
+          @if (registerationForm.get('firstname')?.hasError('required')) {
+          <mat-error>First name is required</mat-error>
+          } @if (registerationForm.get('firstname')?.hasError('pattern')) {
+          <mat-error>Your first name includes invalid characters</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input
+            matInput
+            formControlName="lastname"
+            placeholder="And your last name"
+          />
+          @if (registerationForm.get('lastname')?.hasError('required')) {
+          <mat-error>Last name is required</mat-error>
+          } @if (registerationForm.get('lastname')?.hasError('pattern')) {
+          <mat-error>Your last includes invalid characters</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input
+            matInput
+            formControlName="email"
+            placeholder="Type your email address"
+          />
+          @if (registerationForm.get('email')?.hasError('required')) {
+          <mat-error>Email address is required</mat-error>
+          } @else if (registerationForm.get('email')?.hasError('minlength')) {
+          <mat-error>Email must include at least 3 characters</mat-error>
+          } @else if (registerationForm.get('email')?.hasError('email')) {
+          <mat-error>Invalid email address</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            placeholder="Choose a password"
+          />
+          @if (registerationForm.get('password')?.hasError('required')) {
+          <mat-error>A password is required</mat-error>
+          } @else if (registerationForm.get('password')?.hasError('minlength')){
+          <mat-error
+            >Your password must include at least 3 characters</mat-error
+          >
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Password</mat-label>
+          <input
+            matInput
+            formControlName="confirm_password"
+            placeholder="Confirm your password"
+          />
+        </mat-form-field>
+        <button mat-raised-button [disabled]="registerationForm.invalid">
+          Register Now
+        </button>
+      </div>
+    </form>
+    <button mat-raised-button (click)="toLogin()">I Have an Account</button>
+  </section>
+</div>
+
+@if (spinnerState) {
+<app-spinner [isSpinner]="spinnerState"></app-spinner>
+}
 <div SnackBar #snackBarRef="SnackBar"></div>

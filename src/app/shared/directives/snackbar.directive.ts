@@ -1,49 +1,40 @@
-import { Directive, ElementRef, Input, OnInit, Renderer2, inject } from '@angular/core';
+import { Directive, inject, Input } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { UsersMessages } from '../../core/models/enum/messages.enum';
+import { StateService } from '../services/state.service';
 
 @Directive({
   selector: '[SnackBar]',
   exportAs: 'SnackBar',
   standalone: true
 })
-export class SnackBarDirective implements OnInit {
+export class SnackBarDirective {
   private _snackBar = inject(MatSnackBar);
-  private _router = inject(Router);
-
 
   @Input() durationInSeconds: number = 5;
   @Input() snackBarMessage: string = '';
   @Input() actionLabel: string = 'Dismiss';
-  @Input() customClass: string = ''; // Class for custom styling
+  @Input() customClass: string[] = ['snack-bar-container'];
+  @Input() spinnerState!: boolean;
 
-  constructor(private renderer: Renderer2, private el: ElementRef) {
-  }
+  constructor(private stateService: StateService) { }
 
-  public openSnackBar(text: UsersMessages) {
+  public openSnackBar(text: UsersMessages): void {
     this.snackBarMessage = text;
     if (this.snackBarMessage) {
-      const snackBarRef: MatSnackBarRef<any> = this._snackBar.open(
+      const snackBarRef = <MatSnackBarRef<any>>this._snackBar.open(
         this.snackBarMessage,
         this.actionLabel,
         {
           horizontalPosition: 'center',
-          panelClass: this.customClass ? [this.customClass] : []
+          panelClass: this.customClass
         },
       );
+      snackBarRef.onAction().subscribe((): void => {
+        console.log("spinnerState passed is: ", this.spinnerState);
 
-      snackBarRef.onAction().subscribe(() => {
-        if (UsersMessages.exists === text) {
-          this._router.navigate(['']);
-        } else {
-          this._router.navigate(['register']);
-        }
+        this.stateService.spinnerState = this.spinnerState
       });
     }
-  }
-
-  ngOnInit(): void {
-    // this.renderer.setStyle('mdc-snackbar mat-mdc-snack-bar-container');
   }
 }
