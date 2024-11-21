@@ -31,8 +31,6 @@ export class SnackBarDirective {
         },
       );
       snackBarRef.onAction().subscribe((): void => {
-        console.log("spinnerState passed is: ", this.spinnerState);
-
         this.stateService.spinnerState = this.spinnerState
       });
     }

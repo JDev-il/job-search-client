@@ -23,7 +23,7 @@ export class StateService {
     return this.apiService.addNewUserRequest(user).pipe(
       tap((userResponse: UserResponse) => {
         if (userResponse) {
-          this.apiService.currentUserRequest$.set(userResponse); // Update signal variable
+          this.apiService.currentUserRequest$.set(userResponse);
         }
       }),
       catchError(error => {

@@ -9,5 +9,5 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   if (isAuth) {
     return true;
   }
-  return router.createUrlTree(['login']); // Redirect unauthenticated users
+  return router.createUrlTree(['login']);
 };

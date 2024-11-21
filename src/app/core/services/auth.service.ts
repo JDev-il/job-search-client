@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
 
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private isAuthenticated$ = signal<boolean>(false);
@@ -27,7 +26,6 @@ export class AuthService {
     }
   }
 
-  // Logout method, which removes the token and updates the signal
   public logout(): void {
     if (this.isLocalStorage) {
       localStorage.removeItem('authToken');
@@ -35,7 +33,6 @@ export class AuthService {
     }
   }
 
-  // Getter to expose the authentication status
   public get isAuthenticated(): boolean {
     return (typeof this.isLocalStorage && !!this.getToken()) || this.isAuthenticated$();
   }

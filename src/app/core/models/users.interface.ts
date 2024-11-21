@@ -29,5 +29,4 @@ export interface UserLogin {
   auth_token?: string | null
 }
 
-// export type UserLogin = Partial<Pick<UserRequest, 'email' | 'password'>>
 export type UserToken = { auth_token: string }

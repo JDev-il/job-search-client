@@ -9,9 +9,8 @@ export const loadGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   const stateService = inject(StateService);
   const isAuth = authService.isAuthenticated;
   const isLoginOrRegister = ['login', 'register'].includes(state.url.substring(1));
-  console.log('Guard executed with spinner state:', stateService.spinnerState);
   if (isAuth && isLoginOrRegister) {
-    return router.createUrlTree(['']); // Redirect authenticated users
+    return router.createUrlTree(['']);
   }
-  return true; // Allow access for unauthenticated users
+  return true;
 };

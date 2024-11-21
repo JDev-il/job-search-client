@@ -29,7 +29,6 @@ export class NavigationComponent {
     this.routingService.toLogin();
   }
   public myAccount() {
-    // Send request to server to recieve authorization token
   }
 
 
