@@ -15,18 +15,33 @@
     form {
       width: 33%;
       .form-wrapper {
-        p {
-          color: red;
-        }
         display: flex;
         flex-flow: column;
         .mat-mdc-form-field {
           padding: 6px 0px;
         }
       }
-      :disabled {
-        background-color: #d1d1d13b;
-        color: #0000001e;
+      .buttons-div {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        button {
+          font-size: smaller;
+          border-radius: 0.8em;
+          padding: 0 15px 0;
+          height: 35px;
+          box-shadow: none;
+          transition: all .1s ease-in-out !important;
+          background-color: rgb(68, 109, 147);
+          color: #fff;
+          &:disabled {
+            background-color: #e3e3e3;
+            color: #7a7a7a48;
+          }
+          &:hover {
+            background-color: rgb(106, 170, 231);
+          }
+        }
       }
       @media screen and (max-width: 1280px) {
         width: 50%;
@@ -40,10 +55,6 @@
           }
         }
       }
-    }
-    button {
-      margin-top: 15px;
-      width: 200px;
     }
   }
 }

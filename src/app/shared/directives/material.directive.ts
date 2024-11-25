@@ -13,10 +13,10 @@ export class MaterialDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    const button = this.el.nativeElement.querySelector(".mdc-button");
-    //Button
-    this.renderer.setStyle(button, 'margin', '15px auto 0');
-    this.renderer.setStyle(button, 'width', '50%');
+    // const button = this.el.nativeElement.querySelector(".mdc-button");
+    // //Button
+    // this.renderer.setStyle(button, 'margin', '15px auto 0');
+    // this.renderer.setStyle(button, 'width', '50%');
 
   }
 }

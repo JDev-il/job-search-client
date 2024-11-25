@@ -9,6 +9,7 @@ import { catchError, of, switchMap, takeUntil } from 'rxjs';
 import { UserRequest, UserToken } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { HoverDirective } from '../../directives/hover.directive';
 import { MaterialDirective } from '../../directives/material.directive';
 import { SnackBarDirective } from '../../directives/snackbar.directive';
 import { RoutingService } from '../../services/routing.service';
@@ -24,14 +25,16 @@ import { StateService } from '../../services/state.service';
     MatInputModule,
     MatButtonModule,
     MaterialDirective,
+    HoverDirective,
     SpinnerComponent,
-    SnackBarDirective
+    // SnackBarDirective
   ],
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss', '../../style/form-layout.style.scss']
 })
 export class RegistrationComponent {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
+
   public registerationForm!: FormGroup<RegisterFormModel>;
 
   public get spinnerState(): boolean {
@@ -50,6 +53,15 @@ export class RegistrationComponent {
     this._initializeForm();
     this.spinnerState = false;
   }
+
+  public toLogin(): void {
+    this.routingService.toLogin();
+  }
+
+  public get loginbuttonText() {
+    return this.stateService.buttonText()
+  }
+
 
   public submitRegistrationForm(): void {
     if (this.registerationForm.valid) {
@@ -74,9 +86,6 @@ export class RegistrationComponent {
     }
   }
 
-  public toLogin(): void {
-    this.routingService.toLogin();
-  }
 
   private _initializeForm(): void {
     this.registerationForm = this.fb.group({

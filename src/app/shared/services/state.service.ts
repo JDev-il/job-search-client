@@ -9,7 +9,10 @@ export class StateService {
 
   private usersResponse = signal<UserResponse[]>(<UserResponse[]>{});
   private spinner = signal<boolean>(false);
-  public destroy$: Subject<boolean> = new Subject<boolean>();
+  private readonly destroyed$ = signal(false);
+
+  public destroy$: Subject<boolean> = new Subject<boolean>(); //TODO: replace with destroyed<Signal>
+  public buttonText = signal<string>("Don't have an account?");
 
   constructor(private apiService: ApiService, private authService: AuthService) {
   }
@@ -51,6 +54,26 @@ export class StateService {
     );
   }
 
+  public markAsDestroyed(): void {
+    this.destroyed$.set(true);
+  }
+  public resetDestroyed(): void {
+    this.destroyed$.set(false);
+  }
+  public getDestroyedState(): boolean {
+    return this.destroyed$();
+  }
+
+  // Methods to update state
+  public set setHoverText(hoverText: string) {
+    this.buttonText.set(hoverText);
+  }
+
+  public set setUnhoverText(hoverText: string) {
+    this.buttonText.set(hoverText);
+  }
+
+
   public get spinnerState(): boolean {
     return this.spinner();
   }
@@ -64,4 +87,6 @@ export class StateService {
   public set usersResponseArray(users: UserResponse[]) {
     this.usersResponse.set(users);
   }
+
+
 }

@@ -1,18 +1,4 @@
-.snack-bar-container {
-  position: absolute !important;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  .mat-mdc-snackbar-surface {
-    position: relative !important;
-    top: 125px;
-    .mat-mdc-snack-bar-action {
-      transition: all 0.1s ease-in-out;
-      &:hover {
-        background-color: cyan;
-        color: var(--gray-700) !important;
-      }
-    }
-  }
+.generic-dialog-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
 }

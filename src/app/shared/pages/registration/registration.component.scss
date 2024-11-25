@@ -1,0 +1,9 @@
+.to-login-button {
+  background-color: #4fcaff !important;
+  color: #0000007e !important;
+  width: 180px;
+  &:hover {
+    box-shadow: 0px 0px 12px 1px #7cd8ff !important;
+    color: #fff !important;
+  }
+}

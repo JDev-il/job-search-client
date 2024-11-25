@@ -1,42 +1,51 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Angular files
+/dist/
+/.angular/cache/
+.out-tsc/
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Build outputs
+/tmp/
+/bazel-out/
+npm-debug.log*
+yarn-error.log*
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# Node modules
+/node_modules/
 
-# IDEs and editors
+# Editor and IDE settings
 .idea/
-.project
+/.project
 .classpath
 .c9/
 *.launch
 .settings/
-*.sublime-workspace
+/*.sublime-workspace
+.vscode/
+.history/
 
-# Visual Studio Code
-.vscode/*
+# Exceptions for VS Code settings you want to track
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
+# Coverage and testing
+/coverage/
+/karma-html-reporter/
+
+# Logs
+*.log
 
 # System files
 .DS_Store
 Thumbs.db
+
+# Optional for localhost artifacts
+localhost:4200/
+
+# Ignore temporary artifacts (if using SCSS or similar tools)
+/.sass-cache/
+
+# Ignore Bazel build outputs (for projects using Bazel)
+/bazel-bin/
+/bazel-testlogs/

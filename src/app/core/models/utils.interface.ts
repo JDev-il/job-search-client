@@ -1,10 +1,6 @@
-export interface IpRequest {
-  ip1: string,
-  ip2: IpType
-}
-
-interface IpType {
-  ip: string,
-  country: string,
-  cc: string
+export enum ButtonTexts {
+  loginhover = "Register now",
+  loginunhover = "Don't have an account?",
+  registerhover = "Login now",
+  registerunhover = "I have an account"
 }

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { StateService } from '../../shared/services/state.service';
 
 export interface Tile {
   color: string;
@@ -23,9 +24,8 @@ export class DashboardComponent {
     { text: 'Three', cols: 1, rows: 1, color: 'lightpink' },
     { text: 'Four', cols: 2, rows: 1, color: '' },
   ];
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private stateService: StateService) {
+    this.stateService.spinnerState = false;
+    this.stateService.destroy$.next(false);
   }
-
 }

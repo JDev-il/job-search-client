@@ -70,16 +70,25 @@
             placeholder="Confirm your password"
           />
         </mat-form-field>
+      </div>
+      <div class="buttons-div">
         <button mat-raised-button [disabled]="registerationForm.invalid">
           Register Now
         </button>
+        <button
+          mat-raised-button
+          (click)="toLogin()"
+          class="to-login-button"
+          appHover
+        >
+          {{ loginbuttonText }}
+        </button>
       </div>
     </form>
-    <button mat-raised-button (click)="toLogin()">I Have an Account</button>
   </section>
 </div>
 
 @if (spinnerState) {
 <app-spinner [isSpinner]="spinnerState"></app-spinner>
 }
-<div SnackBar #snackBarRef="SnackBar"></div>
+<!-- <div SnackBar #snackBarRef="SnackBar"></div> -->

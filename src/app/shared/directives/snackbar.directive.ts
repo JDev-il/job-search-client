@@ -1,6 +1,6 @@
 import { Directive, inject, Input } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { UsersMessages } from '../../core/models/enum/messages.enum';
+import { AccountMessages } from '../../core/models/enum/messages.enum';
 import { StateService } from '../services/state.service';
 
 @Directive({
@@ -19,7 +19,7 @@ export class SnackBarDirective {
 
   constructor(private stateService: StateService) { }
 
-  public openSnackBar(text: UsersMessages): void {
+  public openSnackBar(text: AccountMessages): void {
     this.snackBarMessage = text;
     if (this.snackBarMessage) {
       const snackBarRef = <MatSnackBarRef<any>>this._snackBar.open(
