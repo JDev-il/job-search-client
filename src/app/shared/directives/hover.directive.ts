@@ -1,6 +1,6 @@
 import { Directive, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ButtonTexts } from '../../core/models/utils.interface';
+import { ButtonTexts } from '../../core/models/enum/utils.interface';
 import { StateService } from '../services/state.service';
 
 @Directive({

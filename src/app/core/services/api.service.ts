@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { UserRequest } from './../models/users.interface';
@@ -22,16 +22,35 @@ export class ApiService {
   }
 
   public loginUserRequest(userLoginForm: UserLogin): Observable<UserLogin> {
-    let loginData = <UserLogin>{}
-    if (userLoginForm.auth_token) {
-      const headers = {
-        Authorization: `Bearer ${userLoginForm.auth_token}`
-      }
-      loginData = { ...userLoginForm }
-      return this.http.post<UserLogin>(`${this.env.local}${this.authParams.path}${this.authParams.login}`, loginData, { headers: headers });
-    }
-    loginData = { email: userLoginForm.email, password: userLoginForm.password };
-    return this.http.post<UserLogin>(`${this.env.local}${this.authParams.path}${this.authParams.login}`, loginData);
+    return of(userLoginForm).pipe(
+      switchMap(form => {
+        const loginData = form.auth_token
+          ? { ...form }
+          : { email: form.email, password: form.password };
+
+        const headers = form.auth_token
+          ? { Authorization: `Bearer ${form.auth_token}` }
+          : null;
+
+        console.log(headers);
+
+        return this.http.post<UserLogin>(
+          `${this.env.local}${this.authParams.path}${this.authParams.login}`,
+          loginData,
+          headers ? { headers } : {}
+        );
+      })
+    );
+    // let loginData = <UserLogin>{}
+    // if (userLoginForm.auth_token) {
+    //   const headers = {
+    //     Authorization: `Bearer ${userLoginForm.auth_token}`
+    //   }
+    //   loginData = { ...userLoginForm }
+    //   return this.http.post<UserLogin>(`${this.env.local}${this.authParams.path}${this.authParams.login}`, loginData, { headers: headers });
+    // }
+    // loginData = { email: userLoginForm.email, password: userLoginForm.password };
+    // return this.http.post<UserLogin>(`${this.env.local}${this.authParams.path}${this.authParams.login}`, loginData);
   }
 
   public verifyToken(token: string): Observable<string> {

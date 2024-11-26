@@ -1,23 +1,27 @@
-import { Component, DestroyRef, effect, ElementRef, Inject, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, effect, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AccountMessages, IncorrectCredentialsMessages, LoginMessages, SessionExpiredMessages } from '../../../core/models/enum/messages.enum';
+import { IDialogData } from '../../../core/models/data.interface';
+import { TitleText } from '../../../core/models/enum/utils.interface';
+import { RoutingService } from '../../services/routing.service';
 import { StateService } from './../../services/state.service';
 
 @Component({
   selector: 'app-generic-dialog',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [CommonModule, MatButtonModule],
   templateUrl: './generic-dialog.component.html',
   styleUrl: './generic-dialog.component.scss'
 })
 export class GenericDialogComponent {
-  @Input() element!: ElementRef<HTMLElement>
-
+  public titleType!: string;
+  public titleText = TitleText;
   constructor(
     private dialogRef: MatDialogRef<GenericDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public message: LoginMessages | AccountMessages | IncorrectCredentialsMessages | SessionExpiredMessages,
+    @Inject(MAT_DIALOG_DATA) public data: IDialogData,
     private stateService: StateService,
+    private routingService: RoutingService,
     private destroyRef: DestroyRef
   ) {
     effect(() => {
@@ -26,6 +30,7 @@ export class GenericDialogComponent {
       }
       this.dialogRef.afterClosed().subscribe(() => {
         this.stateService.spinnerState = false;
+        data.title === this.titleText.success ? this.routingService.toDashboard() : ''
       });
     });
     this.destroyRef.onDestroy(() => {
@@ -34,7 +39,11 @@ export class GenericDialogComponent {
     });
   }
 
-  closeDialog(): void {
+
+  public get isSuccess(): boolean {
+    return this.data.title === this.titleText.success
+  }
+  public closeDialog(): void {
     this.dialogRef.close();
   }
 

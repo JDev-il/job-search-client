@@ -1,13 +1,27 @@
 <section class="dialog-wrapper">
   <div class="dialog-div">
     <div mat-dialog-header class="dialog-header">
-      <h4 mat-dialog-title>Error!</h4>
+      <h4
+        mat-dialog-title
+        [ngClass]="{
+          'green-title': data.title === titleText.success,
+          'red-title': data.title === titleText.error
+        }"
+      >
+        {{ data.title }}
+      </h4>
     </div>
     <div mat-dialog-content class="dialog-content">
-      <p>{{ message }}</p>
+      <p>{{ data.message }}</p>
     </div>
     <div mat-dialog-actions class="dialog-actions">
-      <button mat-button (click)="closeDialog()">Close</button>
+      <button mat-button (click)="closeDialog()">
+        @if(isSuccess){
+          {{'Continue'}}
+        } @else {
+          {{'Dismiss'}}
+        }
+      </button>
     </div>
   </div>
 </section>

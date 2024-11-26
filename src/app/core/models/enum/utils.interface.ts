@@ -4,3 +4,9 @@ export enum ButtonTexts {
   registerhover = "Login now",
   registerunhover = "I have an account"
 }
+
+export enum TitleText {
+  error = "Error",
+  success = "Success!",
+  failed = "Failed.."
+}

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { IDialogData } from '../../core/models/data.interface';
 import { AccountMessages, IncorrectCredentialsMessages, LoginMessages, SessionExpiredMessages } from '../../core/models/enum/messages.enum';
+import { TitleText } from '../../core/models/enum/utils.interface';
 import { GenericDialogComponent } from '../dialogs/generic-dialog/generic-dialog.component';
 
 @Component({
@@ -11,12 +13,14 @@ import { GenericDialogComponent } from '../dialogs/generic-dialog/generic-dialog
 export class BaseComponent {
   constructor(private dialog: MatDialog) { }
 
-  openErrorDialog(
+  openDialog(
+    title: TitleText,
     message:
       LoginMessages |
       AccountMessages |
       IncorrectCredentialsMessages |
-      SessionExpiredMessages):
+      SessionExpiredMessages
+  ):
     void {
     this.dialog.open(GenericDialogComponent, <MatDialogConfig>{
       disableClose: true,
@@ -25,8 +29,7 @@ export class BaseComponent {
       minHeight: 'unset',
       maxWidth: 'unset',
       maxHeight: 'unset',
-      hasBackdrop: true,
-      data: message
+      data: <IDialogData>{ message: message, title: title }
     });
   }
 }

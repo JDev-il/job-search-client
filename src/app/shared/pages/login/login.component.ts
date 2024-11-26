@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { IncorrectCredentialsMessages, LoginMessages } from '../../../core/models/enum/messages.enum';
+import { TitleText } from '../../../core/models/enum/utils.interface';
 import { LoginModel } from '../../../core/models/forms.interface';
 import { UserLogin } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
@@ -83,15 +84,15 @@ export class LoginComponent extends BaseComponent {
         next: (res: UserLogin | null) => {
           if (res !== null && res.auth_token) {
             this.authService.setToken(res.auth_token);
-            this.openErrorDialog(LoginMessages.success)
+            this.openDialog(TitleText.success, LoginMessages.success);
           }
         },
         error: () => {
           this.formError.set(true);
-          this.openErrorDialog(IncorrectCredentialsMessages.invalid);
+          this.openDialog(TitleText.error, IncorrectCredentialsMessages.invalid);
           this.resetLoginForm();
-          this.cd.detectChanges();
-        }
+        },
+        complete: () => this.cd.detectChanges()
       });
     }
   }
