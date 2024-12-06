@@ -3,7 +3,7 @@ import { Component, DestroyRef, effect, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IDialogData } from '../../../core/models/data.interface';
-import { TitleText } from '../../../core/models/enum/utils.interface';
+import { TitleTextEnum } from '../../../core/models/enum/utils.interface';
 import { RoutingService } from '../../services/routing.service';
 import { StateService } from './../../services/state.service';
 
@@ -16,7 +16,7 @@ import { StateService } from './../../services/state.service';
 })
 export class GenericDialogComponent {
   public titleType!: string;
-  public titleText = TitleText;
+  public titleText = TitleTextEnum;
   constructor(
     private dialogRef: MatDialogRef<GenericDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData,
@@ -35,7 +35,7 @@ export class GenericDialogComponent {
     });
     this.destroyRef.onDestroy(() => {
       this.stateService.markAsDestroyed(); // Mark the signal as destroyed
-      this.stateService.resetDestroyed()
+      this.stateService.resetDestroyed();
     });
   }
 

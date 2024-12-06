@@ -16,3 +16,13 @@ export interface RegisterModel {
 export type RegisterFormModel = Omit<RegisterModel, 'confirm_password'> & {
   confirm_password: FormControl<string | null>;
 };
+
+
+export interface TableDataForm {
+  status: FormControl<string | null>,
+  company: FormControl<string | null>,
+  position: FormControl<string | null>,
+  application: FormControl<string | null>,
+  note: FormControl<string | null>,
+  hunch: FormControl<string | null>
+}

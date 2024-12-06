@@ -5,11 +5,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { IncorrectCredentialsMessages, LoginMessages } from '../../../core/models/enum/messages.enum';
-import { TitleText } from '../../../core/models/enum/utils.interface';
+import { TitleTextEnum } from '../../../core/models/enum/utils.interface';
 import { LoginModel } from '../../../core/models/forms.interface';
 import { UserLogin } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
-import { BaseComponent } from '../../base/baseComponent.base';
+import { BaseDialogComponent } from '../../base/dialog-base.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HoverDirective } from '../../directives/hover.directive';
 import { MaterialDirective } from '../../directives/material.directive';
@@ -29,14 +29,13 @@ import { StateService } from './../../services/state.service';
       MatButtonModule,
       MaterialDirective,
       HoverDirective,
-      // SnackBarDirective,
       SpinnerComponent
     ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss', '../../style/form-layout.style.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent extends BaseComponent {
+export class LoginComponent extends BaseDialogComponent {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
   public loginForm!: FormGroup<LoginModel>;
   public formError = signal<boolean>(false);
@@ -46,11 +45,6 @@ export class LoginComponent extends BaseComponent {
   }
   public set spinnerState(value: boolean) {
     this.stateService.spinnerState = value;
-  }
-
-  public toRegister(): unknown {
-    this.resetLoginForm();
-    return this.routingService.toRegister();
   }
 
   constructor(
@@ -68,6 +62,11 @@ export class LoginComponent extends BaseComponent {
     });
   }
 
+  public toRegister(): void {
+    this.loginForm.reset();
+    this.routingService.toRegister();
+  }
+
   public get loginbuttonText() {
     return this.stateService.buttonText()
   }
@@ -81,26 +80,23 @@ export class LoginComponent extends BaseComponent {
       }
       this.spinnerState = true;
       this.stateService.loginUser(loginForm).subscribe({
-        next: (res: UserLogin | null) => {
-          if (res !== null && res.auth_token) {
-            this.authService.setToken(res.auth_token);
-            this.openDialog(TitleText.success, LoginMessages.success);
+        next: (user: UserLogin | null) => {
+          if (user !== null && user.auth_token) {
+            this.authService.setToken(user.auth_token);
+            this.openDialog(TitleTextEnum.success, LoginMessages.success);
+          } else {
+            this.openDialog(TitleTextEnum.error, LoginMessages.error);
+            this.loginForm.reset();
           }
         },
         error: () => {
           this.formError.set(true);
-          this.openDialog(TitleText.error, IncorrectCredentialsMessages.invalid);
-          this.resetLoginForm();
+          this.openDialog(TitleTextEnum.error, IncorrectCredentialsMessages.invalidUsername);
+          this.loginForm.reset();
         },
         complete: () => this.cd.detectChanges()
       });
     }
   }
 
-  private resetLoginForm(): void {
-    this.loginForm.reset({
-      email: '',
-      password: '',
-    });
-  }
 }

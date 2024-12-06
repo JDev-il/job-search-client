@@ -1,52 +1,29 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 import { RoutingService } from '../../services/routing.service';
-import { StateService } from '../../services/state.service';
 import { AuthService } from './../../../core/services/auth.service';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports: [RouterLink, MatButtonModule],
+  imports: [MatButtonModule, RouterLink],
   templateUrl: './navigation.component.html',
-  styleUrl: './navigation.component.scss'
+  styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent {
-  constructor(private router: Router, private authServie: AuthService, private routingService: RoutingService, private stateService: StateService,
-    private authService: AuthService,
-    private cd: ChangeDetectorRef
-  ) {
-    this.verifyToken();
-  }
+  constructor(private router: Router, private authServie: AuthService, private routingService: RoutingService, private authService: AuthService,
+  ) { }
 
   public isActive(route: string): boolean {
     return this.router.url === route;
   }
 
   public logout() {
-    this.authServie.logout();
+    this.authService.logout();
     this.routingService.toLogin();
   }
   public myAccount() {
-  }
-
-
-  ngOnInit(): void {
-  }
-
-
-  private verifyToken() {
-    this.stateService.verifyUserToken()
-      .subscribe({
-        next: () => {
-          this.stateService.spinnerState = false;
-          this.cd.markForCheck();
-        },
-        error: () => {
-          this.authService.logout();
-          this.routingService.toLogin();
-        }
-      })
+    this.routingService.toAccount();
   }
 }

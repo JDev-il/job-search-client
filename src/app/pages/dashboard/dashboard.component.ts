@@ -1,31 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { StateService } from '../../shared/services/state.service';
-
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatGridListModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
+  // imports: [RouterOutlet, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
-  tiles: Tile[] = [
-    { text: 'One', cols: 3, rows: 1, color: 'lightblue' },
-    { text: 'Two', cols: 1, rows: 2, color: 'lightgreen' },
-    { text: 'Three', cols: 1, rows: 1, color: 'lightpink' },
-    { text: 'Four', cols: 2, rows: 1, color: '' },
-  ];
-  constructor(private stateService: StateService) {
-    this.stateService.spinnerState = false;
-    this.stateService.destroy$.next(false);
-  }
+  // sidebarOpen = signal(false); // Signal to toggle sidebar visibility
+  // toggleSidebar() {
+  //   this.sidebarOpen.update((state) => !state);
+  // }
+
+  //TODO:
+  // > continue constructing the dashboard's sidebar
+  // > link sidebar routes to desired endpoints / pages that will be loaded into DashboardComponent area ['Dashboard']
 }

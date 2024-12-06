@@ -3,41 +3,44 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private isAuthenticated$ = signal<boolean>(false);
-  constructor() { }
+
+  constructor() {
+    const tokenExists = !!this.getToken();
+    this.isAuthenticated$.set(tokenExists);
+  }
+
+  public setAuthentication(state: boolean): void {
+    this.isAuthenticated$.set(state);
+  }
 
   public setToken(token: string): void {
     if (this.isLocalStorage) {
       localStorage.setItem('authToken', token);
+      this.setAuthentication(true);
+    }
+  }
+
+  public get isAuthenticated(): boolean {
+    const tokenExists = !!this.getToken();
+    const signalState = this.isAuthenticated$();
+    if (tokenExists && !signalState) {
       this.isAuthenticated$.set(true);
     }
+    return tokenExists || signalState;
   }
 
   public getToken(): string | null {
-    if (this.isLocalStorage) {
-      const token = localStorage.getItem("authToken");
-      return token;
-    }
-    return null;
-  }
-
-  public removeToken(): void {
-    if (this.isLocalStorage) {
-      localStorage.removeItem('authToken')
-    }
+    return this.isLocalStorage ? localStorage.getItem('authToken') : null;
   }
 
   public logout(): void {
     if (this.isLocalStorage) {
       localStorage.removeItem('authToken');
-      this.isAuthenticated$.set(false);
+      this.setAuthentication(false);
     }
   }
 
-  public get isAuthenticated(): boolean {
-    return (typeof this.isLocalStorage && !!this.getToken()) || this.isAuthenticated$();
-  }
-
   private get isLocalStorage(): boolean {
-    return typeof localStorage !== 'undefined'
+    return typeof localStorage !== 'undefined';
   }
 }

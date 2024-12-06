@@ -1,37 +1,43 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { loadGuard } from './core/guards/load.guard';
+import { AuthResolver } from './shared/services/resolver.service';
 
 export const routes: Routes = [
+
   // Public Routes: Login and Register
   {
     path: 'login',
     loadComponent: () =>
       import('./shared/pages/login/login.component').then((c) => c.LoginComponent),
-    canActivate: [loadGuard], // Redirect logged-in users to the dashboard
+    canActivate: [loadGuard]
   },
   {
     path: 'register',
     loadComponent: () =>
       import('./shared/pages/registration/registration.component').then((c) => c.RegistrationComponent),
-    canActivate: [loadGuard], // Redirect logged-in users to the dashboard
+    canActivate: [loadGuard]
   },
+
   // Protected Routes
   {
     path: '',
     loadComponent: () =>
       import('./shared/pages/layout/layout.component').then((c) => c.LayoutComponent),
-    canActivate: [authGuard], // Only authenticated users
+    canActivate: [authGuard],
+    resolve: {
+      auth: AuthResolver
+    },
     children: [
       {
         path: '',
         loadComponent: () =>
-          import('./pages/dashboard/dashboard.component').then((c) => c.DashboardComponent),
+          import('./pages/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
       {
         path: 'activity',
         loadComponent: () =>
-          import('./pages/activity-table/activity-table.component').then((c) => c.ActivityTableComponent),
+          import('./pages/activity-table/activity-table.component').then((c) => c.ActivityTableComponent)
       },
     ],
   },
@@ -39,16 +45,17 @@ export const routes: Routes = [
     path: 'account',
     loadComponent: () =>
       import('./shared/pages/my-account/my-account.component').then((c) => c.MyAccountComponent),
-    canActivate: [authGuard], // Only authenticated users
+    canActivate: [authGuard]
   },
+
   // Fallback Route for Undefined Paths
   {
     path: '**',
-    redirectTo: 'not-found',
+    redirectTo: 'not-found'
   },
   {
     path: 'not-found',
     loadComponent: () =>
-      import('./shared/pages/not-found/not-found.component').then((c) => c.NotFoundComponent),
+      import('./shared/pages/not-found/not-found.component').then((c) => c.NotFoundComponent)
   },
 ];
