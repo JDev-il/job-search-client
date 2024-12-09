@@ -1,6 +1,7 @@
 export enum AccountMessages {
   redirectMessage = "Redirecting you to your dashboard...",
-  accountNotFoundMessage = "We couldn’t find an account with that information. Please check your input and try again."
+  accountNotFoundMessage = "We couldn’t find an account with that information. Please check your input and try again.",
+  failedMessage = "Http failure response for http://localhost:3000/users/add: 400 Bad Request"
 }
 
 export enum LoginMessages {

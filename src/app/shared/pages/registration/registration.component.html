@@ -10,12 +10,12 @@
           <mat-label>First Name</mat-label>
           <input
             matInput
-            formControlName="firstname"
+            formControlName="firstName"
             placeholder="Type your first name"
           />
-          @if (registerationForm.get('firstname')?.hasError('required')) {
+          @if (registerationForm.get('firstName')?.hasError('required')) {
           <mat-error>First name is required</mat-error>
-          } @if (registerationForm.get('firstname')?.hasError('pattern')) {
+          } @if (registerationForm.get('firstName')?.hasError('pattern')) {
           <mat-error>Your first name includes invalid characters</mat-error>
           }
         </mat-form-field>
@@ -23,12 +23,12 @@
           <mat-label>Last Name</mat-label>
           <input
             matInput
-            formControlName="lastname"
+            formControlName="lastName"
             placeholder="And your last name"
           />
-          @if (registerationForm.get('lastname')?.hasError('required')) {
+          @if (registerationForm.get('lastName')?.hasError('required')) {
           <mat-error>Last name is required</mat-error>
-          } @if (registerationForm.get('lastname')?.hasError('pattern')) {
+          } @if (registerationForm.get('lastName')?.hasError('pattern')) {
           <mat-error>Your last includes invalid characters</mat-error>
           }
         </mat-form-field>

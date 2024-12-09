@@ -28,11 +28,10 @@ export class ActivityTableComponent extends BaseDialogComponent {
   constructor(private cd: ChangeDetectorRef, private stateService: StateService, dialog: MatDialog) {
     super(dialog);
     effect(() => {
-
       const dataUser = this.stateService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
         this.stateService.authorizedUserData().subscribe((tableData: ITableRow[]) => {
-          this.dataSource.set(tableData)
+          this.dataSource.set(tableData);
         })
       }
     })

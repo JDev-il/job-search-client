@@ -20,20 +20,15 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  public addNewUserRequest(user: UserRequest): Observable<UserRequest> {
-    return this.http.post<UserRequest>(`${this.env.local}${this.usersParams.path}${this.usersParams.add}`, user);
+  public addNewUserRequest(userData: UserRequest): Observable<UserResponse> {
+    return this.http.post<UserResponse>(`${this.env.local}${this.usersParams.path}${this.usersParams.add}`, userData);
   }
 
   public loginUserRequest(userLoginForm: UserLogin): Observable<UserLogin> {
     return of(userLoginForm).pipe(
       switchMap(form => {
-        const loginData = form.auth_token
-          ? { ...form }
-          : { email: form.email, password: form.password };
-
-        const headers = form.auth_token
-          ? { Authorization: `Bearer ${form.auth_token}` }
-          : null;
+        const loginData = form.auth_token ? { ...form } : { email: form.email, password: form.password };
+        const headers = form.auth_token ? { Authorization: `Bearer ${form.auth_token}` } : null;
         return this.http.post<UserLogin>(
           `${this.env.local}${this.authParams.path}${this.authParams.login}`,
           loginData,
@@ -51,7 +46,6 @@ export class ApiService {
     return this.http.post<UserToken>(`${this.env.local}${this.env.params.auth.path}${this.env.params.auth.sign}`, user, { responseType: 'json' });
   }
 
-
   public getUserData(user_id: string): Observable<UserResponse> {
     return of(user_id).pipe(
       switchMap((id: string) => {
@@ -67,7 +61,7 @@ export class ApiService {
       }))
   }
 
-  public authUserData(): Observable<ITableRow[]> {
+  public authUserData(): Observable<ITableRow[]> { // After user is authenticated
     const user_id = this.currentUserData().userId;
     return this.http.get<ITableRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getData}`, { params: { user_id } }
     )

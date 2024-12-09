@@ -6,8 +6,8 @@ export interface LoginModel {
 }
 
 export interface RegisterModel {
-  firstname: FormControl<string | null>;
-  lastname: FormControl<string | null>;
+  firstName: FormControl<string | null>;
+  lastName: FormControl<string | null>;
   email: FormControl<string | null>;
   password: FormControl<string | null>;
 }

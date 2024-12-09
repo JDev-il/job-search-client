@@ -30,7 +30,7 @@ export class GenericDialogComponent {
       }
       this.dialogRef.afterClosed().subscribe(() => {
         this.stateService.spinnerState = false;
-        data.title === this.titleText.success ? this.routingService.toDashboard() : ''
+        data.title === this.titleText.success ? this.routingService.toDashboard() : this.routingService.toLogin();
       });
     });
     this.destroyRef.onDestroy(() => {

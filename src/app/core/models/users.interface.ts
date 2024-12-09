@@ -1,14 +1,14 @@
 export interface UserRequest {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }
 
 export interface UserResponse {
   userId: number;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   authToken?: string;

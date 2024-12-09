@@ -5,9 +5,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RegisterFormModel } from '../../../core/models/forms.interface';
 
-import { catchError, of, switchMap, takeUntil } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { catchError, throwError } from 'rxjs';
+import { AccountMessages } from '../../../core/models/enum/messages.enum';
+import { TitleTextEnum } from '../../../core/models/enum/utils.interface';
 import { UserRequest, UserToken } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
+import { BaseDialogComponent } from '../../base/dialog-base.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HoverDirective } from '../../directives/hover.directive';
 import { MaterialDirective } from '../../directives/material.directive';
@@ -30,7 +35,7 @@ import { StateService } from '../../services/state.service';
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss', '../../style/form-layout.style.scss']
 })
-export class RegistrationComponent {
+export class RegistrationComponent extends BaseDialogComponent {
 
   public registerationForm!: FormGroup<RegisterFormModel>;
 
@@ -42,11 +47,13 @@ export class RegistrationComponent {
   }
 
   constructor(
+    dialog: MatDialog,
     private fb: FormBuilder,
     private stateService: StateService,
     private authService: AuthService,
-    private routingService: RoutingService
+    private routingService: RoutingService,
   ) {
+    super(dialog)
     this._initializeForm();
     this.spinnerState = false;
   }
@@ -64,29 +71,30 @@ export class RegistrationComponent {
     if (this.registerationForm.valid) {
       this.spinnerState = true;
       const { confirm_password, ...userData } = this.registerationForm.value;
-      this.stateService.addNewUser(<UserRequest>userData).pipe(
-        switchMap(user => {
-          if (user) {
-            return this.stateService.generateUserToken(user);
+      this.stateService.addNewUser(<UserRequest>userData)
+        .pipe(
+          catchError((err: HttpErrorResponse) => {
+            this.openDialog(TitleTextEnum.error, AccountMessages.failedMessage);
+            return throwError(() => err);
+          })
+        ).subscribe({
+          next: (tokenData: UserToken) => {
+            console.log(tokenData);
+            this.authService.setToken(tokenData.auth_token);
+            this.openDialog(TitleTextEnum.success, AccountMessages.redirectMessage);
+          },
+          error: () => {
+            this.openDialog(TitleTextEnum.failed, AccountMessages.failedMessage);
+            return;
           }
-          return of(null);
-        }), takeUntil(this.stateService.destroy$),
-        catchError(error => {
-          return of(error);
-        })
-      ).subscribe((token: UserToken | null) => {
-        if (token) {
-          this.authService.setToken(token.auth_token);
-          this.routingService.toDashboard();
-        }
-      });
+      })
     }
   }
 
   private _initializeForm(): void {
     this.registerationForm = this.fb.group({
-      firstname: this.fb.control('', [Validators.required, Validators.pattern(/^[\p{L}]+(([' -][\p{L}])?[\p{L}]*)*$/u)]),
-      lastname: this.fb.control('', [Validators.required, Validators.pattern(/^[\p{L}]+(([' -][\p{L}])?[\p{L}]*)*$/u)]),
+      firstName: this.fb.control('', [Validators.required, Validators.pattern(/^[\p{L}]+(([' -][\p{L}])?[\p{L}]*)*$/u)]),
+      lastName: this.fb.control('', [Validators.required, Validators.pattern(/^[\p{L}]+(([' -][\p{L}])?[\p{L}]*)*$/u)]),
       email: this.fb.control('', [Validators.required, Validators.email]),
       password: this.fb.control('', [Validators.required, Validators.minLength(3)]),
       confirm_password: this.fb.control('', Validators.required),
@@ -99,4 +107,3 @@ export class RegistrationComponent {
     return password === confirmPassword ? null : { isConfirmed: true };
   }
 }
-

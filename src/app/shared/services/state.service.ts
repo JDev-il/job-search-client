@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { catchError, Observable, of, Subject, take, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, Subject, switchMap, take, tap, throwError } from 'rxjs';
 import { ITableRow } from '../../core/models/table.interface';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -24,17 +24,11 @@ export class StateService {
     return this.apiService.loginUserRequest(loginForm)
   }
 
-  public addNewUser(user: UserRequest): Observable<UserRequest> {
+  public addNewUser(user: UserRequest): Observable<UserToken> {
     return this.apiService.addNewUserRequest(user).pipe(
-      tap((userResponse: UserRequest) => {
-        if (userResponse) {
-          this.apiService.currentUserRequest$.set(userResponse);
-        }
+      switchMap((userResponse: UserResponse) => {
+        return this.generateUserToken(userResponse);
       }),
-      catchError(error => {
-        console.error('Error while adding new user:', error);
-        return of(error);
-      })
     );
   }
 
@@ -43,17 +37,17 @@ export class StateService {
     if (!token) {
       return throwError(() => new Error('Authentication token is required'));
     }
-    return this.apiService.verifyToken(token); // Let errors propagate naturally
+    return this.apiService.verifyToken(token);
   }
 
-  public generateUserToken(user: UserLogin): Observable<UserToken> {
+  public generateUserToken(user: UserResponse): Observable<UserToken> {
     return this.apiService.generateToken(user).pipe(
       take(1),
-      catchError(error => {
-        console.error('Token generation error:', error);
-        return of(error);
+      catchError((err => {
+        console.error("Token was not generated")
+        return throwError(() => err)
       })
-    );
+      ))
   }
 
   public userDataRequest(): Observable<UserResponse | null> {
@@ -69,16 +63,8 @@ export class StateService {
   }
 
   public authorizedUserData(): Observable<ITableRow[]> {
-    return this.apiService.authUserData();
+    return this.apiService.authUserData().pipe(take(1));
   }
-
-  /*
-    TODO:
-    Add the following function
-      public addApplicationData(): Observable<any> {return this.apiService.authUserData()}
-  */
-
-
 
   public markAsDestroyed(): void {
     this.destroyed$.set(true);
@@ -86,7 +72,6 @@ export class StateService {
   public resetDestroyed(): void {
     this.destroyed$.set(false);
   }
-
   public getDestroyedState(): boolean {
     return this.destroyed$();
   }
