@@ -4,8 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { IncorrectCredentialsMessages, LoginMessages } from '../../../core/models/enum/messages.enum';
-import { TitleTextEnum } from '../../../core/models/enum/utils.interface';
 import { LoginModel } from '../../../core/models/forms.interface';
 import { UserLogin } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
@@ -60,6 +58,7 @@ export class LoginComponent extends BaseDialogComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+    this.spinnerState = false;
   }
 
   public toRegister(): void {
@@ -73,25 +72,25 @@ export class LoginComponent extends BaseDialogComponent {
 
   public submitLogin(): void {
     if (this.loginForm.valid) {
+      this.spinnerState = true;
       this.formError.set(false);
       const loginForm = <UserLogin>{
         email: this.loginForm.value.email,
         password: this.loginForm.value.password
       }
-      this.spinnerState = true;
       this.stateService.loginUser(loginForm).subscribe({
         next: (user: UserLogin | null) => {
           if (user !== null && user.auth_token) {
             this.authService.setToken(user.auth_token);
-            this.openDialog(TitleTextEnum.success, LoginMessages.success);
+            this.openDialog({ notification: this.stateService.notificationsType.success });
           } else {
-            this.openDialog(TitleTextEnum.error, LoginMessages.error);
+            this.openDialog({ notification: this.stateService.notificationsType.error });
             this.loginForm.reset();
           }
         },
         error: () => {
           this.formError.set(true);
-          this.openDialog(TitleTextEnum.error, IncorrectCredentialsMessages.invalidUsername);
+          this.openDialog({ notification: this.stateService.notificationsType.invalid });
           this.loginForm.reset();
         },
         complete: () => this.cd.detectChanges()

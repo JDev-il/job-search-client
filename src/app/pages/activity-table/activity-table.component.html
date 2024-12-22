@@ -1,86 +1,120 @@
-@defer (when dataSource().length > 0) {
-<section class="table-container mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource()">
-    <!-- Status Column -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let element">{{ element.status }}</td>
-    </ng-container>
+<div class="activity-table-wrapper">
+  <div class="actions-wrapper">
+    <div class="add-button-container">
+      <button mat-button (click)="addRow()">Add Row</button>
+    </div>
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-input-field">
+        <mat-label>Search in table</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Anything that starts with..."
+          #input
+        />
+      </mat-form-field>
+    </div>
+  </div>
 
-    <!-- Company Column -->
-    <ng-container matColumnDef="company">
-      <th mat-header-cell *matHeaderCellDef>Company</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.companyName }}
-        {{ element.companyLocation }}
-      </td>
-    </ng-container>
+  <div class="table-container" [ngClass]="{ 'hidden-scroll': localSpinner }">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="header" mat-sort-header>Status</div>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="default-cell">
+            {{ row.status }}
+          </div>
+        </td>
+      </ng-container>
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef>Position</th>
-      <td mat-cell *matCellDef="let element">
-        @if(element.position){
-        <div class="split-cell">
-          <p>{{ element.positionType }}</p>
-          |
-          <p>{{ element.positionStack }}</p>
-        </div>
-        }
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="company">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="header">
+            Company
+            <div class="sub-header">
+              <h4>Name</h4>
+              <h4>Location</h4>
+            </div>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="default-cell split-cell">
+            <td>{{ row.companyName }}</td>
+            <td>{{ row.companyLocation }}</td>
+          </div>
+        </td>
+      </ng-container>
 
-    <!-- Application Platform Column -->
-    <ng-container matColumnDef="application">
-      <th mat-header-cell *matHeaderCellDef>Application</th>
-      <td mat-cell *matCellDef="let element">
-        <div class="split-cell">
-          <p>{{ element.applicationPlatform }}</p>
-          | @defer (when !element.applicationDate) {
-          {{ currentDate | date }}
-          } @placeholder {
-          <p>{{ element.applicationDate }}</p>
-          }
-        </div>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="header">
+            Position
+            <div class="sub-header">
+              <h4>Type</h4>
+              <h4>Stack</h4>
+            </div>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="split-cell">
+            <td>{{ row.positionType }}</td>
+            <td>{{ row.positionStack }}</td>
+          </div>
+        </td>
+      </ng-container>
 
-    <!-- Notes Column -->
-    <ng-container matColumnDef="note">
-      <th mat-header-cell *matHeaderCellDef>Notes</th>
-      <td mat-cell *matCellDef="let element">
-        <div class="custom-cell">
-          <p>
-            {{ element.notes }}
-          </p>
-        </div>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="application">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="header">
+            Application
+            <div class="sub-header">
+              <h4>Platform</h4>
+              <h4>Date Applied</h4>
+            </div>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="split-cell">
+            <td>{{ row.applicationPlatform }}</td>
+            <td>{{ row.applicationDate | date : "MMM d, y" }}</td>
+          </div>
+        </td>
+      </ng-container>
 
-    <!-- Hunch Column -->
-    <ng-container matColumnDef="hunch">
-      <th mat-header-cell *matHeaderCellDef>Hunch</th>
-      <td mat-cell *matCellDef="let element">
-        <div class="custom-cell">
-          <p>{{ element.hunch }}</p>
-        </div>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="header">Notes</div>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="custom-cell">
+            {{ row.notes }}
+          </div>
+        </td>
+      </ng-container>
 
-    <!-- <ng-container matColumnDef="edit"> -->
-    <!-- <th mat-header-cell *matHeaderCellDef>Edit</th> -->
-    <!-- <td mat-cell *matCellDef="let element">TEST</td> -->
-    <!-- </ng-container> -->
+      <ng-container matColumnDef="hunch">
+        <th mat-header-cell *matHeaderCellDef>Hunch</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="default-cell">
+            {{ row.hunch }}
+          </div>
+        </td>
+      </ng-container>
 
-    <!-- Header Row -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <!-- Data Rows -->
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-</section>
-} @placeholder {
-<ng-container>
-  <h6 style="text-align: center">~ No Data ~</h6>
-</ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row" class="actions-mat-cell">
+          <button mat-button (click)="removeRow(row)" class="action-button">
+            Remove Row
+          </button>
+        </td>
+      </ng-container>
 
-}
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <app-spinner [isSpinner]="localSpinner()" [isCredentialPage]="false" />
+</div>

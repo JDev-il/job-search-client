@@ -61,3 +61,14 @@ export enum PlatformEnum {
   CAREER = "Career Page",
 }
 
+export enum FormPlaceholders {
+  status = "Status",
+  companyName = "Company Name",
+  companyLocation = "Company Location",
+  positionType = "Position Type",
+  positionStack = "Position Stack",
+  applicationPlatform = "On which platform did you apply?",
+  applicationDate = "When did you apply?",
+  hunch = "What's your hunch about the application?",
+  notes = "Anything to add?"
+}

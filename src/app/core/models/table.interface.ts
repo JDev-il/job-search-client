@@ -8,8 +8,8 @@ export interface ITableCol {
   notes: string,
   hunch: string
 }
+
 export interface ITableRow {
-  job_id: number;
   status: StatusEnum;
   companyLocation: string;
   companyName: string;
@@ -19,4 +19,14 @@ export interface ITableRow {
   applicationPlatform: PlatformEnum | null;
   hunch: string;
   notes: string[];
+}
+
+export interface ITableDataResponse {
+  jobId: number;
+  tableData: ITableRow
+}
+
+export interface ITableSaveRequest {
+  userId: number,
+  tableData: ITableRow
 }

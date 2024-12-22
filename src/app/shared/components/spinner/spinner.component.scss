@@ -13,8 +13,9 @@
   align-items: center;
   justify-self: center;
   .mat-mdc-progress-spinner {
-    max-width: 8%;
+    max-width: 4rem;
   }
+
   ::ng-deep {
     .mdc-circular-progress__indeterminate-circle-graphic {
       stroke: cyan !important; /* Set your color here */
@@ -30,4 +31,10 @@
   background: #000000b1;
   backdrop-filter: blur(3px);
   position: absolute;
+}
+.non-credential-spinner {
+  top: 125px;
+}
+.non-credential-overlay {
+  top: 75px;
 }

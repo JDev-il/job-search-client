@@ -1,9 +1,6 @@
-<div class="spinner-container">
-  @if (isSpinner) {
-    <mat-spinner></mat-spinner>
-  }
-</div>
-
 @if (isSpinner) {
-  <div class="overlay"></div>
+<div class="spinner-container" [ngClass]="{ 'non-credential-spinner': !isCredentialPage }">
+  <mat-spinner />
+</div>
+<div class="overlay" [ngClass]="{ 'non-credential-overlay': !isCredentialPage }"></div>
 }

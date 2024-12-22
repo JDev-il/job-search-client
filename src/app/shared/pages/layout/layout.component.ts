@@ -3,13 +3,14 @@ import { RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { HelperBaseComponent } from '../../base/helper-base.component';
 import { NavigationComponent } from '../../components/navigation/navigation.component';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { RoutingService } from '../../services/routing.service';
 import { StateService } from '../../services/state.service';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, NavigationComponent],
+  imports: [RouterOutlet, NavigationComponent, SpinnerComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ITableRow } from '../models/table.interface';
+import { ITableDataResponse, ITableSaveRequest } from '../models/table.interface';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { UserRequest } from './../models/users.interface';
 
@@ -20,11 +20,11 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  public addNewUserRequest(userData: UserRequest): Observable<UserResponse> {
+  public addNewUserReq(userData: UserRequest): Observable<UserResponse> {
     return this.http.post<UserResponse>(`${this.env.local}${this.usersParams.path}${this.usersParams.add}`, userData);
   }
 
-  public loginUserRequest(userLoginForm: UserLogin): Observable<UserLogin> {
+  public loginUserReq(userLoginForm: UserLogin): Observable<UserLogin> {
     return of(userLoginForm).pipe(
       switchMap(form => {
         const loginData = form.auth_token ? { ...form } : { email: form.email, password: form.password };
@@ -38,15 +38,15 @@ export class ApiService {
     );
   }
 
-  public verifyToken(token: string): Observable<UserLogin> {
+  public verifyTokenReq(token: string): Observable<UserLogin> {
     return this.http.get<UserLogin>(`${this.env.local}${this.authParams.path}${this.authParams.verify}`, { headers: { 'authorization': `Bearer ${token}` } });
   }
 
-  public generateToken(user: UserLogin): Observable<UserToken> {
+  public generateTokenReq(user: UserLogin): Observable<UserToken> {
     return this.http.post<UserToken>(`${this.env.local}${this.env.params.auth.path}${this.env.params.auth.sign}`, user, { responseType: 'json' });
   }
 
-  public getUserData(user_id: string): Observable<UserResponse> {
+  public getUserDataReq(user_id: string): Observable<UserResponse> {
     return of(user_id).pipe(
       switchMap((id: string) => {
         if (id) {
@@ -61,18 +61,17 @@ export class ApiService {
       }))
   }
 
-  public authUserData(): Observable<ITableRow[]> { // After user is authenticated
-    const user_id = this.currentUserData().userId;
-    return this.http.get<ITableRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getData}`, { params: { user_id } }
+  public authUserDataReq(): Observable<ITableDataResponse[]> { // After user is authenticated
+    const user_id = this.currentUserData()?.userId;
+    return this.http.get<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getData}`, { params: { user_id } }
     )
   }
 
-  //! Complete process for ActivityTableComponent
-  public addApplicationData() {
-    const user = this.currentUserData();
-    if (user && user.userId) {
-      return this.http.post<any>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.addData}`, { email: user.email, user_id: user.userId });
-    }
-    return of()
+  public addNewApplicationReq(newDataRow: ITableSaveRequest): Observable<ITableDataResponse[]> {
+    const payload: ITableSaveRequest = {
+      userId: this.currentUserData().userId,
+      /* tableData: the attached tableData object */
+    } as ITableSaveRequest;
+    return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.addData}`, this.currentUserData());
   }
 }

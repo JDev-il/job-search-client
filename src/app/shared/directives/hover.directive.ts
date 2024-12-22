@@ -1,6 +1,6 @@
 import { Directive, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ButtonTextsEnum } from '../../core/models/enum/utils.interface';
+import { ButtonsEnum } from '../../core/models/enum/utils.interface';
 import { StateService } from '../services/state.service';
 
 @Directive({
@@ -28,11 +28,11 @@ export class HoverDirective implements OnInit {
   }
 
   private setText(): void {
-    this.stateService.setHoverText = this.isLogin ? ButtonTextsEnum.loginhover : ButtonTextsEnum.registerhover;
+    this.stateService.setHoverText = this.isLogin ? ButtonsEnum.loginhover : ButtonsEnum.registerhover;
   }
 
   private unSetText(): void {
-    this.stateService.setHoverText = this.isLogin ? ButtonTextsEnum.loginunhover : ButtonTextsEnum.registerunhover;
+    this.stateService.setHoverText = this.isLogin ? ButtonsEnum.loginunhover : ButtonsEnum.registerunhover;
   }
 
 }

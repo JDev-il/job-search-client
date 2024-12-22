@@ -1,14 +1,20 @@
-export enum ButtonTextsEnum {
+export enum ButtonsEnum {
   loginhover = "Register now",
   loginunhover = "Don't have an account?",
   registerhover = "Login now",
   registerunhover = "I have an account"
 }
 
-export enum TitleTextEnum {
+export enum TitlesEnum {
   error = "Error",
   success = "Success!",
-  failed = "Failed.."
+  failed = "Failed..",
+  oops = "Oops!",
+}
+
+export enum DialogEnum {
+  notification = 'notification',
+  table = 'table'
 }
 
 export enum ROUTES {

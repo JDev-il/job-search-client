@@ -20,15 +20,6 @@ export class AuthService {
     }
   }
 
-  public get isAuthenticated(): boolean {
-    const tokenExists = !!this.getToken();
-    const signalState = this.isAuthenticated$();
-    if (tokenExists && !signalState) {
-      this.isAuthenticated$.set(true);
-    }
-    return tokenExists || signalState;
-  }
-
   public getToken(): string | null {
     return this.isLocalStorage ? localStorage.getItem('authToken') : null;
   }
@@ -38,6 +29,15 @@ export class AuthService {
       localStorage.removeItem('authToken');
       this.setAuthentication(false);
     }
+  }
+
+  public get isAuthenticated(): boolean {
+    const tokenExists = !!this.getToken();
+    const signalState = this.isAuthenticated$();
+    if (tokenExists && !signalState) {
+      this.isAuthenticated$.set(true);
+    }
+    return tokenExists || signalState;
   }
 
   private get isLocalStorage(): boolean {

@@ -8,8 +8,6 @@ import { RegisterFormModel } from '../../../core/models/forms.interface';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, throwError } from 'rxjs';
-import { AccountMessages } from '../../../core/models/enum/messages.enum';
-import { TitleTextEnum } from '../../../core/models/enum/utils.interface';
 import { UserRequest, UserToken } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
 import { BaseDialogComponent } from '../../base/dialog-base.component';
@@ -74,20 +72,19 @@ export class RegistrationComponent extends BaseDialogComponent {
       this.stateService.addNewUser(<UserRequest>userData)
         .pipe(
           catchError((err: HttpErrorResponse) => {
-            this.openDialog(TitleTextEnum.error, AccountMessages.failedMessage);
+            // this.openDialog(TitleTextEnum.error, AccountMessages.failedMessage);
             return throwError(() => err);
           })
         ).subscribe({
           next: (tokenData: UserToken) => {
-            console.log(tokenData);
             this.authService.setToken(tokenData.auth_token);
-            this.openDialog(TitleTextEnum.success, AccountMessages.redirectMessage);
+            // this.openDialog(TitleTextEnum.success, AccountMessages.redirectMessage);
           },
-          error: () => {
-            this.openDialog(TitleTextEnum.failed, AccountMessages.failedMessage);
-            return;
+          error: (err) => {
+            // this.openDialog(TitleTextEnum.failed, AccountMessages.failedMessage);
+            throwError(() => console.error(`There was a problem generating a token`, err));
           }
-      })
+        })
     }
   }
 

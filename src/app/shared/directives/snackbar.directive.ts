@@ -31,7 +31,7 @@ export class SnackBarDirective {
         },
       );
       snackBarRef.onAction().subscribe((): void => {
-        this.stateService.spinnerState = this.spinnerState
+        this.stateService.spinnerState = this.spinnerState;
       });
     }
   }

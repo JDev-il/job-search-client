@@ -1,0 +1,14 @@
+<form [formGroup]="incomingForm" (submit)="submitForm()">
+  @for (control of formArray; track $index; let index = $index) {
+    <mat-form-field>
+      <input
+        matInput
+        [formControlName]="control"
+        placeholder="{{ formPlaceholders[index] }}"
+      />
+    </mat-form-field>
+  } @empty {
+    <p>No form controls available.</p>
+  }
+  <button>TEST</button>
+</form>
