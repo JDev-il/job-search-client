@@ -66,9 +66,6 @@ export class FormComponent {
 
   ngAfterViewInit(): void {
     this.setCompanyLocationValue();
-    this.incomingForm.valueChanges.subscribe(value => {
-      console.log(value);
-    })
   }
 
   public get formArrayKeys(): string[] {
@@ -83,7 +80,7 @@ export class FormComponent {
     }
   }
 
-  public formSubmit() {
+  public formSubmit(): void {
     if (this.incomingForm.valid) {
       this.formEmit.emit(this.incomingForm);
     }

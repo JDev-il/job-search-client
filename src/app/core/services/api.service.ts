@@ -3,8 +3,8 @@ import { Injectable, signal } from '@angular/core';
 import { map, Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Country } from '../models/data.interface';
-import { ContinentsEnum } from '../models/enum/utils.enum';
-import { ITableDataResponse, ITableRow, ITableSaveRequest } from '../models/table.interface';
+import { ContinentsEnum, FormEnum } from '../models/enum/utils.enum';
+import { ITableDataResponse, ITableRow } from '../models/table.interface';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { UserRequest } from './../models/users.interface';
 
@@ -78,15 +78,15 @@ export class ApiService {
     )
   }
 
-  public addNewApplicationReq(newDataRow: ITableRow): Observable<ITableDataResponse> {
-    const payload: ITableSaveRequest = {
+  public applicationActionsReq(formRow: ITableRow, formAction: FormEnum): Observable<ITableDataResponse> {
+    const payload = {
       userId: this.currentUserData$().userId,
-      tableData: newDataRow
-    } as ITableSaveRequest;
-    return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.addApplication}`, payload);
-  }
+      ...formRow
+    };
+    if (formAction === FormEnum.addRow) {
+      return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.addApplication}`, { ...payload });
+    }
+    return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.editApplication}`, { ...payload })
 
-  public editApplicationReq(applicationRow: ITableDataResponse) {
-    return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.editApplication}`, applicationRow)
   }
 }

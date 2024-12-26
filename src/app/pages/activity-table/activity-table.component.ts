@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, effect, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -16,7 +16,7 @@ import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
-import { ITableDataResponse } from './../../core/models/table.interface';
+import { ITableDataResponse, ITableRow } from './../../core/models/table.interface';
 
 @Component({
   selector: 'app-activity-table',
@@ -38,14 +38,10 @@ import { ITableDataResponse } from './../../core/models/table.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityTableComponent extends BaseDialogComponent {
-  // displayedColumns: string[] = ['status', 'company', 'position', 'application', 'note', 'hunch'];
-  // dataSource: WritableSignal<ITableDataResponse[]> = signal<ITableDataResponse[]>([] as ITableDataResponse[]); // WritableSignal for reactive updates
-  private newRow!: FormGroup;
-  private inputDestroy$ = new Subject<void>(); // For cleanup on component destroy
-
+  private newRow!: FormGroup;;
+  private inputDestroy$ = new Subject<void>();
   public selectedRows: WritableSignal<ITableDataResponse[]> = signal<ITableDataResponse[]>([]);
-  public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'note', 'hunch', 'actions'];
-  public headerColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'note', 'hunch', 'actions'];
+  public displayedColumns: WritableSignal<string[]> = signal<string[]>(['select', 'status', 'company', 'position', 'application', 'note', 'hunch', 'actions']);
   public dataSource = new MatTableDataSource([] as ITableDataResponse[]);
   public selection = new SelectionModel<ITableDataResponse>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
@@ -53,9 +49,10 @@ export class ActivityTableComponent extends BaseDialogComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ITableDataResponse[]>;
 
-  constructor(private formService: FormsService, private destroyRef: DestroyRef, private cd: ChangeDetectorRef, private stateService: StateService, dialog: MatDialog) {
+  constructor(private formService: FormsService, private destroyRef: DestroyRef, private stateService: StateService, dialog: MatDialog) {
     super(dialog);
     effect(() => {
+      this.newRow = this.formService.fb.group({})
       if (this.stateService.getDestroyedState()) {
         return;
       }
@@ -76,7 +73,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
         }
       }
     }, { allowSignalWrites: true });
-    destroyRef.onDestroy(() => {
+    this.destroyRef.onDestroy(() => {
       this.stateService.markAsDestroyed();
       this.stateService.resetDestroyed();
       this.inputDestroy$.next();
@@ -94,11 +91,8 @@ export class ActivityTableComponent extends BaseDialogComponent {
       )
       .subscribe({
         next: (value) => {
-          this.dataSource.filter = value; // Apply filter to MatTableDataSource
-          this.localSpinner.set(false); // Hide spinner
-        },
-        complete: () => {
-          console.log('Filter subscription complete.');
+          this.dataSource.filter = value;
+          this.localSpinner.set(false);
         }
       });
   }
@@ -170,6 +164,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     } else {
       const selectedJobIds = new Set(this.selectedRows().map((row) => row.jobId));
       this.dataSource.data = this.dataSource.data.filter((row) => !selectedJobIds.has(row.jobId));
+      //TODO:: Update database
     }
     this.selectedRows.set([] as ITableDataResponse[]);
     this.selection.clear();
@@ -177,8 +172,8 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.updateTable();
   }
 
-  public editSelectedRow(row: ITableDataResponse): void {
-    this.stateService.editApplication(row);
+  public editSelectedRow(row: ITableRow): void {
+    this.stateService.applicationAction(row, FormEnum.editRow);
   }
 
   private updateTable() {

@@ -78,19 +78,20 @@ export class LoginComponent extends BaseDialogComponent {
         email: this.loginForm.value.email,
         password: this.loginForm.value.password
       }
+      const notificationType = this.stateService.notificationsType;
       this.stateService.loginUser(loginForm).subscribe({
         next: (user: UserLogin | null) => {
           if (user !== null && user.auth_token) {
             this.authService.setToken(user.auth_token);
-            this.openDialog({ notification: this.stateService.notificationsType.success });
+            this.openDialog({ notification: notificationType.success });
           } else {
-            this.openDialog({ notification: this.stateService.notificationsType.error });
+            this.openDialog({ notification: notificationType.error });
             this.loginForm.reset();
           }
         },
         error: () => {
           this.formError.set(true);
-          this.openDialog({ notification: this.stateService.notificationsType.invalid });
+          this.openDialog({ notification: notificationType.invalid });
           this.loginForm.reset();
         },
         complete: () => this.cd.detectChanges()

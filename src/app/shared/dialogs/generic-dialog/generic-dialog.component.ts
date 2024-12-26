@@ -60,14 +60,8 @@ export class GenericDialogComponent {
   }
 
   public sendForm(form: FormGroup): void {
-    const formTitle = this.data.form?.formTitle;
-    if (formTitle === FormEnum.addRow) {
-      this.stateService.addNewApplication(form.value).subscribe(console.log);
-      return;
-    } else if (formTitle === FormEnum.editRow) {
-      // this.stateService.editApplication(form.value);
-      return;
-    }
+    const formTitle = this.data.form?.formTitle as FormEnum;
+    this.stateService.applicationAction(form.value, formTitle);
   }
 
   public getContinentsList(selectedContinent: string): void {

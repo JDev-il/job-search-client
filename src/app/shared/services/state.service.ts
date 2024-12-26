@@ -1,7 +1,7 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { catchError, Observable, of, Subject, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
 import { UserMessages, ValidationMessages } from '../../core/models/enum/messages.enum';
-import { ContinentsEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
+import { ContinentsEnum, FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Country } from './../../core/models/data.interface';
@@ -13,7 +13,6 @@ export class StateService {
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
   private tableDataResponse$: WritableSignal<ITableDataResponse[]> = signal([] as ITableDataResponse[]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
-  private countriesList: WritableSignal<string[]> = signal([] as string[])
   private readonly spinner = signal<boolean>(true);
   private readonly destroyed$ = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
@@ -29,9 +28,9 @@ export class StateService {
 
   public addNewUser(user: UserRequest): Observable<UserToken> {
     return this.apiService.addNewUserReq(user).pipe(
-      // tap((userData: UserResponse) => {
-      //   this.dataUserResponse.set(userData);
-      // }),
+      tap((userData: UserResponse) => {
+        this.dataUserResponse.set(userData);
+      }),
       switchMap((userResponse: UserResponse) => {
         return this.generateUserToken(userResponse)
           .pipe(
@@ -78,25 +77,14 @@ export class StateService {
     }));
   }
 
-  public addNewApplication(newTableRow: ITableRow): Observable<ITableDataResponse> {
-
-  //! ERROR OCCURS WITH STATUS UNDEFINED IN TEMPLATE
-  //TODO: fix issue with deep debugging process
-
-    return this.apiService.addNewApplicationReq(newTableRow).pipe(
+  public applicationAction(formRow: ITableRow, formAction: FormEnum): void {
+    this.apiService.applicationActionsReq(formRow, formAction).pipe(
+      switchMap(() => this.authorizedUserDataRequest()),
       take(1),
-      tap(tableData => this.tableDataResponse$.set([...this.tableDataResponse, tableData])),
       catchError((err) => {
         return throwError(() => { return err })
-      }))
+      })).subscribe()
   }
-
-  public editApplication(editableTableRow: ITableDataResponse): Observable<ITableDataResponse[]> {
-    console.log("EDITABLE ROW", editableTableRow);
-    return of()
-  // return this.apiService.editApplicationReq(editableTableRow);
-  }
-
 
   public markAsDestroyed(): void {
     this.destroyed$.set(true);
@@ -108,7 +96,6 @@ export class StateService {
     return this.destroyed$();
   }
 
-  // Methods to update state
   public set setHoverText(hoverText: string) {
     this.buttonText.set(hoverText);
   }
@@ -141,8 +128,6 @@ export class StateService {
     return this.tableDataResponse$();
   }
 
-
-
   public get notificationsType() {
     return {
       success: {
@@ -164,8 +149,6 @@ export class StateService {
     return this.apiService.getCountriesListReq(continent)
       .pipe(
         takeUntil(this.destroy$),
-        tap(data => console.log(data)
-        )
       )
   }
 

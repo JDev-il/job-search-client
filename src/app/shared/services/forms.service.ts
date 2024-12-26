@@ -5,7 +5,7 @@ import { TableDataFormRow } from './../../core/models/forms.interface';
 
 @Injectable({ providedIn: 'root' })
 export class FormsService {
-  constructor(private fb: FormBuilder) { }
+  constructor(public fb: FormBuilder) { }
 
   public tableFormInit(): FormGroup {
     return this.fb.group<TableDataForm>({
