@@ -1,0 +1,14 @@
+form {
+  width: 100%;
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+  .submit-form-button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    button {
+      width: 50%;
+    }
+  }
+}

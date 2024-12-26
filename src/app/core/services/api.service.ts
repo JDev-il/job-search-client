@@ -1,12 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { Observable, of, switchMap, throwError } from 'rxjs';
+import { map, Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ITableDataResponse, ITableSaveRequest } from '../models/table.interface';
+import { Country } from '../models/data.interface';
+import { ContinentsEnum } from '../models/enum/utils.enum';
+import { ITableDataResponse, ITableRow, ITableSaveRequest } from '../models/table.interface';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { UserRequest } from './../models/users.interface';
-
-
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -15,10 +15,21 @@ export class ApiService {
   private authParams = this.env.params.auth;
   private usersParams = this.env.params.users;
   private jobSearchParams = this.env.params.job_search;
-  public currentUserData = signal<UserResponse>({} as UserResponse);
-  public currentUserRequest$ = signal<UserLogin>({} as UserLogin)
+  public currentUserData$ = signal<UserResponse>({} as UserResponse);
+  public currentUserRequest$ = signal<UserLogin>({} as UserLogin);
 
   constructor(private http: HttpClient) { }
+
+  public getCountriesListReq(continent: ContinentsEnum): Observable<Country[]> {
+    if (continent === ContinentsEnum.AMERICA) {
+      return this.http.get<Country[]>(`https://restcountries.com/v3.1/subregion/north%20america`)
+    }
+    return this.http.get<Country[]>(`https://restcountries.com/v3.1/region/${continent}?fields=name`)
+      .pipe(map(data => data
+        .sort((a, b) =>
+          a.name.common.localeCompare(b.name.common))
+      ));
+  }
 
   public addNewUserReq(userData: UserRequest): Observable<UserResponse> {
     return this.http.post<UserResponse>(`${this.env.local}${this.usersParams.path}${this.usersParams.add}`, userData);
@@ -62,16 +73,20 @@ export class ApiService {
   }
 
   public authUserDataReq(): Observable<ITableDataResponse[]> { // After user is authenticated
-    const user_id = this.currentUserData()?.userId;
-    return this.http.get<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getData}`, { params: { user_id } }
+    const user_id = this.currentUserData$()?.userId;
+    return this.http.get<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getApplications}`, { params: { user_id } }
     )
   }
 
-  public addNewApplicationReq(newDataRow: ITableSaveRequest): Observable<ITableDataResponse[]> {
+  public addNewApplicationReq(newDataRow: ITableRow): Observable<ITableDataResponse> {
     const payload: ITableSaveRequest = {
-      userId: this.currentUserData().userId,
-      /* tableData: the attached tableData object */
+      userId: this.currentUserData$().userId,
+      tableData: newDataRow
     } as ITableSaveRequest;
-    return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.addData}`, this.currentUserData());
+    return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.addApplication}`, payload);
+  }
+
+  public editApplicationReq(applicationRow: ITableDataResponse) {
+    return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.editApplication}`, applicationRow)
   }
 }

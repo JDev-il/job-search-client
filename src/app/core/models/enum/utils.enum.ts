@@ -5,16 +5,28 @@ export enum ButtonsEnum {
   registerunhover = "I have an account"
 }
 
-export enum TitlesEnum {
+export enum NotificationsEnum {
   error = "Error",
   success = "Success!",
   failed = "Failed..",
   oops = "Oops!",
 }
 
+export enum FormEnum {
+  addRow = 'Add Application',
+  editRow = 'Applictaion Edit'
+}
+
 export enum DialogEnum {
   notification = 'notification',
-  table = 'table'
+  table = 'table',
+}
+
+export enum ContinentsEnum {
+  AMERICA = "North America",
+  EUROPE = "Europe",
+  ASIA = "Asia",
+  AFRICA = "Africa"
 }
 
 export enum ROUTES {

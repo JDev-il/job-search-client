@@ -32,15 +32,13 @@ export enum PositionTypeEnum {
 
 export enum PositionStackEnum {
   ANGULAR = "Angular",
-  ANGULAR_NODE = "Angular / Node.js",
-  ANGULAR_DOTNET = "Angular / .NET / C#",
-  ANGULAR_NGRX = "Angular / NGRX",
-  GENERIC = "Genric / Unknown",
+  NODE = "Node.js",
+  DOTNET = "C# / .NET Core",
+  STATE_MANAGEMENT = "REDUX / NGRX / NGXS",
+  UNKNOWN = "N/A",
   REACT = "React.js",
-  REACT_NODE = "React.js / Node.js",
-  REACT_TS = "React.js / ts",
-  AN_RE_VU = "Angular / React / Vue.js",
-  ANGULAR_UNK = "Angular / Unknown",
+  REACT_TS = "React.js + TypeScript",
+  AN_RE_VU = "Angular / React.js / Vue.js",
 }
 
 export enum PlatformEnum {
@@ -61,7 +59,7 @@ export enum PlatformEnum {
   CAREER = "Career Page",
 }
 
-export enum FormPlaceholders {
+export enum FormPlaceholdersEnum {
   status = "Status",
   companyName = "Company Name",
   companyLocation = "Company Location",

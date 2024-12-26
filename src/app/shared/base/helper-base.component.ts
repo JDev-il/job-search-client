@@ -15,6 +15,7 @@ export class HelperBaseComponent {
       this.stateService.userDataRequest().subscribe();
     });
   }
+
   public get spinnerState(): boolean {
     return this.stateService.spinnerState;
   }
@@ -22,4 +23,5 @@ export class HelperBaseComponent {
   public set spinnerState(value: boolean) {
     this.stateService.spinnerState = value;
   }
+
 }

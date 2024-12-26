@@ -1,10 +1,11 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { catchError, Observable, of, Subject, switchMap, take, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, Subject, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
 import { UserMessages, ValidationMessages } from '../../core/models/enum/messages.enum';
-import { TitlesEnum } from '../../core/models/enum/utils.interface';
+import { ContinentsEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
-import { ITableDataResponse, ITableSaveRequest } from './../../core/models/table.interface';
+import { Country } from './../../core/models/data.interface';
+import { ITableDataResponse, ITableRow } from './../../core/models/table.interface';
 import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from './../../core/models/users.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -12,11 +13,11 @@ export class StateService {
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
   private tableDataResponse$: WritableSignal<ITableDataResponse[]> = signal([] as ITableDataResponse[]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
+  private countriesList: WritableSignal<string[]> = signal([] as string[])
   private readonly spinner = signal<boolean>(true);
   private readonly destroyed$ = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
-  public addedRows: WritableSignal<ITableDataResponse[]> = signal([] as ITableDataResponse[]);
 
   constructor(private apiService: ApiService, private authService: AuthService) {
   }
@@ -28,9 +29,9 @@ export class StateService {
 
   public addNewUser(user: UserRequest): Observable<UserToken> {
     return this.apiService.addNewUserReq(user).pipe(
-    // tap((userData: UserResponse) => {
-    //   this.dataUserResponse.set(userData);
-    // }),
+      // tap((userData: UserResponse) => {
+      //   this.dataUserResponse.set(userData);
+      // }),
       switchMap((userResponse: UserResponse) => {
         return this.generateUserToken(userResponse)
           .pipe(
@@ -63,7 +64,7 @@ export class StateService {
       take(1),
       tap((userData) => {
         if (userData && userData.email) {
-          this.apiService.currentUserData.set(userData);
+          this.apiService.currentUserData$.set(userData);
           this.spinnerState = false;
         }
       }),
@@ -77,16 +78,23 @@ export class StateService {
     }));
   }
 
-  public addNewApplication(newTableRow: ITableSaveRequest): Observable<ITableDataResponse[]> {
+  public addNewApplication(newTableRow: ITableRow): Observable<ITableDataResponse> {
+
+  //! ERROR OCCURS WITH STATUS UNDEFINED IN TEMPLATE
+  //TODO: fix issue with deep debugging process
+
     return this.apiService.addNewApplicationReq(newTableRow).pipe(
       take(1),
-      tap((tableData: ITableDataResponse[]) => {
-        console.log(tableData);
-      }),
+      tap(tableData => this.tableDataResponse$.set([...this.tableDataResponse, tableData])),
       catchError((err) => {
         return throwError(() => { return err })
-      })
-    )
+      }))
+  }
+
+  public editApplication(editableTableRow: ITableDataResponse): Observable<ITableDataResponse[]> {
+    console.log("EDITABLE ROW", editableTableRow);
+    return of()
+  // return this.apiService.editApplicationReq(editableTableRow);
   }
 
 
@@ -123,10 +131,10 @@ export class StateService {
   }
 
   public get dataUserResponse$(): UserResponse {
-    return this.apiService.currentUserData();
+    return this.apiService.currentUserData$();
   }
   public set dataUserResponse$(userData: UserResponse) {
-    this.apiService.currentUserData.set(userData);
+    this.apiService.currentUserData$.set(userData);
   }
 
   public get tableDataResponse(): ITableDataResponse[] {
@@ -134,21 +142,31 @@ export class StateService {
   }
 
 
+
   public get notificationsType() {
     return {
       success: {
-        title: TitlesEnum.success,
+        title: NotificationsEnum.success,
         message: UserMessages.success
       },
       error: {
-        title: TitlesEnum.error,
+        title: NotificationsEnum.error,
         message: UserMessages.error
       },
       invalid: {
-        title: TitlesEnum.error,
+        title: NotificationsEnum.error,
         message: ValidationMessages.invalidUsername
       }
     }
+  }
+
+  public getContinent(continent: ContinentsEnum): Observable<Country[]> {
+    return this.apiService.getCountriesListReq(continent)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(data => console.log(data)
+        )
+      )
   }
 
 }

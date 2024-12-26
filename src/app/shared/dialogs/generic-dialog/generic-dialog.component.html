@@ -2,8 +2,13 @@
   <div class="dialog-div">
     <div mat-dialog-header class="dialog-header">
       @if (form) {
-      <h4>Form</h4>
-        <app-form [incomingForm]="form"></app-form>
+      <h4>{{ data.form?.formTitle }}</h4>
+      <app-form
+        [countries]="countriesList"
+        [incomingForm]="form.formType"
+        (formEmit)="sendForm(form.formType)"
+        (continentEmit)="getContinentsList($event)"
+      ></app-form>
       } @else {
       <h4
         mat-dialog-title
@@ -14,14 +19,13 @@
       >
         {{ dataType().notification?.title }}
       </h4>
-      <!--! Add Notification -->
       }
     </div>
     <div mat-dialog-content class="dialog-content">
       <!-- <p>{{ data.message }}</p> -->
     </div>
     <div mat-dialog-actions class="dialog-actions">
-      <button mat-button (click)="closeDialog()">
+      <button mat-button class="dialog-actions-button" (click)="closeDialog()">
         @if(isSuccess){
         {{ "Continue" }}
         } @else {

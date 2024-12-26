@@ -1,14 +1,98 @@
-<form [formGroup]="incomingForm" (submit)="submitForm()">
-  @for (control of formArray; track $index; let index = $index) {
-    <mat-form-field>
-      <input
-        matInput
-        [formControlName]="control"
-        placeholder="{{ formPlaceholders[index] }}"
-      />
-    </mat-form-field>
-  } @empty {
-    <p>No form controls available.</p>
-  }
-  <button>TEST</button>
+<form [formGroup]="incomingForm" (submit)="formSubmit()">
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status">
+      <mat-option>None</mat-option>
+      @for (status of statuses(); track status) {
+      <mat-option [value]="status">{{ status }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Company Name</mat-label>
+    <input
+      matInput
+      formControlName="companyName"
+      placeholder="Name of comapny you applied to?"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>From Which Continent?</mat-label>
+    <mat-select (selectionChange)="onContinentChange($event.value)">
+      @for (continent of continents(); track continent) {
+      <mat-option [value]="continent">{{ continent }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Company Location</mat-label>
+    <input
+      type="text"
+      placeholder="Name of Country"
+      matInput
+      formControlName="companyLocation"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
+      @for (option of filteredCountries(); track option) {
+      <mat-option [value]="option">{{ option }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Position Type</mat-label>
+    <mat-select formControlName="positionType">
+      @for (positionType of positionTypes(); track positionType) {
+      <mat-option [value]="positionType">{{ positionType }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Position Stacks</mat-label>
+    <mat-select multiple formControlName="positionStack">
+      @for (positionStack of positionStacks(); track positionStack) {
+      <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Application Platform</mat-label>
+    <mat-select formControlName="applicationPlatform">
+      @for (platform of applicationPlatform(); track platform) {
+      <mat-option [value]="platform">{{ platform }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Date Applied</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      formControlName="applicationDate"
+    />
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>My Hunch</mat-label>
+    <input matInput formControlName="hunch" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Any Notes?</mat-label>
+    <input matInput formControlName="notes" />
+  </mat-form-field>
+  <div class="submit-form-button">
+    <button mat-raised-button>
+      Submit Row
+    </button>
+  </div>
 </form>

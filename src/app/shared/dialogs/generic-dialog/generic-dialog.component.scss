@@ -2,6 +2,11 @@
   width: 100%;
   height: 100%;
   .dialog-div {
+    overflow-y: auto;
+    max-height: 85vh;
+    @media screen and (max-width: 560px) {
+      overflow-x: hidden;
+    }
     .green-title {
       color: #4eb436;
     }
@@ -19,8 +24,9 @@
     align-items: center;
 
     .dialog-actions {
-      button {
-        min-width: 150px;
+      .dialog-actions-button {
+        width: fit-content;
+        font-size: small;
       }
     }
   }

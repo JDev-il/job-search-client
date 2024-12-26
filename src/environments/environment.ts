@@ -18,8 +18,9 @@ export const environment = {
       },
       job_search: {
         path: 'jobsearch',
-        getData: '/data',
-        addData: '/add'
+        getApplications: '/data',
+        addApplication: '/add',
+        editApplication: '/edit'
       }
     }
   },

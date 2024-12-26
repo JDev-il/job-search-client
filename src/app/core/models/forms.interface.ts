@@ -28,12 +28,12 @@ export interface TableDataForm {
 }
 
 
-export interface TableDataRowForm {
+export interface TableDataFormRow {
   status: FormControl<string | null>,
   companyName: FormControl<string | null>,
   companyLocation: FormControl<string | null>,
   positionType: FormControl<string | null>,
-  positionStack: FormControl<string | null>,
+  positionStack: FormControl<string[] | null>,
   applicationPlatform: FormControl<string | null>,
   applicationDate: FormControl<string | null>,
   notes: FormControl<string | null>,

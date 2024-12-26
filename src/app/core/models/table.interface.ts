@@ -18,7 +18,7 @@ export interface ITableRow {
   applicationDate: Date;
   applicationPlatform: PlatformEnum | null;
   hunch: string;
-  notes: string[];
+  notes: string;
 }
 
 export interface ITableDataResponse {
