@@ -10,7 +10,7 @@
         >
           Remove {{ selection.selected.length }} Rows
         </button>
-        <button mat-button (click)="addRow()">Add Row</button>
+        <button mat-button (click)="addNewRow()">Add Row</button>
       </div>
       <div class="search-input">
         <mat-form-field appearance="outline">
@@ -158,8 +158,9 @@
           </div>
         </td>
       </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>
   <app-spinner [isSpinner]="localSpinner()" [isCredentialPage]="false" />

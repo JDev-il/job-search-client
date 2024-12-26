@@ -20,7 +20,9 @@ export const environment = {
         path: 'jobsearch',
         getApplications: '/data',
         addApplication: '/add',
-        editApplication: '/edit'
+        editApplication: '/edit',
+        updateApplication: '/update',
+        removeApplication: '/remove'
       }
     }
   },

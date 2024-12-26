@@ -78,15 +78,26 @@ export class ApiService {
     )
   }
 
-  public applicationActionsReq(formRow: ITableRow, formAction: FormEnum): Observable<ITableDataResponse> {
-    const payload = {
-      userId: this.currentUserData$().userId,
-      ...formRow
-    };
-    if (formAction === FormEnum.addRow) {
-      return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.addApplication}`, { ...payload });
-    }
-    return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.editApplication}`, { ...payload })
+  public applicationAddOrEditReq(row: ITableRow, formAction: FormEnum): Observable<ITableDataResponse> {
+    const payload = this.userPayload(row, formAction);
+    const addOrEdit = formAction === FormEnum.addRow ? this.jobSearchParams.addApplication : this.jobSearchParams.editApplication;
+    return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${addOrEdit}`, { ...payload });
+  }
 
+  public removeApplicationReq(row: ITableDataResponse, formAction: FormEnum): Observable<ITableDataResponse> {
+    const payload = this.userPayload(row, formAction);
+    return this.http.post<any>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeApplication}`, { ...payload });
+  }
+
+  public updateApplicationListReq(applicationList: ITableDataResponse | ITableDataResponse[]): Observable<ITableDataResponse[]> {
+    return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.updateApplication}`, applicationList);
+  }
+
+  private userPayload(formRow: ITableRow | ITableDataResponse, formAction: FormEnum) {
+    let payload = {
+      userId: (formAction === FormEnum.addRow || formAction === FormEnum.editRow) ? this.currentUserData$().userId : '',
+      ...formRow
+    }
+    return payload;
   }
 }

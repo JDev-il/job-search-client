@@ -10,6 +10,7 @@ export interface ITableCol {
 }
 
 export interface ITableRow {
+  userId?: number,
   status: StatusEnum;
   companyLocation: string;
   companyName: string;

@@ -10,11 +10,11 @@ import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } fro
 
 @Injectable({ providedIn: 'root' })
 export class StateService {
+  private readonly spinner = signal<boolean>(true);
+  private readonly destroyed$ = signal<boolean>(false);
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
   private tableDataResponse$: WritableSignal<ITableDataResponse[]> = signal([] as ITableDataResponse[]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
-  private readonly spinner = signal<boolean>(true);
-  private readonly destroyed$ = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
 
@@ -77,13 +77,28 @@ export class StateService {
     }));
   }
 
-  public applicationAction(formRow: ITableRow, formAction: FormEnum): void {
-    this.apiService.applicationActionsReq(formRow, formAction).pipe(
+  public addEditApplication(formRow: ITableRow, formAction: FormEnum): void {
+    this.apiService.applicationAddOrEditReq(formRow, formAction).pipe(
       switchMap(() => this.authorizedUserDataRequest()),
       take(1),
       catchError((err) => {
         return throwError(() => { return err })
       })).subscribe()
+  }
+
+  public updateApplication(applicationList: ITableDataResponse | ITableDataResponse[]): void {
+    this.apiService.updateApplicationListReq(applicationList);
+  }
+
+  public removeApplication(selectedRow: ITableDataResponse, formAction: FormEnum): void {
+    this.apiService.removeApplicationReq(selectedRow, formAction).subscribe()
+  }
+
+  public getContinents(continent: ContinentsEnum): Observable<Country[]> {
+    return this.apiService.getCountriesListReq(continent)
+      .pipe(
+        takeUntil(this.destroy$),
+      )
   }
 
   public markAsDestroyed(): void {
@@ -95,6 +110,7 @@ export class StateService {
   public getDestroyedState(): boolean {
     return this.destroyed$();
   }
+
 
   public set setHoverText(hoverText: string) {
     this.buttonText.set(hoverText);
@@ -143,13 +159,6 @@ export class StateService {
         message: ValidationMessages.invalidUsername
       }
     }
-  }
-
-  public getContinents(continent: ContinentsEnum): Observable<Country[]> {
-    return this.apiService.getCountriesListReq(continent)
-      .pipe(
-        takeUntil(this.destroy$),
-      )
   }
 
 }

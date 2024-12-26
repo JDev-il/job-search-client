@@ -1,7 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -38,10 +37,9 @@ import { ITableDataResponse, ITableRow } from './../../core/models/table.interfa
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityTableComponent extends BaseDialogComponent {
-  private newRow!: FormGroup;;
   private inputDestroy$ = new Subject<void>();
   public selectedRows: WritableSignal<ITableDataResponse[]> = signal<ITableDataResponse[]>([]);
-  public displayedColumns: WritableSignal<string[]> = signal<string[]>(['select', 'status', 'company', 'position', 'application', 'note', 'hunch', 'actions']);
+  public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'note', 'hunch', 'actions'];
   public dataSource = new MatTableDataSource([] as ITableDataResponse[]);
   public selection = new SelectionModel<ITableDataResponse>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
@@ -52,7 +50,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
   constructor(private formService: FormsService, private destroyRef: DestroyRef, private stateService: StateService, dialog: MatDialog) {
     super(dialog);
     effect(() => {
-      this.newRow = this.formService.fb.group({})
       if (this.stateService.getDestroyedState()) {
         return;
       }
@@ -96,7 +93,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
         }
       });
   }
-
 
   public get isChecked(): boolean {
     return this.selection.hasValue() && this.isAllSelected();
@@ -146,8 +142,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.selectedRows.set(rows);
   }
 
-  public addRow() {
-    this.newRow = this.formService.tableRowInit();
+  public addNewRow(): void {
     this.openDialog({ form: { formTitle: FormEnum.addRow, formType: this.formService.tableRowInit() } });
   }
 
@@ -155,6 +150,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     const localDataSource = this.dataSource.data.filter((r) => r.jobId !== row.jobId);
     this.selection.deselect(row);
     this.dataSource.data = localDataSource;
+    this.stateService.removeApplication(row, FormEnum.removeRow);
     this.updateTable();
   }
 
@@ -164,7 +160,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
     } else {
       const selectedJobIds = new Set(this.selectedRows().map((row) => row.jobId));
       this.dataSource.data = this.dataSource.data.filter((row) => !selectedJobIds.has(row.jobId));
-      //TODO:: Update database
     }
     this.selectedRows.set([] as ITableDataResponse[]);
     this.selection.clear();
@@ -173,7 +168,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
   }
 
   public editSelectedRow(row: ITableRow): void {
-    this.stateService.applicationAction(row, FormEnum.editRow);
+    this.stateService.addEditApplication(row, FormEnum.editRow);
   }
 
   private updateTable() {

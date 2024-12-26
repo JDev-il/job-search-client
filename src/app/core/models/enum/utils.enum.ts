@@ -13,8 +13,9 @@ export enum NotificationsEnum {
 }
 
 export enum FormEnum {
-  addRow = 'Add Application',
-  editRow = 'Applictaion Edit'
+  addRow = '',
+  editRow = '',
+  removeRow = ''
 }
 
 export enum DialogEnum {
