@@ -68,7 +68,7 @@ export class GenericDialogComponent {
     const continent = selectedContinent as ContinentsEnum;
     if (continent) {
       combineLatest({
-        list: this.stateService.getContinent(continent)
+        list: this.stateService.getContinents(continent)
       })
         .pipe(takeUntil(this.stateService.destroy$))
         .subscribe((data) => {

@@ -145,7 +145,7 @@ export class StateService {
     }
   }
 
-  public getContinent(continent: ContinentsEnum): Observable<Country[]> {
+  public getContinents(continent: ContinentsEnum): Observable<Country[]> {
     return this.apiService.getCountriesListReq(continent)
       .pipe(
         takeUntil(this.destroy$),
