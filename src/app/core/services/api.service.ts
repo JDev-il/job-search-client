@@ -74,8 +74,7 @@ export class ApiService {
 
   public authUserDataReq(): Observable<ITableDataResponse[]> { // After user is authenticated
     const user_id = this.currentUserData$()?.userId;
-    return this.http.get<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getApplications}`, { params: { user_id } }
-    )
+    return this.http.get<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getApplications}`, { params: { user_id } })
   }
 
   public applicationAddOrEditReq(row: ITableRow, formAction: FormEnum): Observable<ITableDataResponse> {
@@ -84,9 +83,9 @@ export class ApiService {
     return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${addOrEdit}`, { ...payload });
   }
 
-  public removeApplicationReq(row: ITableDataResponse, formAction: FormEnum): Observable<ITableDataResponse> {
+  public removeApplicationReq(row: ITableDataResponse, formAction: FormEnum): Observable<ITableDataResponse[]> {
     const payload = this.userPayload(row, formAction);
-    return this.http.post<any>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeApplication}`, { ...payload });
+    return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeApplication}`, { ...payload });
   }
 
   public updateApplicationListReq(applicationList: ITableDataResponse | ITableDataResponse[]): Observable<ITableDataResponse[]> {

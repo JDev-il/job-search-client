@@ -62,6 +62,7 @@ export class GenericDialogComponent {
   public sendForm(form: FormGroup): void {
     const formTitle = this.data.form?.formTitle as FormEnum;
     this.stateService.addEditApplication(form.value, formTitle);
+    this.dialogRef.close();
   }
 
   public getContinentsList(selectedContinent: string): void {

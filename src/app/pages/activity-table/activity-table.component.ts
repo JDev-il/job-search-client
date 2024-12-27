@@ -55,19 +55,20 @@ export class ActivityTableComponent extends BaseDialogComponent {
       }
       const dataUser = this.stateService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
-        if (!this.stateService.tableDataResponse.length) {
-          combineLatest({
-            tableData: this.stateService.authorizedUserDataRequest()
-          }).pipe(map(data => data.tableData))
-            .subscribe((tableData) => {
+        combineLatest({
+          tableData: this.stateService.authorizedUserDataRequest(),
+        })
+          .pipe(
+            map((data) => data.tableData),
+            tap(data => this.dataSource.data = data)
+          )
+          .subscribe((tableData) => {
+            console.log(this.dataSource.data);
+            if (tableData.length > 0) {
               this.dataSource.sort = this.sort;
-              if (tableData.length) {
-                this.dataSource.data = tableData
-              }
-            })
-        } else {
-          this.dataSource.data = this.stateService.tableDataResponse;
-        }
+              this.dataSource.data = tableData;
+            }
+          })
       }
     }, { allowSignalWrites: true });
     this.destroyRef.onDestroy(() => {
@@ -150,7 +151,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     const localDataSource = this.dataSource.data.filter((r) => r.jobId !== row.jobId);
     this.selection.deselect(row);
     this.dataSource.data = localDataSource;
-    this.stateService.removeApplication(row, FormEnum.removeRow);
+    this.stateService.removeApplication(row, FormEnum.removeRow).subscribe();
     this.updateTable();
   }
 
