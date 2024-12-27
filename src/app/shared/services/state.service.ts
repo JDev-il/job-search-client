@@ -72,9 +72,10 @@ export class StateService {
   }
 
   public authorizedUserDataRequest(): Observable<ITableDataResponse[]> {
-    return this.apiService.authUserDataReq().pipe(tap(tableData => {
-      this.tableDataResponse$.set(tableData)
-    }));
+    return this.apiService.authUserDataReq().pipe(
+      take(1),
+      tap(tableData => this.tableDataResponse = tableData)
+    );
   }
 
   public addEditApplication(formRow: ITableRow, formAction: FormEnum): void {
@@ -147,6 +148,10 @@ export class StateService {
   public get tableDataResponse(): ITableDataResponse[] {
     return this.tableDataResponse$();
   }
+  public set tableDataResponse(tableData: ITableDataResponse[]) {
+    this.tableDataResponse$.set(tableData);
+  }
+
 
   public get notificationsType() {
     return {

@@ -74,8 +74,7 @@ export class ApiService {
 
   public authUserDataReq(): Observable<ITableDataResponse[]> { // After user is authenticated
     const user_id = this.currentUserData$()?.userId;
-    return this.http.get<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getApplications}`, { params: { user_id } }
-    )
+    return this.http.get<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getApplications}`, { params: { user_id } })
   }
 
   public applicationAddOrEditReq(row: ITableRow, formAction: FormEnum): Observable<ITableDataResponse> {
