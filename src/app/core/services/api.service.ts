@@ -90,6 +90,7 @@ export class ApiService {
   }
 
   public removeRowsReq(rows: ITableDataResponse[], formAction: FormEnum): Observable<ITableDataResponse[]> {
+    //! Verify all rows passed on to server
     const payload = this.userPayload(rows, formAction);
     return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeRows}`, payload);
   }
