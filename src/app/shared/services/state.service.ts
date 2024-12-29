@@ -90,8 +90,12 @@ export class StateService {
     this.apiService.updateApplicationListReq(applicationList);
   }
 
-  public removeApplication(selectedRow: ITableDataResponse, formAction: FormEnum): void {
-    this.apiService.removeApplicationReq(selectedRow, formAction).subscribe()
+  public removeRow(selectedRow: ITableDataResponse, formAction: FormEnum): void {
+    this.apiService.removeRowReq(selectedRow, formAction).subscribe()
+  }
+
+  public removeMultipleRows(rows: ITableDataResponse[], formAction: FormEnum): void {
+    this.apiService.removeRowsReq(rows, formAction).subscribe()
   }
 
   public getContinents(continent: ContinentsEnum): Observable<Country[]> {

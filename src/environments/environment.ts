@@ -22,7 +22,8 @@ export const environment = {
         addApplication: '/add',
         editApplication: '/edit',
         updateApplication: '/update',
-        removeApplication: '/remove'
+        removeRow: '/removesingle',
+        removeRows: '/removemultiple'
       }
     }
   },
