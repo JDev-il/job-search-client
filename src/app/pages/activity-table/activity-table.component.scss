@@ -1,41 +1,18 @@
 .activity-table-wrapper {
   position: relative;
-  .outer-table-container {
-    display: flex;
-    justify-items: center;
-    align-items: center;
-    .actions {
-      position: relative;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .action-buttons {
-        display: flex;
-        button {
-          margin-left: 15px;
-          min-width: fit-content;
-          border-radius: 0.6em;
-          background-color: aliceblue;
-        }
-        .remove-rows {
-          background-color: #495be3;
-          color: #faf9fd;
-        }
-      }
-      .search-input {
-        width: 50%;
-        .mat-mdc-form-field {
-          position: relative;
-          top: 10px;
-          right: 15px;
-          width: 100%;
-          .mdc-text-field {
-            align-items: center;
-            .mat-mdc-form-field-infix {
-              label {
-                color: #495be3 !important;
-              }
+  .search-container {
+    width: 75%;
+    margin: auto;
+    position: relative;
+    top: 10px;
+    .search-input {
+      .mat-mdc-form-field {
+        width: 100%;
+        .mdc-text-field {
+          // align-items: center;
+          .mat-mdc-form-field-infix {
+            label {
+              color: #495be3 !important;
             }
           }
         }
@@ -44,7 +21,7 @@
   }
   .table-container {
     position: relative;
-    max-height: 75vh;
+    max-height: 68vh;
     box-shadow: none;
     overflow-y: auto;
     border-bottom: 1px #495be3 solid;
@@ -105,7 +82,7 @@
         .mat-mdc-cell {
           color: var(--gray-900);
           position: relative;
-          max-width: 450px !important;
+          max-width: 4vw !important;
           border: 1px solid #495be358;
           height: 100px !important;
           .default-cell {
@@ -135,23 +112,20 @@
           }
         }
         .checkbox-cell {
-          min-width: 65px;
           max-width: unset !important;
+          min-width: 65px;
           @media screen and (max-width: 1280px) {
             min-width: 75px;
           }
         }
         .actions-mat-cell-div {
-          max-width: 185px !important;
-          @media screen and (max-width: 1280px) {
-          }
           .actions-mat-cell {
-            display: flex;
+            // display: flex;
             justify-content: center;
             align-items: center;
             .action-button {
-              min-width: 100px;
-              padding: 15px;
+              min-width: 85px;
+              padding: 8px;
               margin: 0 5px;
               border-radius: 0.6em;
               @media screen and (max-width: 1666px) {
@@ -205,15 +179,26 @@
       overflow: hidden;
     }
   }
-}
-.no-data-wrapper {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  flex: 1;
-  left: 0;
-  right: 0;
-  bottom: 50%;
+  .outer-table-container {
+    position: absolute;
+    bottom: 0;
+    z-index: 9999;
+    .actions {
+      position: relative;
+      width: 100%;
+      .action-buttons {
+        display: flex;
+        button {
+          margin-left: 15px;
+          min-width: fit-content;
+          border-radius: 0.6em;
+          background-color: aliceblue;
+        }
+        .remove-rows {
+          background-color: #495be3;
+          color: #faf9fd;
+        }
+      }
+    }
+  }
 }

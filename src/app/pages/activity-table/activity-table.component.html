@@ -1,30 +1,18 @@
 <div class="activity-table-wrapper">
-  <div class="outer-table-container">
-    <div class="actions">
-      <div class="action-buttons">
-        <button
-          mat-button
-          (click)="removeSelectedRows()"
-          [disabled]="selection.selected.length < 2"
-          [ngClass]="{ 'remove-rows': selection.selected.length > 1 }"
-        >
-          Remove {{ selection.selected.length }} Rows
-        </button>
-        <button mat-button (click)="addNewRow()">Add Row</button>
-      </div>
-      <div class="search-input">
-        <mat-form-field appearance="outline">
-          <mat-label>Search in table</mat-label>
-          <input
-            matInput
-            (keyup)="applyFilter($event)"
-            placeholder="Anything that starts with..."
-            #input
-          />
-        </mat-form-field>
-      </div>
+  <div class="search-container">
+    <div class="search-input">
+      <mat-form-field appearance="outline">
+        <mat-label>Search in table</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Anything that starts with..."
+          #input
+        />
+      </mat-form-field>
     </div>
   </div>
+
 
   <div
     class="table-container mat-elevation-z8"
@@ -50,6 +38,30 @@
           </div>
         </td>
       </ng-container>
+
+
+      <!-- <ng-container matColumnDef="actions"> -->
+        <!-- <th mat-header-cell *matHeaderCellDef>Actions</th> -->
+        <!-- <td mat-cell *matCellDef="let row" class="actions-mat-cell-div"> -->
+          <!-- <div class="actions-mat-cell"> -->
+            <!-- <button -->
+              <!-- mat-button -->
+              <!-- (click)="editSelectedRow(row)" -->
+              <!-- class="action-button" -->
+            <!-- > -->
+              <!-- Edit Row -->
+            <!-- </button> -->
+            <!-- <button -->
+              <!-- mat-button -->
+              <!-- [disabled]="!selection.isSelected(row)" -->
+              <!-- (click)="removeSingleRow(row)" -->
+              <!-- class="action-button" -->
+            <!-- > -->
+              <!-- Remove Row -->
+            <!-- </button> -->
+          <!-- </div> -->
+        <!-- </td> -->
+      <!-- </ng-container> -->
 
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef>
@@ -136,32 +148,25 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let row" class="actions-mat-cell-div">
-          <div class="actions-mat-cell">
-            <button
-              mat-button
-              (click)="editSelectedRow(row)"
-              class="action-button"
-            >
-              Edit Row
-            </button>
-            <button
-              mat-button
-              [disabled]="!selection.isSelected(row)"
-              (click)="removeSingleRow(row)"
-              class="action-button"
-            >
-              Remove Row
-            </button>
-          </div>
-        </td>
-      </ng-container>
-
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>
   <app-spinner [isSpinner]="localSpinner()" [isCredentialPage]="false" />
 </div>
+<div class="outer-table-container">
+  <div class="actions">
+    <div class="action-buttons">
+      <button
+        mat-button
+        (click)="removeSelectedRows()"
+        [disabled]="selection.selected.length < 1"
+        [ngClass]="{ 'remove-rows': selection.selected.length > 1 }"
+      >
+        Remove {{ selection.selected.length }} Rows
+      </button>
+      <button mat-button (click)="addNewRow()">Add Row</button>
+    </div>
+  </div>
+</div>
+

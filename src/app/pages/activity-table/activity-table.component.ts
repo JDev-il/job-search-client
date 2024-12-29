@@ -39,7 +39,7 @@ import { ITableDataResponse, ITableRow } from './../../core/models/table.interfa
 export class ActivityTableComponent extends BaseDialogComponent {
   private inputDestroy$ = new Subject<void>();
   public selectedRows: WritableSignal<ITableDataResponse[]> = signal<ITableDataResponse[]>([]);
-  public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'note', 'hunch', 'actions'];
+  public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'note', 'hunch'];
   public dataSource = new MatTableDataSource([] as ITableDataResponse[]);
   public selection = new SelectionModel<ITableDataResponse>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
@@ -151,7 +151,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     const localDataSource = this.dataSource.data.filter((r) => r.jobId !== row.jobId);
     this.selection.deselect(row);
     this.dataSource.data = localDataSource;
-    this.stateService.removeApplication(row, FormEnum.removeRow).subscribe();
+    this.stateService.removeRow(row, FormEnum.removeRow);
     this.updateTable();
   }
 
@@ -160,8 +160,11 @@ export class ActivityTableComponent extends BaseDialogComponent {
       this.dataSource = new MatTableDataSource([] as ITableDataResponse[]);
     } else {
       const selectedJobIds = new Set(this.selectedRows().map((row) => row.jobId));
-      this.dataSource.data = this.dataSource.data.filter((row) => !selectedJobIds.has(row.jobId));
+      const filteredDataSource = [...this.dataSource.data].filter((row) => !selectedJobIds.has(row.jobId));
+      this.dataSource.data = filteredDataSource;
+      this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.removeRow);
     }
+
     this.selectedRows.set([] as ITableDataResponse[]);
     this.selection.clear();
     this.syncSelectedRows();
