@@ -151,7 +151,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
     const localDataSource = this.dataSource.data.filter((r) => r.jobId !== row.jobId);
     this.selection.deselect(row);
     this.dataSource.data = localDataSource;
-    this.stateService.removeRow(row, FormEnum.removeRow);
     this.updateTable();
   }
 
