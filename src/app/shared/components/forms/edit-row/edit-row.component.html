@@ -1,12 +1,21 @@
-<form [formGroup]="incomingForm" (submit)="formSubmit()">
+<form [formGroup]="incomingEditForm" (submit)="formSubmit()">
   <mat-form-field appearance="outline">
     <mat-label>Status</mat-label>
+    @defer (when !incomingEditForm.controls.status ||
+    !incomingEditForm.get('status')?.value) {
     <mat-select formControlName="status">
-      <mat-option>None</mat-option>
       @for (status of statuses(); track status) {
       <mat-option [value]="status">{{ status }}</mat-option>
       }
     </mat-select>
+    } @placeholder {
+    <input
+      type="text"
+      matInput
+      formControlName="status"
+      [value]="incomingEditForm.controls.status"
+    />
+    }
   </mat-form-field>
 
   <mat-form-field appearance="outline">
@@ -14,30 +23,21 @@
     <input
       matInput
       formControlName="companyName"
-      placeholder="Name of comapny you applied to?"
+      placeholder="Name of company you applied to?"
+      [value]="incomingEditForm.controls.companyName"
     />
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>From Which Continent?</mat-label>
-    <mat-select (selectionChange)="onContinentChange($event.value)">
-      @for (continent of continents(); track continent) {
-      <mat-option [value]="continent">{{ continent }}</mat-option>
-      }
-    </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Company Location</mat-label>
     <input
       type="text"
-      placeholder="Name of Country"
       matInput
       formControlName="companyLocation"
-      [matAutocomplete]="auto"
+      [value]="incomingEditForm.controls.companyLocation"
     />
     <mat-autocomplete #auto="matAutocomplete">
-      @for (option of filteredCountries(); track option) {
+      @for (option of []; track option) {
       <mat-option [value]="option">{{ option }}</mat-option>
       }
     </mat-autocomplete>
@@ -45,29 +45,58 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Position Type</mat-label>
+    @defer (when !incomingEditForm.controls.positionType ||
+    !incomingEditForm.get('positionType')?.value) {
     <mat-select formControlName="positionType">
       @for (positionType of positionTypes(); track positionType) {
       <mat-option [value]="positionType">{{ positionType }}</mat-option>
       }
     </mat-select>
+    } @placeholder {
+    <input
+      type="text"
+      matInput
+      formControlName="positionType"
+      [value]="incomingEditForm.controls.positionType"
+    />
+    }
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Position Stacks</mat-label>
+    @defer (when !incomingEditForm.controls.positionStack ||
+    !incomingEditForm.get('positionStack')?.value) {
     <mat-select multiple formControlName="positionStack">
       @for (positionStack of positionStacks(); track positionStack) {
       <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
       }
     </mat-select>
+    } @placeholder {
+    <input
+      type="text"
+      matInput
+      formControlName="positionStack"
+      [value]="incomingEditForm.controls.positionStack"
+    />
+    }
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Application Platform</mat-label>
-    <mat-select formControlName="applicationPlatform">
+    @defer (when !incomingEditForm.controls.applicationPlatform ||
+    !incomingEditForm.get('applicationPlatform')?.value) {
+    <mat-select multiple formControlName="applicationPlatform">
       @for (platform of applicationPlatform(); track platform) {
       <mat-option [value]="platform">{{ platform }}</mat-option>
       }
     </mat-select>
+    } @placeholder {
+    <input
+      type="text"
+      matInput
+      formControlName="applicationPlatform"
+      [value]="incomingEditForm.controls.applicationPlatform"
+    />}
   </mat-form-field>
 
   <mat-form-field appearance="outline">
@@ -90,9 +119,4 @@
     <mat-label>Any Notes?</mat-label>
     <input matInput formControlName="notes" />
   </mat-form-field>
-  <div class="submit-form-button">
-    <button mat-raised-button>
-      Submit Row
-    </button>
-  </div>
 </form>

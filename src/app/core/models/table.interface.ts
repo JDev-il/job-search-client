@@ -9,14 +9,15 @@ export interface ITableCol {
   hunch: string
 }
 
-export interface ITableRow {
+export interface ITableDataRow {
   userId?: number,
+  jobId?: number,
   status: StatusEnum;
   companyLocation: string;
   companyName: string;
-  positionStack: PositionStackEnum;
+  positionStack: PositionStackEnum[];
   positionType: PositionTypeEnum;
-  applicationDate: Date;
+  applicationDate: Date | null;
   applicationPlatform: PlatformEnum | null;
   hunch: string;
   notes: string;
@@ -24,10 +25,10 @@ export interface ITableRow {
 
 export interface ITableDataResponse {
   jobId: number;
-  tableData: ITableRow
+  tableData: ITableDataRow
 }
 
 export interface ITableSaveRequest {
   userId: number,
-  tableData: ITableRow
+  tableData: ITableDataRow
 }

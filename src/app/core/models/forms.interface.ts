@@ -29,13 +29,15 @@ export interface TableDataForm {
 
 
 export interface TableDataFormRow {
+  userId?: FormControl<number | null>,
+  jobId?: FormControl<number | null>,
   status: FormControl<string | null>,
   companyName: FormControl<string | null>,
   companyLocation: FormControl<string | null>,
   positionType: FormControl<string | null>,
   positionStack: FormControl<string[] | null>,
   applicationPlatform: FormControl<string | null>,
-  applicationDate: FormControl<string | null>,
+  applicationDate: FormControl<string | Date | null>,
   notes: FormControl<string | null>,
   hunch: FormControl<string | null>
 }

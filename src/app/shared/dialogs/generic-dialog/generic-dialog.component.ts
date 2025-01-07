@@ -7,7 +7,8 @@ import { combineLatest, takeUntil } from 'rxjs';
 import { FormDialog, GenericDialogType } from '../../../core/models/dialog.interface';
 import { ContinentsEnum, FormEnum, NotificationsEnum } from '../../../core/models/enum/utils.enum';
 import { AuthService } from '../../../core/services/auth.service';
-import { FormComponent } from '../../components/form/form.component';
+import { AddRowComponent } from '../../components/forms/add-row/add-row.component';
+import { EditRowComponent } from '../../components/forms/edit-row/edit-row.component';
 import { FormsService } from '../../services/forms.service';
 import { RoutingService } from '../../services/routing.service';
 import { StateService } from './../../services/state.service';
@@ -15,16 +16,17 @@ import { StateService } from './../../services/state.service';
 @Component({
   selector: 'app-generic-dialog',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, FormComponent],
+  imports: [CommonModule, MatButtonModule, AddRowComponent, EditRowComponent],
   templateUrl: './generic-dialog.component.html',
   styleUrl: './generic-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenericDialogComponent {
-  public dataType: WritableSignal<GenericDialogType> = signal({});
-  public titleText = NotificationsEnum;
+  public dataType: WritableSignal<GenericDialogType> = signal<GenericDialogType>({});
+  public notifyText = NotificationsEnum;
   public countriesList: WritableSignal<string[]> = signal([] as string[]);
   public currentContinent!: ContinentsEnum;
+  public formEnum = FormEnum;
   constructor(
     private dialogRef: MatDialogRef<GenericDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GenericDialogType,
@@ -52,16 +54,20 @@ export class GenericDialogComponent {
   }
 
   public get isSuccess(): boolean {
-    return this.dataType().notification?.title === this.titleText.success;
+    return this.dataType().notification?.title === this.notifyText.success;
   }
 
   public get form(): FormDialog | undefined {
     return this.dataType().form;
   }
 
+  public get isAdd(): boolean {
+    return this.form?.formTitle === this.formEnum.add;
+  }
+
   public sendForm(form: FormGroup): void {
     const formTitle = this.data.form?.formTitle as FormEnum;
-    this.stateService.addEditApplication(form.value, formTitle);
+    this.stateService.addOrUpdateApplication(form.value, formTitle);
     this.dialogRef.close();
   }
 

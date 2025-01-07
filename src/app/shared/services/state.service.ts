@@ -5,7 +5,7 @@ import { ContinentsEnum, FormEnum, NotificationsEnum } from '../../core/models/e
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Country } from './../../core/models/data.interface';
-import { ITableDataResponse, ITableRow } from './../../core/models/table.interface';
+import { ITableDataRow } from './../../core/models/table.interface';
 import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from './../../core/models/users.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +13,7 @@ export class StateService {
   private readonly spinner = signal<boolean>(true);
   private readonly destroyed$ = signal<boolean>(false);
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
-  private tableDataResponse$: WritableSignal<ITableDataResponse[]> = signal([] as ITableDataResponse[]);
+  private tableDataResponse$: WritableSignal<ITableDataRow[]> = signal([] as ITableDataRow[]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
@@ -71,15 +71,15 @@ export class StateService {
     );
   }
 
-  public authorizedUserDataRequest(): Observable<ITableDataResponse[]> {
+  public authorizedUserDataRequest(): Observable<ITableDataRow[]> {
     return this.apiService.authUserDataReq().pipe(
       take(1),
       tap(tableData => this.tableDataResponse = tableData)
     );
   }
 
-  public addEditApplication(formRow: ITableRow, formAction: FormEnum): void {
-    this.apiService.applicationAddOrEditReq(formRow, formAction).pipe(
+  public addOrUpdateApplication(row: ITableDataRow, formAction: FormEnum): void {
+    this.apiService.addOrUpdateApplicationReq(row, formAction).pipe(
       switchMap(() => this.authorizedUserDataRequest()),
       take(1),
       catchError((err) => {
@@ -87,16 +87,12 @@ export class StateService {
       })).subscribe()
   }
 
-  public updateApplication(applicationList: ITableDataResponse | ITableDataResponse[]): void {
+  public updateApplication(applicationList: ITableDataRow | ITableDataRow[]): void {
     this.apiService.updateApplicationListReq(applicationList);
   }
 
-  public removeRow(selectedRow: ITableDataResponse, formAction: FormEnum): void {
-    this.apiService.removeRowReq(selectedRow, formAction).subscribe()
-  }
-
-  public removeMultipleRows(rows: ITableDataResponse[], formAction: FormEnum): void {
-    this.apiService.removeRowsReq(rows, formAction).subscribe()
+  public removeMultipleRows(selectedRows: ITableDataRow[], formAction: string): void {
+    this.apiService.removeRowsReq(selectedRows, formAction).subscribe()
   }
 
   public getContinents(continent: ContinentsEnum): Observable<Country[]> {
@@ -145,10 +141,10 @@ export class StateService {
     this.apiService.currentUserData$.set(userData);
   }
 
-  public get tableDataResponse(): ITableDataResponse[] {
+  public get tableDataResponse(): ITableDataRow[] {
     return this.tableDataResponse$();
   }
-  public set tableDataResponse(tableData: ITableDataResponse[]) {
+  public set tableDataResponse(tableData: ITableDataRow[]) {
     this.tableDataResponse$.set(tableData);
   }
 

@@ -8,12 +8,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { FormPlaceholdersEnum, PlatformEnum, PositionStackEnum, PositionTypeEnum, StatusEnum } from '../../../core/models/enum/table-data.enum';
-import { ContinentsEnum } from '../../../core/models/enum/utils.enum';
-import { TableDataFormRow } from '../../../core/models/forms.interface';
+import { FormPlaceholdersEnum, PlatformEnum, PositionStackEnum, PositionTypeEnum, StatusEnum } from '../../../../core/models/enum/table-data.enum';
+import { ContinentsEnum } from '../../../../core/models/enum/utils.enum';
+import { TableDataFormRow } from '../../../../core/models/forms.interface';
 
 @Component({
-  selector: 'app-form',
+  selector: 'app-add-row',
   standalone: true,
   imports: [
     FormsModule,
@@ -26,15 +26,14 @@ import { TableDataFormRow } from '../../../core/models/forms.interface';
     MatDatepickerModule,
     CommonModule
   ],
-  templateUrl: './form.component.html',
-  styleUrl: './form.component.scss',
+  templateUrl: './add-row.component.html',
+  styleUrl: '../styles/form-style.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormComponent {
+export class AddRowComponent {
   @Output() formEmit: EventEmitter<FormGroup<TableDataFormRow>> = new EventEmitter();
   @Output() continentEmit: EventEmitter<ContinentsEnum> = new EventEmitter();
-  @Input() incomingForm!: FormGroup<TableDataFormRow>;
-  @Input() incomingFormTitle!: string;
+  @Input() newAddRowForm!: FormGroup<TableDataFormRow>;
   @Input() countries: WritableSignal<string[]> = signal([] as string[]);
 
   private destroy$ = new Subject<void>();
@@ -69,20 +68,20 @@ export class FormComponent {
   }
 
   public get formArrayKeys(): string[] {
-    return Object.keys(this.incomingForm.controls);
+    return Object.keys(this.newAddRowForm.controls);
   }
 
   public onContinentChange(continentValue: ContinentsEnum): void {
     this.continentEmit.emit(continentValue);
-    const companyLocation = this.incomingForm.get('companyLocation');
+    const companyLocation = this.newAddRowForm.get('companyLocation');
     if (companyLocation) {
       this.cleanFormField(companyLocation)
     }
   }
 
   public formSubmit(): void {
-    if (this.incomingForm.valid) {
-      this.formEmit.emit(this.incomingForm);
+    if (this.newAddRowForm.valid) {
+      this.formEmit.emit(this.newAddRowForm);
     }
   }
 
@@ -91,7 +90,7 @@ export class FormComponent {
   }
 
   private setCompanyLocationValue(): Subscription | undefined {
-    const companyLocationControl = this.incomingForm.get('companyLocation');
+    const companyLocationControl = this.newAddRowForm.get('companyLocation');
     return companyLocationControl?.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(value => {

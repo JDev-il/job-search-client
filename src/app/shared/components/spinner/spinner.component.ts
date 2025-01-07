@@ -10,9 +10,5 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class SpinnerComponent {
   @Input() isSpinner!: boolean;
-  @Input() isCredentialPage!: boolean;
-
-  constructor() {
-
-  }
+  @Input() isActivityTable!: boolean;
 }

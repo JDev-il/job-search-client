@@ -1,15 +1,26 @@
 <section class="dialog-wrapper">
   <div class="dialog-div">
     <div mat-dialog-header class="dialog-header">
-      @if (form) {
-      <h4>{{ data.form?.formTitle }}</h4>
-      <app-form
-        [countries]="countriesList"
-        [incomingForm]="form.formType"
+      @if (form) { @if (data.form?.formTitle === formEnum.add) {
+      <h4>Add Row</h4>
+      <div class="overflow-form">
+        <app-add-row
+          [countries]="countriesList"
+          [newAddRowForm]="form.formType"
+          (formEmit)="sendForm(form.formType)"
+          (continentEmit)="getContinentsList($event)"
+        ></app-add-row>
+      </div>
+      } @else if (data.form?.formTitle === formEnum.edit) {
+      <h4>Edit Row</h4>
+      <div class="overflow-form">
+        @defer(when form && form.formType.get('status')?.value !== ''){
+        <app-edit-row
         (formEmit)="sendForm(form.formType)"
-        (continentEmit)="getContinentsList($event)"
-      ></app-form>
-      } @else {
+        [incomingEditForm]="form.formType"></app-edit-row>
+        } @placeholder { Row is empty! }
+      </div>
+      } } @else {
       <h4
         mat-dialog-title
         [ngClass]="{
@@ -25,7 +36,21 @@
       <p>{{ data.notification?.message }}</p>
     </div>
     <div mat-dialog-actions class="dialog-actions">
-      <button mat-button class="dialog-actions-button" (click)="closeDialog()">
+      @if (form) {
+      <button
+        mat-raised-button
+        [disabled]="!form.formType.valid"
+        (click)="sendForm(form.formType)"
+        class="dialog-actions-button"
+      >
+        @if(isAdd){ Add Row } @else { Edit Row }
+      </button>
+      }
+      <button
+        mat-raised-button
+        class="dialog-actions-button"
+        (click)="closeDialog()"
+      >
         @if(isSuccess){
         {{ "Continue" }}
         } @else {

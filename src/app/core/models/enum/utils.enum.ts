@@ -13,14 +13,14 @@ export enum NotificationsEnum {
 }
 
 export enum FormEnum {
-  addRow = '',
-  editRow = '',
-  removeRow = ''
+  add = "addRow",
+  edit = 'editRow',
+  remove = 'removeRows',
 }
 
 export enum DialogEnum {
-  notification = 'notification',
-  table = 'table',
+  notification = "notification",
+  table = "table",
 }
 
 export enum ContinentsEnum {
@@ -31,9 +31,9 @@ export enum ContinentsEnum {
 }
 
 export enum ROUTES {
-  LOGIN = 'login',
-  REGISTER = 'register',
-  ACCOUNT = 'account',
-  DASHBOARD = '',
-  ACTIVITY = 'activity',
+  LOGIN = "login",
+  REGISTER = "register",
+  ACCOUNT = "account",
+  DASHBOARD = "",
+  ACTIVITY = "activity",
 };

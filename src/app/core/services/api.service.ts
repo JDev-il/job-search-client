@@ -4,8 +4,8 @@ import { map, Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Country } from '../models/data.interface';
 import { ContinentsEnum, FormEnum } from '../models/enum/utils.enum';
-import { ITableDataResponse, ITableRow } from '../models/table.interface';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
+import { ITableDataRow, ITableSaveRequest } from './../models/table.interface';
 import { UserRequest } from './../models/users.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -72,37 +72,32 @@ export class ApiService {
       }))
   }
 
-  public authUserDataReq(): Observable<ITableDataResponse[]> { // After user is authenticated
+  public authUserDataReq(): Observable<ITableDataRow[]> { // After user is authenticated
     const user_id = this.currentUserData$()?.userId;
-    return this.http.get<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getApplications}`, { params: { user_id } }
+    return this.http.get<ITableDataRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getApplications}`, { params: { user_id } }
     )
   }
 
-  public applicationAddOrEditReq(row: ITableRow, formAction: FormEnum): Observable<ITableDataResponse> {
-    const payload = this.userPayload(row, formAction);
-    const addOrEdit = formAction === FormEnum.addRow ? this.jobSearchParams.addApplication : this.jobSearchParams.editApplication;
-    return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${addOrEdit}`, { ...payload });
+  public addOrUpdateApplicationReq(row: ITableDataRow, formAction: FormEnum): Observable<ITableSaveRequest> {
+    const payload = this.userPayload(row, formAction) as ITableDataRow;
+    const addOrEdit = formAction === FormEnum.add ? this.jobSearchParams.addApplication : this.jobSearchParams.updateApplication;
+    return this.http.post<ITableSaveRequest>(`${this.env.local}${this.jobSearchParams.path}${addOrEdit}`, { ...payload });
   }
 
-  public removeRowReq(row: ITableDataResponse, formAction: FormEnum): Observable<ITableDataResponse> {
-    const payload = this.userPayload(row, formAction);
-    return this.http.post<ITableDataResponse>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeRow}`, { ...payload });
-  }
-
-  public removeRowsReq(rows: ITableDataResponse[], formAction: FormEnum): Observable<ITableDataResponse[]> {
+  public removeRowsReq(rows: ITableDataRow[], formAction: string): Observable<ITableDataRow[]> {
     const payload = this.userPayload(rows, formAction);
-    return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeRows}`, payload);
+    return this.http.post<ITableDataRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeRows}`, payload);
   }
 
-  public updateApplicationListReq(applicationList: ITableDataResponse | ITableDataResponse[]): Observable<ITableDataResponse[]> {
-    return this.http.post<ITableDataResponse[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.updateApplication}`, applicationList);
+  public updateApplicationListReq(applicationList: ITableDataRow | ITableDataRow[]): Observable<ITableDataRow[]> {
+    return this.http.post<ITableDataRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.updateApplication}`, applicationList);
   }
 
-  private userPayload(formRow: ITableRow | ITableDataResponse | ITableDataResponse[], formAction: FormEnum) {
+  private userPayload(formRow: ITableDataRow | ITableDataRow[], formAction: string): ITableDataRow {
     let payload = {
-      userId: (formAction === FormEnum.addRow || formAction === FormEnum.editRow) ? this.currentUserData$().userId : '',
-      ...formRow
-    }
+      ...formRow,
+      userId: this.currentUserData$().userId
+    } as ITableDataRow;
     return payload;
   }
 }

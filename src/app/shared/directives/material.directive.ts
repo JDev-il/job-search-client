@@ -1,10 +1,10 @@
-import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: '[custom-mat-form]',
   standalone: true,
 })
-export class MaterialDirective implements OnInit {
+export class MaterialDirective {
   form!: ElementRef<HTMLFormElement>;
   formField!: HTMLFormElement[];
 
@@ -12,11 +12,4 @@ export class MaterialDirective implements OnInit {
     this.form = this.el.nativeElement;
   }
 
-  ngOnInit(): void {
-    // const button = this.el.nativeElement.querySelector(".mdc-button");
-    // //Button
-    // this.renderer.setStyle(button, 'margin', '15px auto 0');
-    // this.renderer.setStyle(button, 'width', '50%');
-
-  }
 }

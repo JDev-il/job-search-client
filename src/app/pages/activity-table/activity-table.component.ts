@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -15,7 +16,7 @@ import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
-import { ITableDataResponse, ITableRow } from './../../core/models/table.interface';
+import { ITableDataRow } from './../../core/models/table.interface';
 
 @Component({
   selector: 'app-activity-table',
@@ -29,6 +30,7 @@ import { ITableDataResponse, ITableRow } from './../../core/models/table.interfa
     MatButtonModule,
     MatFormFieldModule,
     MatCheckboxModule,
+    MatIconModule,
     MatInputModule,
     CommonModule,
     SpinnerComponent
@@ -38,14 +40,17 @@ import { ITableDataResponse, ITableRow } from './../../core/models/table.interfa
 })
 export class ActivityTableComponent extends BaseDialogComponent {
   private inputDestroy$ = new Subject<void>();
-  public selectedRows: WritableSignal<ITableDataResponse[]> = signal<ITableDataResponse[]>([]);
+  public selectedRows: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
   public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'note', 'hunch'];
-  public dataSource = new MatTableDataSource([] as ITableDataResponse[]);
-  public selection = new SelectionModel<ITableDataResponse>(true, []);
+  public dataSource = new MatTableDataSource([] as ITableDataRow[]);
+  public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
+  public rowEdit!: ITableDataRow;
+
+  public rowColor: string = '';
 
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<ITableDataResponse[]>;
+  @ViewChild(MatTable) table!: MatTable<ITableDataRow[]>;
 
   constructor(private formService: FormsService, private destroyRef: DestroyRef, private stateService: StateService, dialog: MatDialog) {
     super(dialog);
@@ -63,7 +68,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
             tap(data => this.dataSource.data = data)
           )
           .subscribe((tableData) => {
-            console.log(this.dataSource.data);
             if (tableData.length > 0) {
               this.dataSource.sort = this.sort;
               this.dataSource.data = tableData;
@@ -123,16 +127,16 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.syncSelectedRows();
   }
 
-  public onToggleRow(row: ITableDataResponse): void {
+  public onToggleRow(row: ITableDataRow): void {
     this.selection.toggle(row);
     this.syncSelectedRows();
   }
 
-  public isSelected(row: ITableDataResponse): boolean {
+  public isSelected(row: ITableDataRow): boolean {
     return this.selection.isSelected(row);
   }
 
-  public selectRow(row: ITableDataResponse): void {
+  public selectRow(row: ITableDataRow): void {
     const rows = [...this.selectedRows()];
     const selectedRowIndex = rows.findIndex(r => r.jobId === row.jobId);
     if (selectedRowIndex === -1) {
@@ -144,35 +148,31 @@ export class ActivityTableComponent extends BaseDialogComponent {
   }
 
   public addNewRow(): void {
-    this.openDialog({ form: { formTitle: FormEnum.addRow, formType: this.formService.tableRowInit() } });
+    this.selection.clear();
+    this.openDialog({ form: { formTitle: FormEnum.add, formType: this.formService.tableRowInit() } });
   }
 
-  public removeSingleRow(row: ITableDataResponse): void {
-    const localDataSource = this.dataSource.data.filter((r) => r.jobId !== row.jobId);
-    this.selection.deselect(row);
-    this.dataSource.data = localDataSource;
-    this.updateTable();
+  public editSelectedRow(row: ITableDataRow): void {
+    this.selection.clear();
+    const editForm = this.formService.editRowInit(row);
+    this.openDialog({ form: { formTitle: FormEnum.edit, formType: editForm } });
   }
 
   public removeSelectedRows() {
     if (this.isAllSelected()) {
-      this.dataSource = new MatTableDataSource([] as ITableDataResponse[]);
+      this.dataSource = new MatTableDataSource([] as ITableDataRow[]);
     } else {
       const selectedJobIds = new Set(this.selectedRows().map((row) => row.jobId));
       const filteredDataSource = [...this.dataSource.data].filter((row) => !selectedJobIds.has(row.jobId));
       this.dataSource.data = filteredDataSource;
-      this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.removeRow);
+      this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.remove);
     }
-
-    this.selectedRows.set([] as ITableDataResponse[]);
+    this.selectedRows.set([] as ITableDataRow[]);
     this.selection.clear();
     this.syncSelectedRows();
     this.updateTable();
   }
 
-  public editSelectedRow(row: ITableRow): void {
-    this.stateService.addEditApplication(row, FormEnum.editRow);
-  }
 
   private updateTable() {
     this.dataSource._updateChangeSubscription();

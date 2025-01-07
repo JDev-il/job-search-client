@@ -1,18 +1,40 @@
 .activity-table-wrapper {
   position: relative;
-  .search-container {
-    width: 75%;
-    margin: auto;
+  .outer-table-container {
     position: relative;
-    top: 10px;
-    .search-input {
-      .mat-mdc-form-field {
-        width: 100%;
-        .mdc-text-field {
-          // align-items: center;
-          .mat-mdc-form-field-infix {
-            label {
-              color: #495be3 !important;
+    display: flex;
+    .actions-contiainer {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      .action-buttons {
+        display: flex;
+        align-items: center;
+        button {
+          &:not(:first-child) {
+            margin-left: 15px;
+          }
+          min-width: fit-content;
+          border-radius: 0.6em;
+          background-color: aliceblue;
+        }
+        .remove-rows {
+          background-color: var(--watermelon);
+          color: #faf9fd;
+        }
+      }
+    }
+    .search-container {
+      position: relative;
+      display: flex;
+      .search-input {
+        .mat-mdc-form-field {
+          width: 100%;
+          .mdc-text-field {
+            .mat-mdc-form-field-infix {
+              label {
+                color: #495be3 !important;
+              }
             }
           }
         }
@@ -21,10 +43,14 @@
   }
   .table-container {
     position: relative;
-    max-height: 68vh;
+    top: 25px;
+    max-height: 75vh;
     box-shadow: none;
     overflow-y: auto;
     border-bottom: 1px #495be3 solid;
+    .selected {
+      background-color: #ff6c8240;
+    }
     .mat-mdc-table {
       min-width: unset;
       width: 100%;
@@ -76,21 +102,27 @@
             }
           }
         }
+        .header-checkbox-selection {
+          flex-flow: row;
+          justify-content: center;
+        }
       }
       .mat-mdc-row {
         border-bottom: 0 !important;
         .mat-mdc-cell {
           color: var(--gray-900);
           position: relative;
-          max-width: 4vw !important;
           border: 1px solid #495be358;
-          height: 100px !important;
-          .default-cell {
+          max-width: 15vw;
+          font-size: 115%;
+          .default-cell,
+          .split-cell {
+            margin: auto;
             display: flex;
+            align-items: center;
+            text-align: center;
+            height: 120px;
             justify-content: center;
-          }
-          .custom-cell {
-            overflow: auto;
           }
           .split-cell {
             position: absolute;
@@ -102,103 +134,82 @@
               margin: auto;
             }
           }
-          .default-cell,
-          .custom-cell,
-          .split-cell {
-            margin: auto;
-            display: flex;
-            text-align: justify;
-            align-items: center;
+          .default-cell {
+            max-width: 125px;
           }
-        }
-        .checkbox-cell {
-          max-width: unset !important;
-          min-width: 65px;
+          .overflow-cell {
+            overflow: auto;
+            padding: 5px;
+            max-height: 120px;
+          }
           @media screen and (max-width: 1280px) {
-            min-width: 75px;
+            min-width: 220px !important;
+            .default-cell,
+            .split-cell {
+              margin: auto !important;
+              align-items: center;
+              max-width: 250px;
+            }
           }
         }
-        .actions-mat-cell-div {
-          .actions-mat-cell {
-            // display: flex;
-            justify-content: center;
-            align-items: center;
-            .action-button {
-              min-width: 85px;
-              padding: 8px;
-              margin: 0 5px;
-              border-radius: 0.6em;
-              @media screen and (max-width: 1666px) {
-                min-width: 85px;
-                @media screen and (max-width: 1280px) {
-                  min-width: 95px;
+        .combined-cell-td {
+          min-width: unset !important;
+          width: 50px;
+          .combined-cell-div {
+            display: flex;
+            .combined-cell-content {
+              display: flex;
+              align-items: center;
+              mat-checkbox {
+                margin: auto;
+              }
+              button {
+                border-radius: 0.2em;
+                padding: 0;
+                mat-icon {
+                  cursor: pointer;
+                  border-radius: 0.1em;
+                  color: #faf9fd;
+                  background-color: var(--gray-700);
+                  &:disabled {
+                    color: rgba(191, 191, 191, 0.668);
+                    background-color: var(--gray-700);
+                  }
+                }
+                &:hover {
+                  background-color: #ff6c8280;
+                  color: #faf9fd;
+                  mat-icon {
+                    background-color: var(--watermelon);
+                  }
                 }
               }
-              &:disabled {
-                color: rgba(191, 191, 191, 0.668);
+              @media screen and (max-width: 1280px) {
+                flex-flow: column;
+                align-items: center;
+                margin: auto;
               }
             }
           }
         }
       }
-
-      @media screen and (max-width: 1280px) {
+      @media screen and (max-width: 992px) {
+        .mat-mdc-header-cell,
         .mat-mdc-cell {
-          min-width: 220px;
-          .custom-cell {
-            height: 65px !important;
-          }
-          .default-cell,
-          .custom-cell,
-          .split-cell {
-            margin: auto !important;
-            align-items: center;
-            max-width: 250px;
-          }
+          padding: 6px;
         }
-        @media screen and (max-width: 992px) {
-          .mat-mdc-header-cell,
-          .mat-mdc-cell {
-            padding: 6px;
-          }
-          @media screen and (max-width: 768px) {
-            padding: 0;
-          }
+        @media screen and (max-width: 768px) {
+          padding: 0;
         }
       }
     }
     @media screen and (max-width: 992px) {
       margin: auto;
-      overflow: auto;
-      border-radius: 0em 0em 0.8em 0.8em !important;
       @media screen and (max-width: 768px) {
-        height: 65vh;
       }
     }
     .hidden-scroll {
       overflow: hidden;
-    }
-  }
-  .outer-table-container {
-    position: absolute;
-    bottom: 0;
-    z-index: 9999;
-    .actions {
-      position: relative;
-      width: 100%;
-      .action-buttons {
-        display: flex;
-        button {
-          margin-left: 15px;
-          min-width: fit-content;
-          border-radius: 0.6em;
-          background-color: aliceblue;
-        }
-        .remove-rows {
-          background-color: #495be3;
-          color: #faf9fd;
-        }
-      }
     }
   }
 }

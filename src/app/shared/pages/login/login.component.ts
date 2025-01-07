@@ -61,14 +61,15 @@ export class LoginComponent extends BaseDialogComponent {
     this.spinnerState = false;
   }
 
+  public get loginbuttonText() {
+    return this.stateService.buttonText()
+  }
+
   public toRegister(): void {
     this.loginForm.reset();
     this.routingService.toRegister();
   }
 
-  public get loginbuttonText() {
-    return this.stateService.buttonText()
-  }
 
   public submitLogin(): void {
     if (this.loginForm.valid) {
