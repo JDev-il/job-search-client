@@ -39,13 +39,13 @@ import { ITableDataRow } from './../../core/models/table.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityTableComponent extends BaseDialogComponent {
-  private inputDestroy$ = new Subject<void>();
+  private destroy$ = new Subject<void>();
+  public isDataExists = signal<boolean>(false);
   public selectedRows: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
   public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'note', 'hunch'];
   public dataSource = new MatTableDataSource([] as ITableDataRow[]);
   public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
-  public rowEdit!: ITableDataRow;
 
   public rowColor: string = '';
 
@@ -64,11 +64,13 @@ export class ActivityTableComponent extends BaseDialogComponent {
           tableData: this.stateService.authorizedUserDataRequest(),
         })
           .pipe(
+            takeUntil(this.destroy$),
             map((data) => data.tableData),
             tap(data => this.dataSource.data = data)
           )
           .subscribe((tableData) => {
             if (tableData.length > 0) {
+              this.isDataExists.set(true);
               this.dataSource.sort = this.sort;
               this.dataSource.data = tableData;
             }
@@ -78,8 +80,8 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.destroyRef.onDestroy(() => {
       this.stateService.markAsDestroyed();
       this.stateService.resetDestroyed();
-      this.inputDestroy$.next();
-      this.inputDestroy$.complete();
+      this.destroy$.next();
+      this.destroy$.complete();
     })
   }
 
@@ -89,7 +91,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
         tap(() => this.localSpinner.set(true)),
         debounceTime(800),
         map((e: Event) => (e.target as HTMLInputElement).value.trim().toLowerCase()),
-        takeUntil(this.inputDestroy$)
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: (value) => {
@@ -102,6 +104,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
   public get isChecked(): boolean {
     return this.selection.hasValue() && this.isAllSelected();
   }
+
   public get isCheckedNotAll(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -165,8 +168,8 @@ export class ActivityTableComponent extends BaseDialogComponent {
       const selectedJobIds = new Set(this.selectedRows().map((row) => row.jobId));
       const filteredDataSource = [...this.dataSource.data].filter((row) => !selectedJobIds.has(row.jobId));
       this.dataSource.data = filteredDataSource;
-      this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.remove);
     }
+    this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.remove);
     this.selectedRows.set([] as ITableDataRow[]);
     this.selection.clear();
     this.syncSelectedRows();
@@ -175,6 +178,9 @@ export class ActivityTableComponent extends BaseDialogComponent {
 
 
   private updateTable() {
+    if (!this.dataSource.data.length) {
+      this.isDataExists.set(false);
+    }
     this.dataSource._updateChangeSubscription();
     this.table.renderRows();
   }

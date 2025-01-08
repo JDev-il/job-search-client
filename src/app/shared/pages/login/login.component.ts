@@ -84,7 +84,7 @@ export class LoginComponent extends BaseDialogComponent {
         next: (user: UserLogin | null) => {
           if (user !== null && user.auth_token) {
             this.authService.setToken(user.auth_token);
-            this.openDialog({ notification: notificationType.success });
+            this.openDialog({ notification: notificationType.success.login });
           } else {
             this.openDialog({ notification: notificationType.error });
             this.loginForm.reset();

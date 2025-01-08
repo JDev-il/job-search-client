@@ -54,7 +54,7 @@ export class GenericDialogComponent {
   }
 
   public get isSuccess(): boolean {
-    return this.dataType().notification?.title === this.notifyText.success;
+    return this.dataType().notification?.title === this.notifyText.successlogin || this.dataType().notification?.title === this.notifyText.successregister;
   }
 
   public get form(): FormDialog | undefined {

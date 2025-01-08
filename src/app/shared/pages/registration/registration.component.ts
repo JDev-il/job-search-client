@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,6 +14,7 @@ import { BaseDialogComponent } from '../../base/dialog-base.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HoverDirective } from '../../directives/hover.directive';
 import { MaterialDirective } from '../../directives/material.directive';
+import { FormsService } from '../../services/forms.service';
 import { RoutingService } from '../../services/routing.service';
 import { StateService } from '../../services/state.service';
 
@@ -50,9 +51,10 @@ export class RegistrationComponent extends BaseDialogComponent {
     private stateService: StateService,
     private authService: AuthService,
     private routingService: RoutingService,
+    private formService: FormsService
   ) {
     super(dialog)
-    this._initializeForm();
+    this.registerationForm = this.formService.initializeRegistrationForm()
     this.spinnerState = false;
   }
 
@@ -67,40 +69,24 @@ export class RegistrationComponent extends BaseDialogComponent {
 
   public submitRegistrationForm(): void {
     if (this.registerationForm.valid) {
+      const notification = this.stateService.notificationsType;
       this.spinnerState = true;
       const { confirm_password, ...userData } = this.registerationForm.value;
       this.stateService.addNewUser(<UserRequest>userData)
         .pipe(
           catchError((err: HttpErrorResponse) => {
-            // this.openDialog(TitleTextEnum.error, AccountMessages.failedMessage);
+            this.openDialog({ notification: notification.error });
             return throwError(() => err);
           })
         ).subscribe({
           next: (tokenData: UserToken) => {
             this.authService.setToken(tokenData.auth_token);
-            // this.openDialog(TitleTextEnum.success, AccountMessages.redirectMessage);
+            this.openDialog({ notification: notification.success.register });
           },
           error: (err) => {
-            // this.openDialog(TitleTextEnum.failed, AccountMessages.failedMessage);
             throwError(() => console.error(`There was a problem generating a token`, err));
           }
         })
     }
-  }
-
-  private _initializeForm(): void {
-    this.registerationForm = this.fb.group({
-      firstName: this.fb.control('', [Validators.required, Validators.pattern(/^[\p{L}]+(([' -][\p{L}])?[\p{L}]*)*$/u)]),
-      lastName: this.fb.control('', [Validators.required, Validators.pattern(/^[\p{L}]+(([' -][\p{L}])?[\p{L}]*)*$/u)]),
-      email: this.fb.control('', [Validators.required, Validators.email]),
-      password: this.fb.control('', [Validators.required, Validators.minLength(3)]),
-      confirm_password: this.fb.control('', Validators.required),
-    }, { validators: this.passwordMatchValidator });
-  }
-
-  private passwordMatchValidator(form: AbstractControl): ValidationErrors | null {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirm_password')?.value;
-    return password === confirmPassword ? null : { isConfirmed: true };
   }
 }

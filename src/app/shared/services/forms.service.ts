@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { TableDataForm } from '../../core/models/forms.interface';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { TableDataFormRow } from './../../core/models/forms.interface';
@@ -7,6 +7,17 @@ import { TableDataFormRow } from './../../core/models/forms.interface';
 @Injectable({ providedIn: 'root' })
 export class FormsService {
   constructor(public fb: FormBuilder) { }
+
+  public initializeRegistrationForm(): FormGroup {
+    return this.fb.group({
+      firstName: this.fb.control('', [Validators.required, Validators.pattern(/^[\p{L}]+(([' -][\p{L}])?[\p{L}]*)*$/u)]),
+      lastName: this.fb.control('', [Validators.required, Validators.pattern(/^[\p{L}]+(([' -][\p{L}])?[\p{L}]*)*$/u)]),
+      email: this.fb.control('', [Validators.required, Validators.email]),
+      password: this.fb.control('', [Validators.required, Validators.minLength(3)]),
+      confirm_password: this.fb.control('', Validators.required),
+    }, { validators: this.passwordMatchValidator });
+  }
+
 
   public tableFormInit(): FormGroup {
     return this.fb.group<TableDataForm>({
@@ -51,4 +62,9 @@ export class FormsService {
     })
   }
 
+  private passwordMatchValidator(form: AbstractControl): ValidationErrors | null {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirm_password')?.value;
+    return password === confirmPassword ? null : { isConfirmed: true };
+  }
 }

@@ -21,138 +21,151 @@
             matInput
             (keyup)="applyFilter($event)"
             placeholder="Anything that starts with..."
+            [disabled]="!isDataExists()"
             #input
           />
         </mat-form-field>
       </div>
     </div>
   </div>
-  <div
-    class="table-container mat-elevation-z8"
-    [ngClass]="{ 'hidden-scroll': localSpinner }"
-  >
-    <table mat-table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header header-checkbox-selection">
-            Select
-            <mat-checkbox
-              (change)="$event ? toggleAllRows() : null"
-              [checked]="isChecked"
-              [indeterminate]="isCheckedNotAll"
-            >
-            </mat-checkbox>
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let row" class="combined-cell-td">
-          <div class="combined-cell-div">
-            <div class="combined-cell-content">
+  <div class="table-data-displayer">
+    @if (isDataExists()) {
+    <div
+      class="table-container mat-elevation-z8"
+      [ngClass]="{ 'hidden-scroll': localSpinner }"
+    >
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header header-checkbox-selection">
+              Select
               <mat-checkbox
-                (change)="$event ? onToggleRow(row) : null"
-                [checked]="isSelected(row)"
+                (change)="$event ? toggleAllRows() : null"
+                [checked]="isChecked"
+                [indeterminate]="isCheckedNotAll"
               >
               </mat-checkbox>
-              <button mat-button (click)="editSelectedRow(row)">
-                Edit
-                <mat-icon fontIcon="edit"></mat-icon>
-              </button>
             </div>
-          </div>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header" mat-sort-header>Status</div>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <div class="default-cell">
-            {{ row.status }}
-          </div>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="company">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header">
-            Company
-            <div class="sub-header">
-              <h4>Name</h4>
-              <h4>Location</h4>
+          </th>
+          <td mat-cell *matCellDef="let row" class="combined-cell-td">
+            <div class="combined-cell-div">
+              <div class="combined-cell-content">
+                <mat-checkbox
+                  (change)="$event ? onToggleRow(row) : null"
+                  [checked]="isSelected(row)"
+                >
+                </mat-checkbox>
+                <button mat-button (click)="editSelectedRow(row)">
+                  Edit
+                  <mat-icon fontIcon="edit"></mat-icon>
+                </button>
+              </div>
             </div>
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <div class="split-cell">
-            <td>{{ row.companyName }}</td>
-            <td>{{ row.companyLocation }}</td>
-          </div>
-        </td>
-      </ng-container>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="position">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header">
-            Position
-            <div class="sub-header">
-              <h4>Type</h4>
-              <h4>Stack</h4>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header" mat-sort-header>Status</div>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="default-cell">
+              {{ row.status }}
             </div>
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <div class="split-cell">
-            <td>{{ row.positionType }}</td>
-            <td>{{ row.positionStack }}</td>
-          </div>
-        </td>
-      </ng-container>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="application">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header">
-            Application
-            <div class="sub-header">
-              <h4>Platform</h4>
-              <h4>Date Applied</h4>
+        <ng-container matColumnDef="company">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header">
+              Company
+              <div class="sub-header">
+                <h4>Name</h4>
+                <h4>Location</h4>
+              </div>
             </div>
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <div class="split-cell">
-            <td>{{ row.applicationPlatform }}</td>
-            <td>{{ row.applicationDate | date : "MMM d, y" }}</td>
-          </div>
-        </td>
-      </ng-container>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="split-cell">
+              <td>{{ row.companyName }}</td>
+              <td>{{ row.companyLocation }}</td>
+            </div>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="note">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header">Notes</div>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <div class="overflow-cell">
-            {{ row.notes }}
-          </div>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header">
+              Position
+              <div class="sub-header">
+                <h4>Type</h4>
+                <h4>Stack</h4>
+              </div>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="split-cell">
+              <td>{{ row.positionType }}</td>
+              <td>{{ row.positionStack }}</td>
+            </div>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="hunch">
-        <th mat-header-cell *matHeaderCellDef>Hunch</th>
-        <td mat-cell *matCellDef="let row">
-          <div class="default-cell">
-            {{ row.hunch }}
-          </div>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="application">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header">
+              Application
+              <div class="sub-header">
+                <h4>Platform</h4>
+                <h4>Date Applied</h4>
+              </div>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="split-cell">
+              <td>{{ row.applicationPlatform }}</td>
+              <td>{{ row.applicationDate | date : "MMM d, y" }}</td>
+            </div>
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        [ngClass]="{ 'selected': isSelected(row) }"
-      ></tr>
-    </table>
+        <ng-container matColumnDef="note">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header">Notes</div>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="overflow-cell">
+              {{ row.notes }}
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="hunch">
+          <th mat-header-cell *matHeaderCellDef>Hunch</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="default-cell">
+              {{ row.hunch }}
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [ngClass]="{ selected: isSelected(row) }"
+        ></tr>
+      </table>
+    </div>
+    } @else {
+    <div class="no-data-div">
+      <h4>No Data</h4>
+    </div>
+    }
   </div>
-  <app-spinner [isSpinner]="localSpinner()" [isActivityTable]="false" />
+
+  <app-spinner [isSpinner]="localSpinner()" [isActivityTable]="true" />
 </div>

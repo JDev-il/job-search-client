@@ -7,7 +7,8 @@ export enum ButtonsEnum {
 
 export enum NotificationsEnum {
   error = "Error",
-  success = "Success!",
+  successlogin = "Login Success",
+  successregister = "Registered Successfully!",
   failed = "Failed..",
   oops = "Oops!",
 }

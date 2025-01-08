@@ -73,7 +73,6 @@ export class StateService {
 
   public authorizedUserDataRequest(): Observable<ITableDataRow[]> {
     return this.apiService.authUserDataReq().pipe(
-      take(1),
       tap(tableData => this.tableDataResponse = tableData)
     );
   }
@@ -152,8 +151,14 @@ export class StateService {
   public get notificationsType() {
     return {
       success: {
-        title: NotificationsEnum.success,
-        message: UserMessages.success
+        login: {
+          title: NotificationsEnum.successlogin,
+          message: UserMessages.success
+        },
+        register: {
+          title: NotificationsEnum.successregister,
+          message: UserMessages.success
+        }
       },
       error: {
         title: NotificationsEnum.error,

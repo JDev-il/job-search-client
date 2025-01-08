@@ -6,7 +6,7 @@
   align-items: center;
   background-color: var(--main-bg);
   .nav-flex-wrapper {
-    width: 85%;
+    width: 100%;
     display: inline-flex;
     margin: auto;
     ul {
@@ -20,14 +20,16 @@
         max-width: 150px;
         margin: 0 10px;
         .active {
-          background: var(--mint-green);
-          color: black;
+          background-color: var(--watermelon);
+          color: #ffffff;
         }
         @media screen and (max-width: 1280px) {
           @media screen and (max-width: 992px) {
             @media screen and (max-width: 768px) {
-              margin: 0 5px;
+              transform: scale(0.85);
+              margin: 0;
               @media screen and (max-width: 560px) {
+                transform: scale(0.78);
               }
             }
           }
@@ -37,10 +39,10 @@
           padding: 5px;
           justify-content: center;
           cursor: pointer;
-          background: var(--hot-red);
+          background-color: #929ef9;;
           border-radius: 0.2em;
           text-decoration: none;
-          color: aliceblue;
+          color: #ffffff;
         }
       }
     }
@@ -49,10 +51,17 @@
       width: fit-content;
       button {
         width: 100%;
-        max-width: 75px;
+        max-width: 150px;
         border-radius: 0.6em;
         line-height: normal;
         margin: 0 10px;
+        @media screen and (max-width: 768px) {
+          transform: scale(0.85);
+          margin: 0;
+          @media screen and (max-width: 560px) {
+            transform: scale(0.78);
+          }
+        }
       }
     }
   }
