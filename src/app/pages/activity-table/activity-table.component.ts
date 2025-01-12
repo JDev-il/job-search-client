@@ -175,6 +175,10 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.updateTable();
   }
 
+  public isEnoughLength(length: number): boolean {
+    return length > 250;
+  }
+
   public get isPositions(): boolean {
     return !!this.positionStack().length;
   }

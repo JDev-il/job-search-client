@@ -214,6 +214,9 @@
             }
             .overflow-cell {
               overflow-y: auto;
+              word-break: break-all;
+            }
+            .overflow-cell-unflex {
               align-items: unset !important;
             }
           }
