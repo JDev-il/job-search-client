@@ -10,8 +10,11 @@ import { StateService } from '../services/state.service';
 })
 export class HelperBaseComponent {
   constructor(public stateService: StateService, public authService: AuthService, public routingService: RoutingService) {
+    this.stateService.userDataRequest().subscribe({
+      next: (data) => { if (!data) { this.authService.logout(); this.routingService.toLogin() } else { this.spinnerState = false; } },
+      error: (err) => console.error(err)
+    })
     effect(() => {
-      this.stateService.userDataRequest().subscribe();
     });
   }
 

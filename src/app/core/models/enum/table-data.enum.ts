@@ -19,44 +19,45 @@ export enum StatusEnum {
 }
 
 export enum PositionTypeEnum {
-  FS = "Fullstack Developer",
-  FSS = "Fullstack Developer (Senior)",
-  FE = "Frontend Developer",
-  FES = "Frontend Developer (Senior)",
-  AD = "Angular Developer",
-  SWD = "Software Developer",
-  SWE = "Software Engineer",
+  FS = "Fullstack",
+  FSS = "Fullstack (Senior)",
+  FE = "Frontend",
+  FES = "Frontend (Senior)",
+  AD = "Angular",
+  SWD = "SW",
+  SWE = "SE",
   TL = "Team Lead",
-  WD = "Web Developer",
+  WD = "Web",
 }
 
 export enum PositionStackEnum {
   ANGULAR = "Angular",
   NODE = "Node.js",
-  DOTNET = "C# / .NET Core",
-  STATE_MANAGEMENT = "REDUX / NGRX / NGXS",
+  DOTNET = ".NET Core",
+  STATE_MANAGEMENT = "REDUX/NGRX",
   UNKNOWN = "N/A",
   REACT = "React.js",
-  REACT_TS = "React.js + TypeScript",
-  AN_RE_VU = "Angular / React.js / Vue.js",
+  REACT_TS = "React.js/TypeScript",
+  AN_RE_VU = "Angular/React.js/Vue.js",
 }
 
 export enum PlatformEnum {
-  HR_REACH = "HR Reached Me",
-  HR_SELF = "HR Self Reach",
   LINKEDIN = "LinkedIn",
   GLASSDOOR = "GlassDoor",
-  ALLJOBS = "AllJobs",
   DRUSHIM = "Drushim",
   JOBINFO = "JobInfo",
+  ALLJOBS = "AllJobs",
   DIALOG = "Dialog",
+  REFERRAL = "Referral",
+  HR_REACH = "HR Reached Me",
+  HR_SELF = "HR Self Reach",
   SQLINK = "SQLink",
   ETHOSIA = "Ethosia",
   GOTFRIENDS = "GotFriends",
-  FACEBOOK = "Facebook",
-  DE = "Direct Email",
-  DM = "Direct Message",
   CAREER = "Career Page",
+  FACEBOOK = "Facebook",
+  EMAIL = "Email",
+  DM = "Direct Message",
 }
 
 export enum FormPlaceholdersEnum {

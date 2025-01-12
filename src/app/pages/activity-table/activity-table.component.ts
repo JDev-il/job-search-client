@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, Renderer2, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { combineLatest, debounceTime, fromEvent, map, Subject, takeUntil, tap } from 'rxjs';
+import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
@@ -40,9 +41,9 @@ import { ITableDataRow } from './../../core/models/table.interface';
 })
 export class ActivityTableComponent extends BaseDialogComponent {
   private destroy$ = new Subject<void>();
-  public isDataExists = signal<boolean>(false);
+  public positionStack: WritableSignal<PositionStackEnum[]> = signal<PositionStackEnum[]>([]);
   public selectedRows: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
-  public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'note', 'hunch'];
+  public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
   public dataSource = new MatTableDataSource([] as ITableDataRow[]);
   public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
@@ -52,7 +53,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ITableDataRow[]>;
 
-  constructor(private formService: FormsService, private destroyRef: DestroyRef, private stateService: StateService, dialog: MatDialog) {
+  constructor(private formService: FormsService, private destroyRef: DestroyRef, private stateService: StateService, private renderer: Renderer2, dialog: MatDialog) {
     super(dialog);
     effect(() => {
       if (this.stateService.getDestroyedState()) {
@@ -64,13 +65,11 @@ export class ActivityTableComponent extends BaseDialogComponent {
           tableData: this.stateService.authorizedUserDataRequest(),
         })
           .pipe(
-            takeUntil(this.destroy$),
             map((data) => data.tableData),
             tap(data => this.dataSource.data = data)
           )
           .subscribe((tableData) => {
             if (tableData.length > 0) {
-              this.isDataExists.set(true);
               this.dataSource.sort = this.sort;
               this.dataSource.data = tableData;
             }
@@ -176,10 +175,17 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.updateTable();
   }
 
+  public get isPositions(): boolean {
+    return !!this.positionStack().length;
+  }
+
+  public get isDataExists(): boolean {
+    return this.stateService.isDataExists();
+  }
 
   private updateTable() {
     if (!this.dataSource.data.length) {
-      this.isDataExists.set(false);
+      this.stateService.isDataExists.set(false);
     }
     this.dataSource._updateChangeSubscription();
     this.table.renderRows();

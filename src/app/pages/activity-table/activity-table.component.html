@@ -21,7 +21,7 @@
             matInput
             (keyup)="applyFilter($event)"
             placeholder="Anything that starts with..."
-            [disabled]="!isDataExists()"
+            [disabled]="!isDataExists"
             #input
           />
         </mat-form-field>
@@ -29,7 +29,7 @@
     </div>
   </div>
   <div class="table-data-displayer">
-    @if (isDataExists()) {
+    @if (isDataExists) {
     <div
       class="table-container mat-elevation-z8"
       [ngClass]="{ 'hidden-scroll': localSpinner }"
@@ -47,8 +47,8 @@
               </mat-checkbox>
             </div>
           </th>
-          <td mat-cell *matCellDef="let row" class="combined-cell-td">
-            <div class="combined-cell-div">
+          <td mat-cell *matCellDef="let row">
+            <div class="cell-control combined-cell">
               <div class="combined-cell-content">
                 <mat-checkbox
                   (change)="$event ? onToggleRow(row) : null"
@@ -69,8 +69,10 @@
             <div class="header" mat-sort-header>Status</div>
           </th>
           <td mat-cell *matCellDef="let row">
-            <div class="default-cell">
-              {{ row.status }}
+            <div class="cell-control">
+              <div class="default-cell">
+                <td>{{ row.status }}</td>
+              </div>
             </div>
           </td>
         </ng-container>
@@ -86,9 +88,11 @@
             </div>
           </th>
           <td mat-cell *matCellDef="let row">
-            <div class="split-cell">
-              <td>{{ row.companyName }}</td>
-              <td>{{ row.companyLocation }}</td>
+            <div class="cell-control">
+              <div class="split-cell">
+                <td>{{ row.companyName }}</td>
+                <td>{{ row.companyLocation }}</td>
+              </div>
             </div>
           </td>
         </ng-container>
@@ -104,9 +108,15 @@
             </div>
           </th>
           <td mat-cell *matCellDef="let row">
-            <div class="split-cell">
-              <td>{{ row.positionType }}</td>
-              <td>{{ row.positionStack }}</td>
+            <div class="cell-control">
+              <div class="split-cell positions">
+                <td>{{ row.positionType }}</td>
+                <td class="stacks">
+                  @for(position of row.positionStack; track $index){
+                  <p>{{ position }}</p>
+                  }
+                </td>
+              </div>
             </div>
           </td>
         </ng-container>
@@ -122,9 +132,24 @@
             </div>
           </th>
           <td mat-cell *matCellDef="let row">
-            <div class="split-cell">
-              <td>{{ row.applicationPlatform }}</td>
-              <td>{{ row.applicationDate | date : "MMM d, y" }}</td>
+            <div class="cell-control">
+              <div class="split-cell">
+                <td>{{ row.applicationPlatform }}</td>
+                <td>{{ row.applicationDate | date : "MMM d, y" }}</td>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="hunch">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header">Hunch</div>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="cell-control overflow-cell">
+              <td>
+                {{ row.hunch }}
+              </td>
             </div>
           </td>
         </ng-container>
@@ -134,17 +159,10 @@
             <div class="header">Notes</div>
           </th>
           <td mat-cell *matCellDef="let row">
-            <div class="overflow-cell">
-              {{ row.notes }}
-            </div>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="hunch">
-          <th mat-header-cell *matHeaderCellDef>Hunch</th>
-          <td mat-cell *matCellDef="let row">
-            <div class="default-cell">
-              {{ row.hunch }}
+            <div class="cell-control overflow-cell">
+              <td>
+                {{ row.notes }}
+              </td>
             </div>
           </td>
         </ng-container>

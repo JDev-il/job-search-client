@@ -1,5 +1,9 @@
 .activity-table-wrapper {
-  position: relative;
+  margin: 0 auto;
+  max-width: 85%;
+  @media screen and (max-width: 992px) {
+    max-width: 100%;
+  }
   .outer-table-container {
     position: relative;
     display: flex;
@@ -50,24 +54,24 @@
   }
   .table-data-displayer {
     min-height: 25vh;
+    width: 100%;
     .table-container {
       position: relative;
       top: 25px;
       max-height: 75vh;
+      width: 100%;
       box-shadow: none;
       overflow-y: auto;
-      border-bottom: 1px #495be3 solid;
       .selected {
         background-color: #ff6c8240;
       }
       .mat-mdc-table {
         min-width: unset;
         width: 100%;
-        min-height: 75vh;
         border: 0;
-        border-spacing: 0;
         table-layout: unset;
         background-color: #faf9fd;
+        padding: 15px 25px 10px;
         .mat-mdc-header-row {
           position: relative;
           z-index: 3;
@@ -75,39 +79,48 @@
             background-color: #faf9fda9;
             backdrop-filter: blur(8px);
             margin: 0 !important;
-            top: 0;
+            padding: 0 !important;
             z-index: 100;
-            height: 7rem;
-            font-size: 1.6em;
+            height: 5rem;
+            font-size: 1.4em;
             text-align: center;
             border-color: #495be3;
             color: var(--gray-700);
             font-weight: 600;
             @media screen and (max-width: 992px) {
-              font-size: small;
               font-size: 1.2em;
             }
           }
           .header {
+            position: relative;
             display: flex;
             flex-flow: column;
             padding: 0;
-            margin: 0;
             align-items: center;
+            bottom: 15px;
+            @media screen and (max-width: 992px) {
+              bottom: 0;
+            }
+            margin: auto;
             .sub-header {
               position: absolute;
               display: flex;
               align-items: center;
               bottom: 0;
-              left: 0;
               width: 100%;
+              top: 45px;
+              @media screen and (max-width: 992px) {
+                top: 35px;
+              }
               h4 {
                 position: relative;
-                font-size: 0.6em !important;
+                font-size: 0.8em !important;
                 display: flex;
                 font-weight: 500;
                 margin: 0 auto;
-                top: 5px;
+                @media screen and (max-width: 1280px) {
+                  font-size: 0.7em !important;
+                }
               }
             }
           }
@@ -117,61 +130,21 @@
           }
         }
         .mat-mdc-row {
+          position: relative;
           border-bottom: 0 !important;
           .mat-mdc-cell {
             color: var(--gray-900);
             position: relative;
-            border: 1px solid #495be358;
+            // border-top: 0 !important;
+            border-color: #495be3;
+            padding: 0;
             max-width: 15vw;
-            font-size: 115%;
-            .default-cell,
-            .split-cell {
-              margin: auto;
-              display: flex;
-              align-items: center;
-              text-align: center;
-              height: 120px;
-              justify-content: center;
-            }
-            .split-cell {
-              position: absolute;
-              left: 0;
-              top: 0;
-              bottom: 0;
-              right: 0;
-              td {
-                margin: auto;
-              }
-            }
-            .default-cell {
-              max-width: 125px;
-            }
-            .overflow-cell {
-              overflow: auto;
-              padding: 5px;
-              max-height: 120px;
-            }
             @media screen and (max-width: 1280px) {
-              min-width: 220px !important;
-              .default-cell,
-              .split-cell {
-                margin: auto !important;
-                align-items: center;
-                max-width: 250px;
-              }
+              max-width: max-content;
             }
-          }
-          .combined-cell-td {
-            min-width: unset !important;
-            width: 50px;
-            .combined-cell-div {
-              display: flex;
+            .combined-cell {
+              text-align: center;
               .combined-cell-content {
-                display: flex;
-                align-items: center;
-                mat-checkbox {
-                  margin: auto;
-                }
                 button {
                   border-radius: 0.2em;
                   padding: 0;
@@ -194,11 +167,54 @@
                   }
                 }
                 @media screen and (max-width: 1280px) {
-                  flex-flow: column;
+                  flex-flow: row;
+                  align-items: center;
+                  margin: 0;
+                }
+              }
+            }
+            .cell-control:not(.combined-cell) {
+              height: 75px;
+              min-width: 185px;
+              font-size: small;
+              display: flex;
+              align-items: center;
+              @media screen and (max-width: 1280px) {
+                min-width: 220px;
+              }
+              & > div {
+                width: 100%;
+                display: flex;
+                @media screen and (max-width: 1280px) {
+                }
+                & > * {
+                  display: flex;
                   align-items: center;
                   margin: auto;
                 }
               }
+              @media screen and (max-width: 1280px) {
+                justify-content: flex-start;
+              }
+              .positions {
+                max-width: 185px;
+                margin: auto;
+                .stacks {
+                  margin: auto;
+                  min-width: fit-content;
+                  display: flex;
+                  flex-flow: column;
+                  max-height: 40px;
+                  overflow-y: auto;
+                  p {
+                    margin: 0;
+                  }
+                }
+              }
+            }
+            .overflow-cell {
+              overflow-y: auto;
+              align-items: unset !important;
             }
           }
         }
@@ -208,14 +224,12 @@
             padding: 6px;
           }
           @media screen and (max-width: 768px) {
-            padding: 0;
+            padding: 2px 10px;
           }
         }
       }
       @media screen and (max-width: 992px) {
         margin: auto;
-        @media screen and (max-width: 768px) {
-        }
       }
       .hidden-scroll {
         overflow: hidden;
@@ -223,9 +237,9 @@
     }
     .no-data-div {
       position: absolute;
-      bottom: 0;
       left: 0;
       right: 0;
+      top: 50vh;
       h4 {
         text-align: center;
         color: var(--watermelon);

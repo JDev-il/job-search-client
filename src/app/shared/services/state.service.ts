@@ -15,6 +15,7 @@ export class StateService {
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
   private tableDataResponse$: WritableSignal<ITableDataRow[]> = signal([] as ITableDataRow[]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
+  public isDataExists = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
 
@@ -64,7 +65,6 @@ export class StateService {
       tap((userData) => {
         if (userData && userData.email) {
           this.apiService.currentUserData$.set(userData);
-          this.spinnerState = false;
         }
       }),
       catchError(() => of(null))
@@ -72,9 +72,17 @@ export class StateService {
   }
 
   public authorizedUserDataRequest(): Observable<ITableDataRow[]> {
-    return this.apiService.authUserDataReq().pipe(
-      tap(tableData => this.tableDataResponse = tableData)
-    );
+    return this.apiService.authUserDataReq()
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((tableData) => {
+          this.tableDataResponse = tableData
+          if (tableData.length) {
+            this.isDataExists.set(true)
+          }
+        }
+        )
+      );
   }
 
   public addOrUpdateApplication(row: ITableDataRow, formAction: FormEnum): void {
