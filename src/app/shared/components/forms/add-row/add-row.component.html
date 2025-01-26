@@ -20,17 +20,9 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline">
-    <mat-label>From Which Continent?</mat-label>
-    <mat-select (selectionChange)="onContinentChange($event.value)">
-      @for (continent of continents(); track continent) {
-      <mat-option [value]="continent">{{ continent }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
     <mat-label>Company Location</mat-label>
     <input
+      (keyup)="onCountryType($event, newAddRowForm)"
       type="text"
       placeholder="Name of Country"
       matInput
@@ -38,12 +30,13 @@
       [matAutocomplete]="auto"
     />
     <mat-autocomplete #auto="matAutocomplete">
-      @for (option of filteredCountries(); track option) {
-      <mat-option [value]="option">{{ option }}</mat-option>
+      @for (country of filteredCountries(); track country) {
+      <mat-option [value]="country.name.common">
+        {{ country.name.common }}
+      </mat-option>
       }
     </mat-autocomplete>
   </mat-form-field>
-
   <mat-form-field appearance="outline">
     <mat-label>Position Type</mat-label>
     <mat-select formControlName="positionType">

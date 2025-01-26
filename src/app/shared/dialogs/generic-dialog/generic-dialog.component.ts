@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, effect, Inject, signal,
 import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { combineLatest, takeUntil } from 'rxjs';
+import { Country } from '../../../core/models/data.interface';
 import { FormDialog, GenericDialogType } from '../../../core/models/dialog.interface';
 import { ContinentsEnum, FormEnum, NotificationsEnum } from '../../../core/models/enum/utils.enum';
 import { AuthService } from '../../../core/services/auth.service';
@@ -11,6 +11,7 @@ import { AddRowComponent } from '../../components/forms/add-row/add-row.componen
 import { EditRowComponent } from '../../components/forms/edit-row/edit-row.component';
 import { FormsService } from '../../services/forms.service';
 import { RoutingService } from '../../services/routing.service';
+import { TableDataFormRow } from './../../../core/models/forms.interface';
 import { StateService } from './../../services/state.service';
 
 @Component({
@@ -24,8 +25,10 @@ import { StateService } from './../../services/state.service';
 export class GenericDialogComponent {
   public dataType: WritableSignal<GenericDialogType> = signal<GenericDialogType>({});
   public notifyText = NotificationsEnum;
-  public countriesList: WritableSignal<string[]> = signal([] as string[]);
+  // public countriesList: WritableSignal<string[]> = signal([] as string[]);
+  public countriesList: WritableSignal<Country[]> = signal([] as Country[]);
   public currentContinent!: ContinentsEnum;
+  public editFormSnapshot!: TableDataFormRow;
   public formEnum = FormEnum;
   constructor(
     private dialogRef: MatDialogRef<GenericDialogComponent>,
@@ -41,6 +44,7 @@ export class GenericDialogComponent {
       if (this.stateService.getDestroyedState()) {
         return;
       }
+      this.countriesList.set(this.stateService.allCountries);
       this.dialogRef.afterClosed().subscribe(() => {
         if (this.authService.isAuthenticated && data.notification) {
           this.routingService.toDashboard();
@@ -48,6 +52,9 @@ export class GenericDialogComponent {
       });
     }, { allowSignalWrites: true });
     this.destroyRef.onDestroy(() => {
+      if (this.shouldSkipDestroyActions) {
+        return;
+      }
       this.stateService.markAsDestroyed();
       this.stateService.resetDestroyed();
     });
@@ -67,27 +74,41 @@ export class GenericDialogComponent {
 
   public sendForm(form: FormGroup): void {
     const formTitle = this.data.form?.formTitle as FormEnum;
-    this.stateService.addOrUpdateApplication(form.value, formTitle);
+    this.stateService.addOrUpdateApplication(form.value, formTitle).subscribe();
     this.dialogRef.close();
   }
+  public getCountriesList(): void {
+    this.stateService.getAllCountries();
+  // .pipe(takeUntil(this.stateService.destroy$))
+  //     .subscribe((data) => {
+  //       const countries = data.list.map(c => c.name.common)
+  //       this.countriesList.set(countries);
+  //     })
 
+
+    // this.stateService.getAllCountries().subscribe();
+  }
   public getContinentsList(selectedContinent: string): void {
-    const continent = selectedContinent as ContinentsEnum;
-    if (continent) {
-      combineLatest({
-        list: this.stateService.getContinents(continent)
-      })
-        .pipe(takeUntil(this.stateService.destroy$))
-        .subscribe((data) => {
-          const countries = data.list.map(c => c.name.common)
-          this.countriesList.set(countries);
-        })
-    }
+    // const continent = selectedContinent as ContinentsEnum;
+    // if (continent) {
+    //   combineLatest({
+    //     list: this.stateService.getContinents(continent)
+    //   })
+    //     .pipe(takeUntil(this.stateService.destroy$))
+    //     .subscribe((data) => {
+    //       const countries = data.list.map(c => c.name.common)
+    //       this.countriesList.set(countries);
+    //     })
+    // }
   }
 
   public closeDialog(): void {
     this.stateService.spinnerState = false;
     this.dialogRef.close();
+  }
+
+  private get shouldSkipDestroyActions(): boolean {
+    return !this.form || this.form.formType.invalid;
   }
 
 }

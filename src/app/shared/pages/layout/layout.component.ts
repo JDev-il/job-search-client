@@ -17,6 +17,6 @@ import { StateService } from '../../services/state.service';
 })
 export class LayoutComponent extends HelperBaseComponent {
   constructor(stateService: StateService, authService: AuthService, routingService: RoutingService) {
-    super(stateService, authService, routingService)
+    super(stateService, authService, routingService);
   }
 }

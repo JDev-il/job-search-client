@@ -30,6 +30,11 @@ export enum ContinentsEnum {
   ASIA = "Asia",
   AFRICA = "Africa"
 }
+export enum CountryTypesEnum {
+  eng = "eng",
+  smo = "smo",
+  tkl = "tkl"
+}
 
 export enum ROUTES {
   LOGIN = "login",

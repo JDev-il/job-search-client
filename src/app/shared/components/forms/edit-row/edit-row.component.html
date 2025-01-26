@@ -34,11 +34,15 @@
       type="text"
       matInput
       formControlName="companyLocation"
+      (keyup)="onCountryType($event, incomingEditForm)"
       [value]="incomingEditForm.controls.companyLocation"
+      [matAutocomplete]="auto"
     />
     <mat-autocomplete #auto="matAutocomplete">
-      @for (option of []; track option) {
-      <mat-option [value]="option">{{ option }}</mat-option>
+      @for (country of filteredCountries(); track country) {
+      <mat-option [value]="country.name.common">{{
+        country.name.common
+      }}</mat-option>
       }
     </mat-autocomplete>
   </mat-form-field>

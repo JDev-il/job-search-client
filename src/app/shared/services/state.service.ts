@@ -1,11 +1,11 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { catchError, Observable, of, Subject, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
+import { catchError, Observable, Subject, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
 import { UserMessages, ValidationMessages } from '../../core/models/enum/messages.enum';
-import { ContinentsEnum, FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
+import { FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Country } from './../../core/models/data.interface';
-import { ITableDataRow } from './../../core/models/table.interface';
+import { ITableDataRow, ITableSaveRequest } from './../../core/models/table.interface';
 import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from './../../core/models/users.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -15,6 +15,8 @@ export class StateService {
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
   private tableDataResponse$: WritableSignal<ITableDataRow[]> = signal([] as ITableDataRow[]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
+  private countries: WritableSignal<Country[]> = signal<Country[]>([] as Country[])
+  private currentCountry: WritableSignal<Country> = signal<Country>({} as Country);
   public isDataExists = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
@@ -67,17 +69,17 @@ export class StateService {
           this.apiService.currentUserData$.set(userData);
         }
       }),
-      catchError(() => of(null))
+      catchError((err) => throwError(() => err))
     );
   }
 
   public authorizedUserDataRequest(): Observable<ITableDataRow[]> {
     return this.apiService.authUserDataReq()
       .pipe(
-        takeUntil(this.destroy$),
+        take(1),
         tap((tableData) => {
-          this.tableDataResponse = tableData
           if (tableData.length) {
+            this.tableDataResponse = tableData
             this.isDataExists.set(true)
           }
         }
@@ -85,29 +87,49 @@ export class StateService {
       );
   }
 
-  public addOrUpdateApplication(row: ITableDataRow, formAction: FormEnum): void {
-    this.apiService.addOrUpdateApplicationReq(row, formAction).pipe(
-      switchMap(() => this.authorizedUserDataRequest()),
+  public addOrUpdateApplication(row: ITableDataRow, formAction: FormEnum): Observable<ITableSaveRequest> {
+    return this.apiService.addOrUpdateApplicationReq(row, formAction).pipe(
       take(1),
       catchError((err) => {
-        return throwError(() => { return err })
-      })).subscribe()
+        return throwError(() => { console.error(err) })
+      }))
   }
 
-  public updateApplication(applicationList: ITableDataRow | ITableDataRow[]): void {
-    this.apiService.updateApplicationListReq(applicationList);
-  }
-
-  public removeMultipleRows(selectedRows: ITableDataRow[], formAction: string): void {
-    this.apiService.removeRowsReq(selectedRows, formAction).subscribe()
-  }
-
-  public getContinents(continent: ContinentsEnum): Observable<Country[]> {
-    return this.apiService.getCountriesListReq(continent)
+  public removeMultipleRows(selectedRows: ITableDataRow[], formAction: string): Observable<ITableDataRow[]> {
+    return this.apiService.removeRowsReq(selectedRows, formAction)
       .pipe(
-        takeUntil(this.destroy$),
-      )
+        take(1),
+        catchError((err) => {
+          return throwError(() => { console.error(err) })
+        }))
+      ;
   }
+
+  public getAllCountries(): Observable<Country[]> { // Triggered at the highest level
+    return this.apiService.getCountriesListReq().pipe(
+      takeUntil(this.destroy$),
+      tap(data => {
+        this.countries.set(data);
+      })
+    )
+  }
+
+  public getCountry(country: string): Observable<Country> {
+    return this.apiService.getCountryByName(country)
+      .pipe(
+        take(1),
+        tap((data: Country) => {
+          this.currentCountry.set(data);
+        })
+      );
+  }
+
+  // public getContinents(continent: ContinentsEnum): Observable<Country[]> {
+  //   return this.apiService.getCountriesListReq(continent)
+  //     .pipe(
+  //       takeUntil(this.destroy$),
+  //     )
+  // }
 
   public markAsDestroyed(): void {
     this.destroyed$.set(true);
@@ -153,6 +175,11 @@ export class StateService {
   }
   public set tableDataResponse(tableData: ITableDataRow[]) {
     this.tableDataResponse$.set(tableData);
+  }
+
+
+  public get allCountries(): Country[] {
+    return this.countries();
   }
 
 

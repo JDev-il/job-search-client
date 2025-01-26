@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Output } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Subject, Subscription, takeUntil } from 'rxjs';
-import { FormPlaceholdersEnum, PlatformEnum, PositionStackEnum, PositionTypeEnum, StatusEnum } from '../../../../core/models/enum/table-data.enum';
+import { Subscription, takeUntil } from 'rxjs';
 import { ContinentsEnum } from '../../../../core/models/enum/utils.enum';
 import { TableDataFormRow } from '../../../../core/models/forms.interface';
+import { FormsBaseComponent } from '../../../base/forms-base.component';
 
 @Component({
   selector: 'app-add-row',
@@ -30,33 +30,11 @@ import { TableDataFormRow } from '../../../../core/models/forms.interface';
   styleUrl: '../styles/form-style.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddRowComponent {
+export class AddRowComponent extends FormsBaseComponent {
   @Output() formEmit: EventEmitter<FormGroup<TableDataFormRow>> = new EventEmitter();
-  @Output() continentEmit: EventEmitter<ContinentsEnum> = new EventEmitter();
-  @Input() newAddRowForm!: FormGroup<TableDataFormRow>;
-  @Input() countries: WritableSignal<string[]> = signal([] as string[]);
-
-  private destroy$ = new Subject<void>();
-  public continents: WritableSignal<string[]> = signal([] as string[]);
-
-  public statuses = signal(this.enumsToArray(StatusEnum));
-  public positionTypes = signal(this.enumsToArray(PositionTypeEnum));
-  public positionStacks = signal(this.enumsToArray(PositionStackEnum));
-  public applicationPlatform = signal(this.enumsToArray(PlatformEnum))
-
-  public filteredCountries = signal([] as string[]);
-  public companyLocationField = signal<string>('');
-  public formPlaceholders = Object.values(FormPlaceholdersEnum);
-
+  @Output() countriesEmit: EventEmitter<ContinentsEnum> = new EventEmitter();
   constructor(private destroyRef: DestroyRef) {
-    effect(() => {
-      this.continents.set(this.enumsToArray(ContinentsEnum));
-      const countries = [...this.countries()];
-      const filtered = countries.filter((country) =>
-        country.toLowerCase().includes(this.companyLocationField())
-      );
-      this.filteredCountries.set(filtered);
-    }, { allowSignalWrites: true })
+    super();
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
       this.destroy$.complete();
@@ -71,22 +49,10 @@ export class AddRowComponent {
     return Object.keys(this.newAddRowForm.controls);
   }
 
-  public onContinentChange(continentValue: ContinentsEnum): void {
-    this.continentEmit.emit(continentValue);
-    const companyLocation = this.newAddRowForm.get('companyLocation');
-    if (companyLocation) {
-      this.cleanFormField(companyLocation)
-    }
-  }
-
   public formSubmit(): void {
     if (this.newAddRowForm.valid) {
       this.formEmit.emit(this.newAddRowForm);
     }
-  }
-
-  private enumsToArray(enums: {}): string[] {
-    return Object.values(enums)
   }
 
   private setCompanyLocationValue(): Subscription | undefined {
@@ -97,11 +63,4 @@ export class AddRowComponent {
         this.companyLocationField.set(value!.toLowerCase());
       });
   }
-
-  private cleanFormField(field: AbstractControl<string | null, string | null>) {
-    field.setValue('');
-    field.markAsPristine();
-    field.markAsUntouched();
-  }
-
 }

@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { combineLatest, debounceTime, fromEvent, map, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, fromEvent, map, Subject, takeUntil, tap } from 'rxjs';
 import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
@@ -61,19 +61,14 @@ export class ActivityTableComponent extends BaseDialogComponent {
       }
       const dataUser = this.stateService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
-        combineLatest({
-          tableData: this.stateService.authorizedUserDataRequest(),
-        })
+        this.stateService.authorizedUserDataRequest()
           .pipe(
-            map((data) => data.tableData),
-            tap(data => this.dataSource.data = data)
-          )
-          .subscribe((tableData) => {
-            if (tableData.length > 0) {
+            map(data => data as ITableDataRow[]),
+            tap(data => {
               this.dataSource.sort = this.sort;
-              this.dataSource.data = tableData;
-            }
-          })
+              this.dataSource.data = data as ITableDataRow[];
+            })
+        ).subscribe()
       }
     }, { allowSignalWrites: true });
     this.destroyRef.onDestroy(() => {
@@ -168,7 +163,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
       const filteredDataSource = [...this.dataSource.data].filter((row) => !selectedJobIds.has(row.jobId));
       this.dataSource.data = filteredDataSource;
     }
-    this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.remove);
+    this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.remove).subscribe();
     this.selectedRows.set([] as ITableDataRow[]);
     this.selection.clear();
     this.syncSelectedRows();

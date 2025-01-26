@@ -4,7 +4,7 @@ import { GenericDialogType } from '../../core/models/dialog.interface';
 import { GenericDialogComponent } from '../dialogs/generic-dialog/generic-dialog.component';
 
 @Component({
-  selector: 'app-base',
+  selector: 'app-dialog-base',
   template: '',
   standalone: true,
 })

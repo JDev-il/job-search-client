@@ -15,9 +15,6 @@ export class AuthResolver implements Resolve<UserLogin | null> {
   ) { }
 
   resolve(): Observable<UserLogin | null> {
-    if (!this.authService.isAuthenticated) {
-      return this.onError();
-    }
     return this.stateService.verifyUserToken().pipe(
       tap((user: UserLogin) => {
         const userRes = <AuthUserResponse>{

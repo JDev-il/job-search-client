@@ -8,7 +8,6 @@
           [countries]="countriesList"
           [newAddRowForm]="form.formType"
           (formEmit)="sendForm(form.formType)"
-          (continentEmit)="getContinentsList($event)"
         ></app-add-row>
       </div>
       } @else if (data.form?.formTitle === formEnum.edit) {
@@ -16,8 +15,10 @@
       <div class="overflow-form">
         @defer(when form && form.formType.get('status')?.value !== ''){
         <app-edit-row
-        (formEmit)="sendForm(form.formType)"
-        [incomingEditForm]="form.formType"></app-edit-row>
+          (formEmit)="sendForm(form.formType)"
+          [incomingEditForm]="form.formType"
+          [countries]="countriesList"
+        ></app-edit-row>
         } @placeholder { Row is empty! }
       </div>
       } } @else {
