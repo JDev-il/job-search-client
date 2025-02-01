@@ -27,6 +27,13 @@ export class ApiService {
         .sort((a, b) =>
           a.name.common.localeCompare(b.name.common))
       ));
+
+    //! REMOVE SECTION
+    // return of();
+    // if (continent === ContinentsEnum.AMERICA) {
+    //   return this.http.get<Country[]>(`${this.geoParams.baseUrl}${this.geoParams.north_america}`)
+    // }
+
   }
   public getCountryByName(country: string): Observable<Country> {
     return this.http.get<Country>(`${this.geoParams.baseUrl}${this.geoParams.name}/${country}`)
