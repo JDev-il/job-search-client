@@ -39,3 +39,21 @@
   top: 105px;
   max-height: 75vh;
 }
+
+
+.small-spinner {
+  width: 15%;
+  height: min-content;
+  z-index: 6;
+  .mat-mdc-progress-spinner {
+    max-width: 50px !important;
+    height: 50px !important;
+    position: relative;
+    bottom: 10px;
+  }
+  ::ng-deep {
+    .mdc-circular-progress__indeterminate-circle-graphic {
+      stroke: cyan !important;
+    }
+  }
+}

@@ -2,11 +2,20 @@ export const environment = {
   production: false,
   apiUrls: {
     geo: {
-      baseUrl: "https://restcountries.com/v3.1/",
-      all: "all",
-      name: "name/*"
-      // north_america: "subregion/north%20america",
-      // rest_of_the_world: "region/{}?fields=name"
+      countries: {
+        baseUrl: "https://restcountries.com/v3.1/all",
+        filter: {
+          name: "?fields=name",
+          maps: "?fields=maps",
+          all: "?fields=name,maps"
+        },
+      },
+      cities: {
+        baseUrl: "https://countriesnow.space/api/v0.1/",
+        name: "countries/population/cities",
+        filter: "countries/population/cities/filter",
+        // https://countriesnow.space/api/v0.1/countries/population/cities
+      }
     },
     remote: 'http://192.168.68.56:3000',
     local: 'http://localhost:3000/',

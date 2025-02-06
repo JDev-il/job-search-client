@@ -2,8 +2,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { map, Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Country } from '../models/data.interface';
+import { City, Country } from '../models/data.interface';
+import { ParamsBy, ParamsOrder } from '../models/enum/params.enum';
 import { FormEnum } from '../models/enum/utils.enum';
+import { CityReqParams } from '../models/requests.intefrace';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { ITableDataRow, ITableSaveRequest } from './../models/table.interface';
 import { UserRequest } from './../models/users.interface';
@@ -22,14 +24,21 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   public getCountriesListReq(): Observable<Country[]> {
-    return this.http.get<Country[]>(`${this.geoParams.baseUrl}${this.geoParams.all}`)
+    return this.http.get<Country[]>(`${this.geoParams.countries.baseUrl}${this.geoParams.countries.filter.all}`)
       .pipe(map(data => data
         .sort((a, b) =>
           a.name.common.localeCompare(b.name.common))
       ));
   }
-  public getCountryByName(country: string): Observable<Country> {
-    return this.http.get<Country>(`${this.geoParams.baseUrl}${this.geoParams.name}/${country}`)
+
+  public getCitiesReq(country: string): Observable<City> {
+    const citiesData = {
+      limit: 500,
+      order: ParamsOrder.ASC,
+      orderBy: ParamsBy.NAME,
+      country: country.toLowerCase()
+    } as CityReqParams;
+    return this.http.post<City>(`${this.geoParams.cities.baseUrl}${this.geoParams.cities.filter}`, citiesData);
   }
 
   public addNewUserReq(userData: UserRequest): Observable<UserResponse> {

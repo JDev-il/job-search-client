@@ -11,4 +11,5 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class SpinnerComponent {
   @Input() isSpinner!: boolean;
   @Input() isActivityTable!: boolean;
+  @Input() isSmallSpinner: boolean = false;
 }

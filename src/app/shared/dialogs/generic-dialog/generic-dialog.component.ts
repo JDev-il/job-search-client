@@ -9,7 +9,6 @@ import { ContinentsEnum, FormEnum, NotificationsEnum } from '../../../core/model
 import { AuthService } from '../../../core/services/auth.service';
 import { AddRowComponent } from '../../components/forms/add-row/add-row.component';
 import { EditRowComponent } from '../../components/forms/edit-row/edit-row.component';
-import { FormsService } from '../../services/forms.service';
 import { RoutingService } from '../../services/routing.service';
 import { TableDataFormRow } from './../../../core/models/forms.interface';
 import { StateService } from './../../services/state.service';
@@ -25,7 +24,6 @@ import { StateService } from './../../services/state.service';
 export class GenericDialogComponent {
   public dataType: WritableSignal<GenericDialogType> = signal<GenericDialogType>({});
   public notifyText = NotificationsEnum;
-  // public countriesList: WritableSignal<string[]> = signal([] as string[]);
   public countriesList: WritableSignal<Country[]> = signal([] as Country[]);
   public currentContinent!: ContinentsEnum;
   public editFormSnapshot!: TableDataFormRow;
@@ -36,7 +34,6 @@ export class GenericDialogComponent {
     private stateService: StateService,
     private authService: AuthService,
     private routingService: RoutingService,
-    private formsService: FormsService,
     private destroyRef: DestroyRef
   ) {
     effect(() => {
@@ -76,30 +73,6 @@ export class GenericDialogComponent {
     const formTitle = this.data.form?.formTitle as FormEnum;
     this.stateService.addOrUpdateApplication(form.value, formTitle).subscribe();
     this.dialogRef.close();
-  }
-  public getCountriesList(): void {
-    this.stateService.getAllCountries();
-  // .pipe(takeUntil(this.stateService.destroy$))
-  //     .subscribe((data) => {
-  //       const countries = data.list.map(c => c.name.common)
-  //       this.countriesList.set(countries);
-  //     })
-
-
-    // this.stateService.getAllCountries().subscribe();
-  }
-  public getContinentsList(selectedContinent: string): void {
-    // const continent = selectedContinent as ContinentsEnum;
-    // if (continent) {
-    //   combineLatest({
-    //     list: this.stateService.getContinents(continent)
-    //   })
-    //     .pipe(takeUntil(this.stateService.destroy$))
-    //     .subscribe((data) => {
-    //       const countries = data.list.map(c => c.name.common)
-    //       this.countriesList.set(countries);
-    //     })
-    // }
   }
 
   public closeDialog(): void {

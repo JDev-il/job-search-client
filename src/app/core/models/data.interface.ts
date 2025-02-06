@@ -7,6 +7,22 @@ export interface Country {
         official: string,
         common: string
       }
-    },
-  }
+    }
+  },
+  maps: {
+    googleMaps: string,
+    openStreetMaps?: string
+  },
+}
+
+export interface City {
+  error: boolean,
+  msg: string,
+  data: CityData[]
+}
+
+export interface CityData {
+  city: string,
+  country: string,
+  populationCounts: {}[]
 }

@@ -14,6 +14,7 @@ export interface ITableDataRow {
   jobId?: number,
   status: StatusEnum;
   companyLocation: string;
+  companyCity: string;
   companyName: string;
   positionStack: PositionStackEnum[];
   positionType: PositionTypeEnum;

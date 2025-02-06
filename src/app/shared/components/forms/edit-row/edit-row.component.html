@@ -34,7 +34,7 @@
       type="text"
       matInput
       formControlName="companyLocation"
-      (keyup)="onCountryType($event, incomingEditForm)"
+      (keyup)="onTypeCountry($event)"
       [value]="incomingEditForm.controls.companyLocation"
       [matAutocomplete]="auto"
     />
@@ -46,7 +46,33 @@
       }
     </mat-autocomplete>
   </mat-form-field>
+  <mat-form-field appearance="outline">
+    <input
+      (keyup)="onTypeCity($event)"
+      type="text"
+      placeholder="Which City?"
+      matInput
+      formControlName="companyCity"
+      [matAutocomplete]="auto"
+      [value]="incomingEditForm.controls.companyCity"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
 
+      <!-- @for (city of currentCitiesList().data; track city) { -->
+      <!-- <mat-option [value]="city.city | stringSanitizer"> -->
+        <!-- {{ city.city | stringSanitizer }} -->
+      <!-- </mat-option> -->
+      <!-- } -->
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Position Type</mat-label>
+    <mat-select formControlName="positionType">
+      @for (positionType of positionTypes(); track positionType) {
+      <mat-option [value]="positionType">{{ positionType }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Position Type</mat-label>
     @defer (when !incomingEditForm.controls.positionType ||

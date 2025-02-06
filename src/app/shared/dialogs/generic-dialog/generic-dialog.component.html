@@ -15,9 +15,9 @@
       <div class="overflow-form">
         @defer(when form && form.formType.get('status')?.value !== ''){
         <app-edit-row
-          (formEmit)="sendForm(form.formType)"
-          [incomingEditForm]="form.formType"
-          [countries]="countriesList"
+        [incomingEditForm]="form.formType"
+        [countries]="countriesList"
+        (formEmit)="sendForm(form.formType)"
         ></app-edit-row>
         } @placeholder { Row is empty! }
       </div>

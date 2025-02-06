@@ -4,7 +4,7 @@ import { UserMessages, ValidationMessages } from '../../core/models/enum/message
 import { FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
-import { Country } from './../../core/models/data.interface';
+import { City, Country } from './../../core/models/data.interface';
 import { ITableDataRow, ITableSaveRequest } from './../../core/models/table.interface';
 import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from './../../core/models/users.interface';
 
@@ -17,6 +17,8 @@ export class StateService {
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
   private countries: WritableSignal<Country[]> = signal<Country[]>([] as Country[])
   private currentCountry: WritableSignal<Country> = signal<Country>({} as Country);
+  private currentCitiesByCountry: WritableSignal<City> = signal<City>({} as City);
+  private filteredCities: WritableSignal<string[]> = signal<string[]>([] as string[]);
   public isDataExists = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
@@ -82,8 +84,7 @@ export class StateService {
             this.tableDataResponse = tableData
             this.isDataExists.set(true)
           }
-        }
-        )
+        })
       );
   }
 
@@ -114,22 +115,17 @@ export class StateService {
     )
   }
 
-  public getCountry(country: string): Observable<Country> {
-    return this.apiService.getCountryByName(country)
+  public getCities(country: string): Observable<City> {
+    return this.apiService.getCitiesReq(country)
       .pipe(
         take(1),
-        tap((data: Country) => {
-          this.currentCountry.set(data);
-        })
-      );
+        tap((city: City) => {
+          const data = city as City;
+          this.citiesOfCurrentCountry = data
+        }),
+      )
   }
 
-  // public getContinents(continent: ContinentsEnum): Observable<Country[]> {
-  //   return this.apiService.getCountriesListReq(continent)
-  //     .pipe(
-  //       takeUntil(this.destroy$),
-  //     )
-  // }
 
   public markAsDestroyed(): void {
     this.destroyed$.set(true);
@@ -177,9 +173,26 @@ export class StateService {
     this.tableDataResponse$.set(tableData);
   }
 
-
   public get allCountries(): Country[] {
     return this.countries();
+  }
+
+  public get currentSelectedCountry(): Country {
+    return this.currentCountry();
+  }
+
+  public get citiesOfCurrentCountry(): City {
+    return this.currentCitiesByCountry();
+  }
+  public set citiesOfCurrentCountry(cities: City) {
+    this.currentCitiesByCountry.set(cities);
+  }
+
+  public get filteredCitiesByCountry(): string[] {
+    return this.filteredCities();
+  }
+  public set filteredCitiesByCountry(cities: string[]) {
+    this.filteredCities.set(cities);
   }
 
 

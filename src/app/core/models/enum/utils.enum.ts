@@ -19,6 +19,11 @@ export enum FormEnum {
   remove = 'removeRows',
 }
 
+export enum FormDataTypes {
+  countries = 1,
+  cities = 2
+}
+
 export enum DialogEnum {
   notification = "notification",
   table = "table",

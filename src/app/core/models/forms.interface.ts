@@ -12,11 +12,9 @@ export interface RegisterModel {
   password: FormControl<string | null>;
 }
 
-
 export type RegisterFormModel = Omit<RegisterModel, 'confirm_password'> & {
   confirm_password: FormControl<string | null>;
 };
-
 
 export interface TableDataForm {
   status: FormControl<string | null>,
@@ -27,13 +25,13 @@ export interface TableDataForm {
   hunch: FormControl<string | null>
 }
 
-
 export interface TableDataFormRow {
   userId?: FormControl<number | null>,
   jobId?: FormControl<number | null>,
   status: FormControl<string | null>,
   companyName: FormControl<string | null>,
   companyLocation: FormControl<string | null>,
+  companyCity: FormControl<string | null>,
   positionType: FormControl<string | null>,
   positionStack: FormControl<string[] | null>,
   applicationPlatform: FormControl<string | null>,

@@ -10,3 +10,9 @@
   [ngClass]="isActivityTable ? 'non-credential-page-overlay' : ''"
 ></div>
 }
+
+@if (isSmallSpinner) {
+<div class="small-spinner">
+  <mat-spinner />
+</div>
+}
