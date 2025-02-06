@@ -33,7 +33,7 @@ export class ApiService {
 
   public getCitiesReq(country: string): Observable<City> {
     const citiesData = {
-      limit: 500,
+      limit: 1000,
       order: ParamsOrder.ASC,
       orderBy: ParamsBy.NAME,
       country: country.toLowerCase()

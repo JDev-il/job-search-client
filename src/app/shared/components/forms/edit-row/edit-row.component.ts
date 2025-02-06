@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsBaseComponent } from '../../../base/forms-base.component';
 import { StateService } from '../../../services/state.service';
+import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
 
 @Component({
   selector: 'app-edit-row',
@@ -22,6 +23,7 @@ import { StateService } from '../../../services/state.service';
     MatSelectModule,
     MatFormFieldModule,
     MatDatepickerModule,
+    StringSanitizerPipe,
     CommonModule,
   ],
   templateUrl: './edit-row.component.html',

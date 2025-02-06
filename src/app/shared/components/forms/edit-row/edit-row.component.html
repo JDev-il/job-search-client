@@ -54,15 +54,13 @@
       matInput
       formControlName="companyCity"
       [matAutocomplete]="auto"
-      [value]="incomingEditForm.controls.companyCity"
     />
     <mat-autocomplete #auto="matAutocomplete">
-
-      <!-- @for (city of currentCitiesList().data; track city) { -->
-      <!-- <mat-option [value]="city.city | stringSanitizer"> -->
-        <!-- {{ city.city | stringSanitizer }} -->
-      <!-- </mat-option> -->
-      <!-- } -->
+      @for (city of currentCitiesList().data; track city) {
+      <mat-option [value]="city.city | stringSanitizer">
+        {{ city.city | stringSanitizer }}
+      </mat-option>
+      }
     </mat-autocomplete>
   </mat-form-field>
   <mat-form-field appearance="outline">
