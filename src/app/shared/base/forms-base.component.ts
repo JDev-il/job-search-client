@@ -1,7 +1,7 @@
 import { Component, effect, EventEmitter, Input, Output, signal, WritableSignal } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup } from "@angular/forms";
 import { Subject } from "rxjs";
-import { City, CityData, Country } from "../../core/models/data.interface";
+import { City, Country } from "../../core/models/data.interface";
 import { PlatformEnum, PositionStackEnum, PositionTypeEnum, StatusEnum } from "../../core/models/enum/table-data.enum";
 import { ContinentsEnum } from "../../core/models/enum/utils.enum";
 import { TableDataFormRow } from "../../core/models/forms.interface";
@@ -19,8 +19,8 @@ export class FormsBaseComponent {
   @Input() newAddRowForm!: FormGroup<TableDataFormRow>;
   @Input() countries: WritableSignal<Country[]> = signal([] as Country[]);
   protected filteredCountries: WritableSignal<Country[]> = signal([] as Country[]);
-  protected currentCitiesList: WritableSignal<City> = signal({} as City);
-  protected filteredCities: WritableSignal<CityData[]> = signal([] as CityData[]);
+  protected currentCitiesList: WritableSignal<string[]> = signal<string[]>([]);
+  protected filteredCities: WritableSignal<string[]> = signal([] as string[]);
   protected companyCity = new FormControl('');
   protected destroy$ = new Subject<void>();
   protected statuses = signal(this.enumsToArray(StatusEnum));
@@ -34,12 +34,18 @@ export class FormsBaseComponent {
 
   constructor(public stateService: StateService) {
     effect(() => {
-      const countries = this.filterCountries(this.companyLocationField());
-      this.filteredCountries.set(countries);
-      if (this.companyCityField() || (this.currentCitiesList() && this.currentCitiesList().data)) {
+      if (this.companyCityField() || this.isCurrentCitiesList) {
+        this.currentCitiesList.set(this.stateService.citiesOfCurrentCountry.data);
         const cities = this.filterCities(this.companyCityField());
         this.filteredCities.set(cities);
       }
+      //! Keeping logic in case I want to include country change base on user's choice
+      // const countries = this.filterCountries(this.companyLocationField());
+      // this.filteredCountries.set(countries);
+      // if (this.companyCityField() || this.isCurrentCitiesList) {
+      //   const cities = this.filterCities(this.companyCityField());
+      //   this.filteredCities.set(cities);
+      // }
     }, { allowSignalWrites: true });
   }
 
@@ -58,34 +64,20 @@ export class FormsBaseComponent {
     }
   }
 
-  protected onSelectCity(): void {
-    const value = this.formType.get('companyCity')?.value || '';
-    this.companyCityField.set(value);
-  }
-
-  protected onTypeCountry(event: KeyboardEvent): void {
-    const companyCountry = this.formType.get('companyLocation') as AbstractControl;
-    const value = companyCountry?.value || ''
-    if (!value) {
-      this.cleanFormField(this.formType.get('companyCity') as AbstractControl)
-      this.isCompanyCity.set(false);
-      this.isCompanyLoction.set(false);
-      event.preventDefault();
-    }
-    this.companyLocationField.set(value.toLowerCase());
+  protected onSelectCity(city: string): void {
+    this.companyCityField.set(city);
   }
 
   protected onTypeCity(event: KeyboardEvent): void {
-    const companyCity = this.formType.get('companyCity') as AbstractControl;
-    const value = companyCity?.value || ''
-    if (!value) {
-      this.formType.get('companyLocation')?.setValue(this.companyLocationField());
+    const companyCity = this.formType.get('companyLocation') as AbstractControl;
+    const value = companyCity?.value || '';
+    if (!value && event.key === 'Backspace') {
+      this.resetCitiesList();
       event.preventDefault();
+      return;
     }
-    this.companyCityField.set(value.toLowerCase());
+    this.companyCityField.set(value);
   }
-
-  //! Refine what happens when focus on compayCity field
 
   protected cleanFormField(field: AbstractControl<string | null>) {
     field.setValue('');
@@ -103,18 +95,22 @@ export class FormsBaseComponent {
     });
   }
 
-  protected filterCities(query: string): CityData[] {
-    const data = this.currentCitiesList().data;
-    return data.filter((city: CityData) => {
-      return city.city.toLowerCase().includes(query.toLowerCase());
+  protected filterCities(query: string): string[] {
+    const citiesData = this.currentCitiesList() as string[];
+    return citiesData.filter((city: string) => {
+      return city.toLowerCase().includes(query.toLowerCase())
     });
   }
 
   protected resetCitiesList(): void {
-    return this.currentCitiesList.set(this.stateService.citiesOfCurrentCountry)
+    this.currentCitiesList.set(this.stateService.citiesOfCurrentCountry.data);
   }
 
   private get formType(): FormGroup<TableDataFormRow> {
     return this.incomingEditForm || this.newAddRowForm
+  }
+
+  private get isCurrentCitiesList(): boolean {
+    return !!this.stateService.citiesOfCurrentCountry.data;
   }
 }

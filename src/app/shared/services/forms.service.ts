@@ -54,7 +54,7 @@ export class FormsService {
       status: this.fb.control(row?.status ?? '', Validators.required),
       companyName: this.fb.control(row?.companyName ?? '', Validators.required),
       companyLocation: this.fb.control(row?.companyLocation ?? '', Validators.required),
-      companyCity: this.fb.control(row?.companyCity ?? '', Validators.required),
+      companyCity: this.fb.control(row?.companyCity ?? ''),
       positionType: this.fb.control(row?.positionType ?? '', Validators.required),
       positionStack: this.fb.control(row?.positionStack ?? [''], Validators.required),
       applicationPlatform: this.fb.control(row?.applicationPlatform ?? '', Validators.required),

@@ -1,7 +1,7 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { catchError, Observable, Subject, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
 import { UserMessages, ValidationMessages } from '../../core/models/enum/messages.enum';
-import { FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
+import { CountriesEnum, FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { City, Country } from './../../core/models/data.interface';
@@ -15,15 +15,17 @@ export class StateService {
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
   private tableDataResponse$: WritableSignal<ITableDataRow[]> = signal([] as ITableDataRow[]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
-  private countries: WritableSignal<Country[]> = signal<Country[]>([] as Country[])
+  private countries: WritableSignal<Country[]> = signal<Country[]>([] as Country[]);
   private currentCountry: WritableSignal<Country> = signal<Country>({} as Country);
   private currentCitiesByCountry: WritableSignal<City> = signal<City>({} as City);
   private filteredCities: WritableSignal<string[]> = signal<string[]>([] as string[]);
+  public currentCountryName: WritableSignal<string> = signal<string>(CountriesEnum.default);
   public isDataExists = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
 
   constructor(private apiService: ApiService, private authService: AuthService) {
+    this.getCities(this.currentCountryName()).subscribe();
   }
 
   public loginUser(loginForm: UserLogin): Observable<UserLogin | null> {
@@ -119,9 +121,9 @@ export class StateService {
     return this.apiService.getCitiesReq(country)
       .pipe(
         take(1),
-        tap((city: City) => {
-          const data = city as City;
-          this.citiesOfCurrentCountry = data
+        tap((cities: City) => {
+          cities.data = cities.data.sort((a: string, b: string) => a.localeCompare(b.toLowerCase()));
+          this.citiesOfCurrentCountry = cities;
         }),
       )
   }

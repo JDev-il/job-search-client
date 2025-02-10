@@ -12,9 +12,8 @@ export const environment = {
       },
       cities: {
         baseUrl: "https://countriesnow.space/api/v0.1/",
-        name: "countries/population/cities",
+        citiesList: 'countries/cities',
         filter: "countries/population/cities/filter",
-        // https://countriesnow.space/api/v0.1/countries/population/cities
       }
     },
     remote: 'http://192.168.68.56:3000',

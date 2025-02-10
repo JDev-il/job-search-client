@@ -22,7 +22,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Company Location</mat-label>
     <input
-      (keyup)="onTypeCountry($event)"
+      (keyup)="onTypeCity($event)"
       type="text"
       placeholder="Company Location"
       matInput
@@ -30,35 +30,23 @@
       [matAutocomplete]="auto"
     />
     <mat-autocomplete #auto="matAutocomplete">
-      @for (country of filteredCountries(); track country) {
+      @for (city of filteredCities(); track $index) {
       <mat-option
-        [value]="country.name.common | stringSanitizer"
-        (onSelectionChange)="onSelectCountry(country.name.common)"
+        [value]="city | stringSanitizer"
+        (onSelectionChange)="onSelectCity(city)"
       >
-        {{ country.name.common | stringSanitizer }}
+        {{ city | stringSanitizer }}
       </mat-option>
       }
     </mat-autocomplete>
   </mat-form-field>
-  @if (isCompanyCity()) {
   <mat-form-field appearance="outline">
-    <input
-      (keyup)="onTypeCity($event)"
-      type="text"
-      placeholder="Which City?"
-      matInput
-      formControlName="companyCity"
-      [matAutocomplete]="auto"
-    />
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectCity()">
-      @for (city of filteredCities(); track city) {
-      <mat-option
-        [value]="city.city | stringSanitizer"
-      >
-        {{ city.city | stringSanitizer }}
-      </mat-option>
+    <mat-label>Position Stacks</mat-label>
+    <mat-select multiple formControlName="positionStack">
+      @for (positionStack of positionStacks(); track positionStack) {
+      <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
       }
-    </mat-autocomplete>
+    </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Position Type</mat-label>
@@ -68,18 +56,6 @@
       }
     </mat-select>
   </mat-form-field>
-  } @else { @if(!isCompanyCity() && isCompanyLoction()){
-  <app-spinner [isSmallSpinner]="true"></app-spinner>
-  } }
-  <mat-form-field appearance="outline">
-    <mat-label>Position Stacks</mat-label>
-    <mat-select multiple formControlName="positionStack">
-      @for (positionStack of positionStacks(); track positionStack) {
-      <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
   <mat-form-field appearance="outline">
     <mat-label>Application Platform</mat-label>
     <mat-select formControlName="applicationPlatform">

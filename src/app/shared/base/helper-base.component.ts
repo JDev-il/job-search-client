@@ -14,9 +14,9 @@ export class HelperBaseComponent {
       next: (data) => { if (!data) { this.authService.logout(); this.routingService.toLogin() } else { this.spinnerState = false; } },
       error: (err) => console.error(err)
     })
-    if (!this.stateService.allCountries.length) {
+    /* if (!this.stateService.allCountries.length) {
       this.stateService.getAllCountries().subscribe();
-    }
+    } */
   }
 
   public get spinnerState(): boolean {

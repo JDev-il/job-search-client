@@ -27,38 +27,19 @@
       [value]="incomingEditForm.controls.companyName"
     />
   </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Company Location</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="companyLocation"
-      (keyup)="onTypeCountry($event)"
-      [value]="incomingEditForm.controls.companyLocation"
-      [matAutocomplete]="auto"
-    />
-    <mat-autocomplete #auto="matAutocomplete">
-      @for (country of filteredCountries(); track country) {
-      <mat-option [value]="country.name.common">{{
-        country.name.common
-      }}</mat-option>
-      }
-    </mat-autocomplete>
-  </mat-form-field>
   <mat-form-field appearance="outline">
     <input
       (keyup)="onTypeCity($event)"
       type="text"
       placeholder="Which City?"
       matInput
-      formControlName="companyCity"
+      formControlName="companyLocation"
       [matAutocomplete]="auto"
     />
     <mat-autocomplete #auto="matAutocomplete">
-      @for (city of currentCitiesList().data; track city) {
-      <mat-option [value]="city.city | stringSanitizer">
-        {{ city.city | stringSanitizer }}
+      @for (city of currentCitiesList(); track city) {
+      <mat-option [value]="city | stringSanitizer">
+        {{ city | stringSanitizer }}
       </mat-option>
       }
     </mat-autocomplete>

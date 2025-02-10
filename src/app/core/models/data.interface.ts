@@ -18,7 +18,7 @@ export interface Country {
 export interface City {
   error: boolean,
   msg: string,
-  data: CityData[]
+  data: string[]
 }
 
 export interface CityData {

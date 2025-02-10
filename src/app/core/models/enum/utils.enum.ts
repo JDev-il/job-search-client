@@ -35,6 +35,11 @@ export enum ContinentsEnum {
   ASIA = "Asia",
   AFRICA = "Africa"
 }
+
+export enum CountriesEnum {
+  default = "israel"
+}
+
 export enum CountryTypesEnum {
   eng = "eng",
   smo = "smo",

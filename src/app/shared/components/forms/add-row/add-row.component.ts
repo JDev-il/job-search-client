@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsBaseComponent } from '../../../base/forms-base.component';
 import { StringSanitizerPipe } from '../../../pipes/string-sanitizer.pipe';
 import { StateService } from '../../../services/state.service';
-import { SpinnerComponent } from '../../spinner/spinner.component';
 
 @Component({
   selector: 'app-add-row',
@@ -25,7 +24,6 @@ import { SpinnerComponent } from '../../spinner/spinner.component';
     MatFormFieldModule,
     MatDatepickerModule,
     StringSanitizerPipe,
-    SpinnerComponent,
     CommonModule
   ],
   templateUrl: './add-row.component.html',
