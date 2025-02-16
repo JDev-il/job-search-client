@@ -1,21 +1,11 @@
 <form [formGroup]="newAddRowForm" (submit)="formSubmit()">
   <ng-content></ng-content>
   <mat-form-field appearance="outline">
-    <mat-label>Status</mat-label>
-    <mat-select formControlName="status">
-      <mat-option>None</mat-option>
-      @for (status of statuses(); track status) {
-      <mat-option [value]="status">{{ status }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
     <mat-label>Company Name</mat-label>
     <input
       matInput
       formControlName="companyName"
-      placeholder="Name of company you applied to?"
+      placeholder="Name of Company"
     />
   </mat-form-field>
 
@@ -24,7 +14,6 @@
     <input
       (keyup)="onTypeCity($event)"
       type="text"
-      placeholder="Company Location"
       matInput
       formControlName="companyLocation"
       [matAutocomplete]="auto"
@@ -41,15 +30,7 @@
     </mat-autocomplete>
   </mat-form-field>
   <mat-form-field appearance="outline">
-    <mat-label>Position Stacks</mat-label>
-    <mat-select multiple formControlName="positionStack">
-      @for (positionStack of positionStacks(); track positionStack) {
-      <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Position Type</mat-label>
+    <mat-label>Role</mat-label>
     <mat-select formControlName="positionType">
       @for (positionType of positionTypes(); track positionType) {
       <mat-option [value]="positionType">{{ positionType }}</mat-option>
@@ -57,7 +38,15 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline">
-    <mat-label>Application Platform</mat-label>
+    <mat-label>Stacks</mat-label>
+    <mat-select multiple formControlName="positionStack">
+      @for (positionStack of positionStacks(); track positionStack) {
+      <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Applied On</mat-label>
     <mat-select formControlName="applicationPlatform">
       @for (platform of applicationPlatform(); track platform) {
       <mat-option [value]="platform">{{ platform }}</mat-option>
@@ -75,7 +64,15 @@
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
-
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status">
+      <mat-option>None</mat-option>
+      @for (status of statuses(); track status) {
+      <mat-option [value]="status">{{ status }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>My Hunch</mat-label>
     <input matInput formControlName="hunch" />

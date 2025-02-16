@@ -46,14 +46,6 @@
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Position Type</mat-label>
-    <mat-select formControlName="positionType">
-      @for (positionType of positionTypes(); track positionType) {
-      <mat-option [value]="positionType">{{ positionType }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Position Type</mat-label>
     @defer (when !incomingEditForm.controls.positionType ||
     !incomingEditForm.get('positionType')?.value) {
     <mat-select formControlName="positionType">
@@ -81,12 +73,19 @@
       }
     </mat-select>
     } @placeholder {
-    <input
-      type="text"
-      matInput
-      formControlName="positionStack"
-      [value]="incomingEditForm.controls.positionStack"
-    />
+    <div class="edit-stack-div">
+      <input
+        type="text"
+        matInput
+        formControlName="positionStack"
+        [value]="incomingEditForm.controls.positionStack"
+      />
+      @if (!isEditField()) {
+      <a type="button" (click)="editField()" class="edit-field-button"
+        >Edit Stack</a
+      >
+      }
+    </div>
     }
   </mat-form-field>
 

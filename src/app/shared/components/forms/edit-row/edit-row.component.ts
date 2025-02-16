@@ -27,7 +27,7 @@ import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
     CommonModule,
   ],
   templateUrl: './edit-row.component.html',
-  styleUrl: '../styles/form-style.scss'
+  styleUrls: ['../styles/form-style.scss', './edit-row.component.scss']
 })
 export class EditRowComponent extends FormsBaseComponent {
 
@@ -39,9 +39,15 @@ export class EditRowComponent extends FormsBaseComponent {
       this.destroy$.complete();
     })
   }
-  formSubmit() {
+
+  public formSubmit() {
     if (this.incomingEditForm.valid) {
       this.formEmit.emit(this.incomingEditForm);
     }
+  }
+
+  public editField() {
+    this.isEditField.set(true);
+    this.incomingEditForm.controls.positionStack.reset()
   }
 }

@@ -32,6 +32,11 @@ export class FormsBaseComponent {
   protected isCompanyCity = signal(false);
   protected isCompanyLoction = signal(false);
 
+
+  //! Complete edit field logic
+  protected isEditField = signal(false);
+
+
   constructor(public stateService: StateService) {
     effect(() => {
       if (this.companyCityField() || this.isCurrentCitiesList) {
@@ -39,6 +44,7 @@ export class FormsBaseComponent {
         const cities = this.filterCities(this.companyCityField());
         this.filteredCities.set(cities);
       }
+
       //! Keeping logic in case I want to include country change base on user's choice
       // const countries = this.filterCountries(this.companyLocationField());
       // this.filteredCountries.set(countries);

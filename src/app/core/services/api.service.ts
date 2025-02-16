@@ -91,17 +91,17 @@ export class ApiService {
   }
 
   public addOrUpdateApplicationReq(row: ITableDataRow, formAction: FormEnum): Observable<ITableSaveRequest> {
-    const payload = this.userPayload(row, formAction) as ITableDataRow;
+    const payload = this.userPayload(row) as ITableDataRow;
     const addOrEdit = formAction === FormEnum.add ? this.jobSearchParams.addApplication : this.jobSearchParams.updateApplication;
     return this.http.post<ITableSaveRequest>(`${this.env.local}${this.jobSearchParams.path}${addOrEdit}`, { ...payload });
   }
 
   public removeRowsReq(rows: ITableDataRow[], formAction: string): Observable<ITableDataRow[]> {
-    const payload = this.userPayload(rows, formAction);
+    const payload = this.userPayload(rows);
     return this.http.post<ITableDataRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeRows}`, payload);
   }
 
-  private userPayload(formRow: ITableDataRow | ITableDataRow[], formAction: string): ITableDataRow {
+  private userPayload(formRow: ITableDataRow | ITableDataRow[]): ITableDataRow {
     let payload = {
       ...formRow,
       userId: this.currentUserData$().userId

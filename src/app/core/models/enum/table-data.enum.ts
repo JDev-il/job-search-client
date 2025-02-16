@@ -2,43 +2,44 @@ export enum TableColsEnum {
   'status', 'company', 'position', 'application', 'note', 'hunch'
 }
 export enum StatusEnum {
-  AWAITING_RESPONSE = "Awaiting response..",
-  AWAITING_INTERVIEW = "Awaiting interview..",
-  AWAITING_HR_DECISION = "Awaiting HR/Tech lead decision..",
-  AWAITING_EXAM = "Awaiting Exam..",
-  AWAITING_RESULTS = "Awaiting results",
-  ARCHIVED = "Archived",
+  AWAITING_RESPONSE = "Awaiting response",
+  HR_REACHED_BACK = "HR reached me back",
+  AWAITING_DECISION = "Awaiting decision",
   DECIDED_TO_PASS = "Decided to pass",
-  INTERVIEW_SCHEDULED = "Interview scheduled",
   LOW_SALARY = "Below salary expectations",
-  REAPPLIED = "Reapplied & waiting response",
-  PASSED = "Passed",
+  DID_NOT_PASS_HR = "Didn't pass HR",
+  AWAITING_INTERVIEW = "Awaiting interview",
+  INTERVIEW_SCHEDULED = "Interview scheduled",
+  AWAITING_RESULTS = "Awaiting interview results",
   REJECTED = "Rejected",
-  PROBABLY_NOT = "Probably not..",
-  STILL_WAITING = "Still waiting for reply..",
+  PASSED = "Passed",
+  PROBABLY_NOT = "Probably didn't pass",
+  REAPPLIED = "Reapplied & awaiting response",
+  ARCHIVED = "Archived",
+  RECIVED_CONTRACT = "Received a contract"
 }
 
 export enum PositionTypeEnum {
-  FS = "Fullstack",
-  FSS = "Fullstack (Senior)",
-  FE = "Frontend",
-  FES = "Frontend (Senior)",
-  AD = "Angular",
-  SWD = "SW",
-  SWE = "SE",
+  FS = "Fullstack Developer",
+  FSS = "Fullstack Developer (Senior)",
+  FE = "Frontend Developer",
+  FES = "Frontend Developer (Senior)",
+  AD = "Angular Developer",
+  SWD = "Software Developer",
   TL = "Team Lead",
-  WD = "Web",
+  WD = "Web Developer",
 }
 
 export enum PositionStackEnum {
   ANGULAR = "Angular",
   NODE = "Node.js",
-  DOTNET = ".NET Core",
-  STATE_MANAGEMENT = "REDUX/NGRX",
+  DOTNET = ".NET Core 6/7",
+  STATE_MANAGEMENT = "NgRx/NGXS/Redux",
   UNKNOWN = "N/A",
   REACT = "React.js",
-  REACT_TS = "React.js/TypeScript",
-  AN_RE_VU = "Angular/React.js/Vue.js",
+  REACT_TS = "React/TypeScript",
+  VUE = "Vue.js",
+  NG_RC_VUE = "Angular/React.js/Vue.js",
 }
 
 export enum PlatformEnum {

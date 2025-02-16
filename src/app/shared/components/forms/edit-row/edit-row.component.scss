@@ -1,0 +1,13 @@
+.edit-stack-div {
+  display: flex;
+  .edit-field-button {
+    display: flex;
+    min-width: fit-content;
+    font-size: small;
+    color: var(--bright-blue);
+    cursor: pointer;
+    &:hover {
+      color: var(--secondary-bg);
+    }
+  }
+}

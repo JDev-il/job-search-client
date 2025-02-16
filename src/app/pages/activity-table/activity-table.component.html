@@ -112,9 +112,7 @@
               <div class="split-cell positions">
                 <td>{{ row.positionType }}</td>
                 <td class="stacks">
-                  @for(position of row.positionStack; track $index){
-                  <p>{{ position }}</p>
-                  }
+                  {{ row.positionStack }}
                 </td>
               </div>
             </div>
