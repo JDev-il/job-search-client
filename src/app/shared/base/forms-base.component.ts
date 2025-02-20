@@ -1,5 +1,6 @@
-import { Component, effect, EventEmitter, Input, Output, signal, WritableSignal } from "@angular/core";
+import { Component, effect, EventEmitter, Input, Output, signal, ViewChild, WritableSignal } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup } from "@angular/forms";
+import { MatSelect } from "@angular/material/select";
 import { Subject } from "rxjs";
 import { City, Country } from "../../core/models/data.interface";
 import { PlatformEnum, PositionStackEnum, PositionTypeEnum, StatusEnum } from "../../core/models/enum/table-data.enum";
@@ -18,6 +19,10 @@ export class FormsBaseComponent {
   @Input() incomingEditForm!: FormGroup<TableDataFormRow>;
   @Input() newAddRowForm!: FormGroup<TableDataFormRow>;
   @Input() countries: WritableSignal<Country[]> = signal([] as Country[]);
+  @ViewChild('statusSelect') statusSelect!: MatSelect;
+  @ViewChild('typeSelect') typeSelect!: MatSelect;
+  @ViewChild('stackSelect') stackSelect!: MatSelect;
+  @ViewChild('platformSelect') platformSelect!: MatSelect;
   protected filteredCountries: WritableSignal<Country[]> = signal([] as Country[]);
   protected currentCitiesList: WritableSignal<string[]> = signal<string[]>([]);
   protected filteredCities: WritableSignal<string[]> = signal([] as string[]);
@@ -31,11 +36,7 @@ export class FormsBaseComponent {
   protected companyCityField = signal('');
   protected isCompanyCity = signal(false);
   protected isCompanyLoction = signal(false);
-
-
-  //! Complete edit field logic
-  protected isEditField = signal(false);
-
+  protected isEditField = signal(true);
 
   constructor(public stateService: StateService) {
     effect(() => {
@@ -44,7 +45,6 @@ export class FormsBaseComponent {
         const cities = this.filterCities(this.companyCityField());
         this.filteredCities.set(cities);
       }
-
       //! Keeping logic in case I want to include country change base on user's choice
       // const countries = this.filterCountries(this.companyLocationField());
       // this.filteredCountries.set(countries);
@@ -108,8 +108,30 @@ export class FormsBaseComponent {
     });
   }
 
+
   protected resetCitiesList(): void {
     this.currentCitiesList.set(this.stateService.citiesOfCurrentCountry.data);
+  }
+
+  protected isEditClicked(): void {
+    this.isEditField.set(false);
+  }
+
+  protected whichSelect(controlName: string) {
+    switch (controlName) {
+      case 'status':
+        this.statusSelect.open();
+        break;
+      case 'positionType':
+        this.typeSelect.open();
+        break;
+      case 'positionStack':
+        this.stackSelect.open();
+        break;
+      case 'applicationPlatform':
+        this.platformSelect.open();
+        break;
+    }
   }
 
   private get formType(): FormGroup<TableDataFormRow> {
@@ -119,4 +141,5 @@ export class FormsBaseComponent {
   private get isCurrentCitiesList(): boolean {
     return !!this.stateService.citiesOfCurrentCountry.data;
   }
+
 }

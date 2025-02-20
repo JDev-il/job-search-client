@@ -112,7 +112,9 @@
               <div class="split-cell positions">
                 <td>{{ row.positionType }}</td>
                 <td class="stacks">
-                  {{ row.positionStack }}
+                  @for (item of row.positionStack; track $index) {
+                  <p>{{ item }}</p>
+                  }
                 </td>
               </div>
             </div>
@@ -174,7 +176,6 @@
             </div>
           </td>
         </ng-container>
-
         <tr
           mat-header-row
           *matHeaderRowDef="displayedColumns; sticky: true"
@@ -182,7 +183,8 @@
         <tr
           mat-row
           *matRowDef="let row; columns: displayedColumns"
-          [ngClass]="{ selected: isSelected(row) }"
+          [ngClass]="rowColorStatus(row)"
+          [class.selected]="isSelected(row)"
         ></tr>
       </table>
     </div>
@@ -192,6 +194,5 @@
     </div>
     }
   </div>
-
   <app-spinner [isSpinner]="localSpinner()" [isActivityTable]="true" />
 </div>

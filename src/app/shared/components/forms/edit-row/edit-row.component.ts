@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsBaseComponent } from '../../../base/forms-base.component';
@@ -24,6 +25,7 @@ import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
     MatFormFieldModule,
     MatDatepickerModule,
     StringSanitizerPipe,
+    MatIcon,
     CommonModule,
   ],
   templateUrl: './edit-row.component.html',
@@ -32,7 +34,7 @@ import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
 export class EditRowComponent extends FormsBaseComponent {
 
   @Input() incomingFormTitle!: string;
-  constructor(private destroyRef: DestroyRef, stateService: StateService) {
+  constructor(private cd: ChangeDetectorRef, private destroyRef: DestroyRef, stateService: StateService) {
     super(stateService);
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
@@ -40,14 +42,17 @@ export class EditRowComponent extends FormsBaseComponent {
     })
   }
 
-  public formSubmit() {
+  public formSubmit(): void {
     if (this.incomingEditForm.valid) {
       this.formEmit.emit(this.incomingEditForm);
     }
   }
 
-  public editField() {
-    this.isEditField.set(true);
-    this.incomingEditForm.controls.positionStack.reset()
+  public editOption(fieldName: string): void {
+    this.incomingEditForm.get(fieldName)?.reset();
+    setTimeout(() => {
+      this.whichSelect(fieldName);
+
+    }, 200)
   }
 }

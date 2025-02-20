@@ -31,7 +31,7 @@
           padding: 0 15px 0;
           height: 35px;
           box-shadow: none;
-          transition: all .1s ease-in-out !important;
+          transition: all 0.1s ease-in-out !important;
           background-color: rgb(68, 109, 147);
           color: #fff;
           &:disabled {
@@ -55,6 +55,23 @@
           }
         }
       }
+    }
+  }
+}
+
+.mat-mdc-select-panel {
+  padding: 0 !important;
+  .mdc-list-item {
+    background-color: #d9e7fc !important;
+  }
+  .mat-mdc-option-multiple {
+    background-color: #d9e7fc !important;
+    color: #3b3b3b !important;
+  }
+  .mdc-list-item--selected {
+    background-color: #113a77 !important;
+    span {
+      color: white !important;
     }
   }
 }

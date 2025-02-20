@@ -3,7 +3,7 @@
     <mat-label>Status</mat-label>
     @defer (when !incomingEditForm.controls.status ||
     !incomingEditForm.get('status')?.value) {
-    <mat-select formControlName="status">
+    <mat-select formControlName="status" #statusSelect>
       @for (status of statuses(); track status) {
       <mat-option [value]="status">{{ status }}</mat-option>
       }
@@ -15,6 +15,11 @@
       formControlName="status"
       [value]="incomingEditForm.controls.status"
     />
+    <div class="button-icon-div">
+      <a type="button" (click)="editOption('status')" class="button-icon-field">
+        <mat-icon>close</mat-icon>
+      </a>
+    </div>
     }
   </mat-form-field>
 
@@ -28,6 +33,7 @@
     />
   </mat-form-field>
   <mat-form-field appearance="outline">
+    <mat-label>Company Location</mat-label>
     <input
       (keyup)="onTypeCity($event)"
       type="text"
@@ -48,7 +54,7 @@
     <mat-label>Position Type</mat-label>
     @defer (when !incomingEditForm.controls.positionType ||
     !incomingEditForm.get('positionType')?.value) {
-    <mat-select formControlName="positionType">
+    <mat-select formControlName="positionType" #typeSelect>
       @for (positionType of positionTypes(); track positionType) {
       <mat-option [value]="positionType">{{ positionType }}</mat-option>
       }
@@ -60,6 +66,15 @@
       formControlName="positionType"
       [value]="incomingEditForm.controls.positionType"
     />
+    <div class="button-icon-div">
+      <a
+        type="button"
+        (click)="editOption('positionType')"
+        class="button-icon-field"
+      >
+        <mat-icon>close</mat-icon>
+      </a>
+    </div>
     }
   </mat-form-field>
 
@@ -67,24 +82,28 @@
     <mat-label>Position Stacks</mat-label>
     @defer (when !incomingEditForm.controls.positionStack ||
     !incomingEditForm.get('positionStack')?.value) {
-    <mat-select multiple formControlName="positionStack">
+    <mat-select multiple formControlName="positionStack" #stackSelect>
       @for (positionStack of positionStacks(); track positionStack) {
       <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
       }
     </mat-select>
     } @placeholder {
-    <div class="edit-stack-div">
+    <div class="edit-div">
       <input
         type="text"
         matInput
         formControlName="positionStack"
         [value]="incomingEditForm.controls.positionStack"
       />
-      @if (!isEditField()) {
-      <a type="button" (click)="editField()" class="edit-field-button"
-        >Edit Stack</a
-      >
-      }
+      <div class="button-icon-div">
+        <a
+          type="button"
+          (click)="editOption('positionStack')"
+          class="button-icon-field"
+        >
+          <mat-icon>close</mat-icon>
+        </a>
+      </div>
     </div>
     }
   </mat-form-field>
@@ -93,7 +112,7 @@
     <mat-label>Application Platform</mat-label>
     @defer (when !incomingEditForm.controls.applicationPlatform ||
     !incomingEditForm.get('applicationPlatform')?.value) {
-    <mat-select multiple formControlName="applicationPlatform">
+    <mat-select formControlName="applicationPlatform" #platformSelect>
       @for (platform of applicationPlatform(); track platform) {
       <mat-option [value]="platform">{{ platform }}</mat-option>
       }
@@ -104,7 +123,17 @@
       matInput
       formControlName="applicationPlatform"
       [value]="incomingEditForm.controls.applicationPlatform"
-    />}
+    />
+    <div class="button-icon-div">
+      <a
+        type="button"
+        (click)="editOption('applicationPlatform')"
+        class="button-icon-field"
+      >
+        <mat-icon>close</mat-icon>
+      </a>
+    </div>
+    }
   </mat-form-field>
 
   <mat-form-field appearance="outline">

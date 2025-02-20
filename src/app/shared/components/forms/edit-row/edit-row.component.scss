@@ -1,11 +1,26 @@
 .edit-stack-div {
   display: flex;
-  .edit-field-button {
+}
+.button-icon-div {
+  position: absolute;
+  z-index: 9999;
+  width: 100%;
+  cursor: pointer;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  .button-icon-field {
+    position: absolute;
     display: flex;
-    min-width: fit-content;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
     font-size: small;
     color: var(--bright-blue);
-    cursor: pointer;
     &:hover {
       color: var(--secondary-bg);
     }

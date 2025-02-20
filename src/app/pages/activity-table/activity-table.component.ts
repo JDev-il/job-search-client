@@ -11,7 +11,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { debounceTime, fromEvent, map, Subject, takeUntil, tap } from 'rxjs';
-import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
+import { PositionStackEnum, StatusEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
@@ -25,6 +25,7 @@ import { ITableDataRow } from './../../core/models/table.interface';
   templateUrl: './activity-table.component.html',
   styleUrl: './activity-table.component.scss',
   imports: [
+    SpinnerComponent,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
@@ -34,7 +35,6 @@ import { ITableDataRow } from './../../core/models/table.interface';
     MatIconModule,
     MatInputModule,
     CommonModule,
-    SpinnerComponent
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -47,8 +47,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
   public dataSource = new MatTableDataSource([] as ITableDataRow[]);
   public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
-
-  public rowColor: string = '';
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ITableDataRow[]>;
@@ -78,6 +76,17 @@ export class ActivityTableComponent extends BaseDialogComponent {
       this.destroy$.complete();
     })
   }
+
+  public rowColorStatus = (row: ITableDataRow): string => {
+    switch (row.status) {
+      case StatusEnum.AWAITING_RESPONSE:
+        return "awaiting-response";
+      case StatusEnum.REJECTED:
+        return "rejected";
+      default:
+        return '';
+    }
+  };
 
   public applyFilter(event: KeyboardEvent) {
     fromEvent(event.target as HTMLInputElement, 'input')

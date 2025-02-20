@@ -33,13 +33,15 @@ export enum PositionTypeEnum {
 export enum PositionStackEnum {
   ANGULAR = "Angular",
   NODE = "Node.js",
-  DOTNET = ".NET Core 6/7",
-  STATE_MANAGEMENT = "NgRx/NGXS/Redux",
+  DOTNET = ".NET Core",
+  NGRX = "NgRx",
+  NGXS = "NGXS",
+  REDUX = "Redux",
   UNKNOWN = "N/A",
   REACT = "React.js",
-  REACT_TS = "React/TypeScript",
+  REACT_TS = "React / TypeScript",
   VUE = "Vue.js",
-  NG_RC_VUE = "Angular/React.js/Vue.js",
+  NG_RC_VUE = "Angular, React.js, Vue.js",
 }
 
 export enum PlatformEnum {

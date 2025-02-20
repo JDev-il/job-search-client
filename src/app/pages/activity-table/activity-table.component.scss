@@ -1,3 +1,4 @@
+@import "../../shared/style/status.scss";
 .activity-table-wrapper {
   margin: 0 auto;
   max-width: 85%;
@@ -63,7 +64,13 @@
       box-shadow: none;
       overflow-y: auto;
       .selected {
-        background-color: #ff6c8240;
+        background-color: #ff6c8282 !important;
+        text-decoration: line-through;
+        .combined-cell-content {
+          button {
+            color: #495be3 !important;
+          }
+        }
       }
       .mat-mdc-table {
         min-width: unset;
@@ -107,19 +114,23 @@
               display: flex;
               align-items: center;
               bottom: 0;
-              width: 100%;
               top: 45px;
+              width: 85%;
+              @media screen and (max-width: 1280px) {
+                width: 95%;
+              }
               @media screen and (max-width: 992px) {
+                width: 100%;
                 top: 35px;
               }
               h4 {
                 position: relative;
-                font-size: 0.8em !important;
+                font-size: 0.9em !important;
                 display: flex;
                 font-weight: 500;
                 margin: 0 auto;
                 @media screen and (max-width: 1280px) {
-                  font-size: 0.7em !important;
+                  font-size: 1em !important;
                 }
               }
             }
@@ -148,6 +159,7 @@
                 button {
                   border-radius: 0.2em;
                   padding: 0;
+                  color: #495be3;
                   mat-icon {
                     cursor: pointer;
                     border-radius: 0.1em;
@@ -174,18 +186,20 @@
               }
             }
             .cell-control:not(.combined-cell) {
-              height: 75px;
-              min-width: 185px;
-              font-size: small;
+              height: 85px;
+              font-size: medium;
               display: flex;
               align-items: center;
+              justify-content: center;
               @media screen and (max-width: 1280px) {
                 min-width: 220px;
+                text-align: justify;
               }
               & > div {
-                width: 100%;
+                width: 85%;
                 display: flex;
                 @media screen and (max-width: 1280px) {
+                  width: 100%;
                 }
                 & > * {
                   display: flex;
@@ -193,28 +207,32 @@
                   margin: auto;
                 }
               }
-              @media screen and (max-width: 1280px) {
-                justify-content: flex-start;
-              }
               .positions {
-                max-width: 185px;
-                margin: auto;
+                //! From here >> finish maintenance
                 .stacks {
-                  margin: auto;
-                  min-width: fit-content;
+                  text-align: center;
+                  margin: 0 auto 0 15px;
                   display: flex;
                   flex-flow: column;
-                  max-height: 40px;
+                  align-items: center;
+                  justify-content: flex-start;
+                  max-height: 58px;
                   overflow-y: auto;
                   p {
-                    margin: 0;
+                    text-align: left;
                   }
+                }
+                @media screen and (max-width: 1280px) {
+                  max-width: 85%;
                 }
               }
             }
             .overflow-cell {
               overflow-y: auto;
               word-break: break-all;
+
+              margin: auto;
+              width: 100%;
             }
             .overflow-cell-unflex {
               align-items: unset !important;
