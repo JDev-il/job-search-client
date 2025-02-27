@@ -1,14 +1,21 @@
 @import "./app/shared/style/custom-material.scss";
 @import "./app/shared/style/variables.scss";
 
+@function reduceFontSize($font) {
+  @return $font * 0.85; // Reduce by 15%
+}
+
+html {
+  font-size: 16px; // Ensures predictable rem calculations
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-}
-body {
+
   h1,
   h2,
   h3,
@@ -16,5 +23,37 @@ body {
   h5,
   h6 {
     margin: 0px 0px 25px 10px;
+  }
+
+  $h1-size: 1.75rem;
+  $h2-size: reduceFontSize($h1-size);
+  $h3-size: reduceFontSize($h2-size);
+  $h4-size: reduceFontSize($h3-size);
+  $h5-size: reduceFontSize($h4-size);
+  $h6-size: reduceFontSize($h5-size);
+
+  h1 {
+    font-size: $h1-size !important;
+  }
+  h2 {
+    font-size: $h2-size !important;
+  }
+  h3 {
+    font-size: $h3-size !important;
+  }
+  h4 {
+    font-size: $h4-size !important;
+  }
+  h5 {
+    font-size: $h5-size !important;
+  }
+  h6 {
+    font-size: $h6-size !important;
+  }
+
+  a,
+  button {
+    font-size: 0.85rem !important;
+    border-radius: 0.6rem !important;
   }
 }
