@@ -11,13 +11,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { debounceTime, fromEvent, map, Subject, takeUntil, tap } from 'rxjs';
-import { PositionStackEnum, StatusEnum } from '../../core/models/enum/table-data.enum';
+import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
 import { ITableDataRow } from './../../core/models/table.interface';
+import { UIService } from './../../shared/services/ui.service';
 
 @Component({
   selector: 'app-activity-table',
@@ -51,7 +52,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ITableDataRow[]>;
 
-  constructor(private formService: FormsService, private destroyRef: DestroyRef, private stateService: StateService, private renderer: Renderer2, dialog: MatDialog) {
+  constructor(private formService: FormsService, private stateService: StateService, private uiService: UIService, private destroyRef: DestroyRef, private renderer: Renderer2, dialog: MatDialog) {
     super(dialog);
     effect(() => {
       if (this.stateService.getDestroyedState()) {
@@ -77,15 +78,8 @@ export class ActivityTableComponent extends BaseDialogComponent {
     })
   }
 
-  public rowColorStatus = (row: ITableDataRow): string => {
-    switch (row.status) {
-      case StatusEnum.AWAITING_RESPONSE:
-        return "awaiting-response";
-      case StatusEnum.REJECTED:
-        return "rejected";
-      default:
-        return '';
-    }
+  public rowColorSwitch(row: ITableDataRow): string {
+    return this.uiService.colorSwitch(row);
   };
 
   public applyFilter(event: KeyboardEvent) {

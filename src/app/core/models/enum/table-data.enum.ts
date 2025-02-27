@@ -16,7 +16,7 @@ export enum StatusEnum {
   PROBABLY_NOT = "Probably didn't pass",
   REAPPLIED = "Reapplied & awaiting response",
   ARCHIVED = "Archived",
-  RECIVED_CONTRACT = "Received a contract"
+  RECEIVED_CONTRACT = "Received a contract"
 }
 
 export enum PositionTypeEnum {
@@ -39,8 +39,9 @@ export enum PositionStackEnum {
   REDUX = "Redux",
   UNKNOWN = "N/A",
   REACT = "React.js",
-  REACT_TS = "React / TypeScript",
   VUE = "Vue.js",
+  TS = "TypeScript",
+  JS = "JavaScript",
   NG_RC_VUE = "Angular, React.js, Vue.js",
 }
 

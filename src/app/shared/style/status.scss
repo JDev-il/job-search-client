@@ -1,35 +1,131 @@
-@mixin row-color($status, $bg-color, $color) {
+// Base Colors
+$awaiting-response: #a4c2f4;
+$hr-reached-back: #ff9375;
+$awaiting-decision: #2193de;
+$decided-to-pass: #dd7e6b;
+$below-salary-expectation: #a64d79;
+$did-not-pass-hr: #ff0100;
+$awaiting-interview: #a2c4c9;
+$interview-scheduled: #3d78d8;
+$awaiting-results: #ffcb31;
+$rejected: #e06666;
+$passed: #91f3cc;
+$probably-not: #f6b26b;
+$reapplied: #20124d;
+$archived: #434343;
+$received-contract: #93c47d;
+
+@function is-color-match($color1, $color2) {
+  @return red($color1) == red($color2) and green($color1) == green($color2) and
+    blue($color1) == blue($color2);
+}
+
+// Function to generate accent colors dynamically
+@function generate-accent(
+  $color,
+  $lightness-adjust: 20%,
+  $saturation-adjust: -15%
+) {
+  @if is-color-match($color, #20124d) or is-color-match($color, #434343) {
+    @return #ffffffa3;
+  }
+  @if lightness($color) > 10% {
+    $lightness-adjust: -35%;
+  } @else {
+    $lightness-adjust: -20%; // Prevents excessive lightening
+  }
+  $new-lightness: lightness($color) + $lightness-adjust;
+  $new-saturation: saturation($color) + $saturation-adjust;
+  @return hsl(hue($color), $new-saturation, $new-lightness);
+}
+
+// Generate accent colors dynamically
+$awaiting-response-accent: generate-accent($awaiting-response);
+$hr-reached-back-accent: generate-accent($hr-reached-back);
+$awaiting-decision-accent: generate-accent($awaiting-decision);
+$decided-to-pass-accent: generate-accent($decided-to-pass);
+$below-salary-expectation-accent: generate-accent($below-salary-expectation);
+$did-not-pass-hr-accent: generate-accent($did-not-pass-hr);
+$awaiting-interview-accent: generate-accent($awaiting-interview);
+$interview-scheduled-accent: generate-accent($interview-scheduled);
+$awaiting-results-accent: generate-accent($awaiting-results);
+$rejected-accent: generate-accent($rejected);
+$passed-accent: generate-accent($passed);
+$probably-not-accent: generate-accent($probably-not);
+$reapplied-accent: generate-accent($reapplied);
+$archived-accent: generate-accent($archived);
+$received-contract-accent: generate-accent($received-contract);
+
+// Mixin for row styling
+@mixin row-color($status, $bg-color, $accent-color) {
   .#{$status} {
     background-color: $bg-color !important;
+    border-color: darken($bg-color, 10%);
     > * {
-      color: $color !important;
+      color: $accent-color !important;
       .combined-cell-content {
         button {
-          color: $color !important;
+          color: $accent-color !important;
         }
       }
     }
   }
 }
 
-// Apply mixin to different statuses
-@include row-color("awaiting-response", var(--main-bg), white);
-@include row-color("rejected", var(--orange-red), white);
+// Apply styles to all statuses
+@include row-color(
+  "awaiting-response",
+  $awaiting-response,
+  $awaiting-response-accent
+);
+@include row-color(
+  "hr-reached-back",
+  $hr-reached-back,
+  $hr-reached-back-accent
+);
+@include row-color(
+  "awaiting-decision",
+  $awaiting-decision,
+  $awaiting-decision-accent
+);
+@include row-color(
+  "decided-to-pass",
+  $decided-to-pass,
+  $decided-to-pass-accent
+);
+@include row-color(
+  "below-salary-expectation",
+  $below-salary-expectation,
+  $below-salary-expectation-accent
+);
+@include row-color(
+  "did-not-pass-hr",
+  $did-not-pass-hr,
+  $did-not-pass-hr-accent
+);
+@include row-color(
+  "awaiting-interview",
+  $awaiting-interview,
+  $awaiting-interview-accent
+);
+@include row-color(
+  "interview-scheduled",
+  $interview-scheduled,
+  $interview-scheduled-accent
+);
+@include row-color(
+  "awaiting-results",
+  $awaiting-results,
+  $awaiting-results-accent
+);
+@include row-color("rejected", $rejected, $rejected-accent);
+@include row-color("passed", $passed, $passed-accent);
+@include row-color("probably-not", $probably-not, $probably-not-accent);
+@include row-color("reapplied", $reapplied, $reapplied-accent);
+@include row-color("archived", $archived, $archived-accent);
+@include row-color(
+  "received-contract",
+  $received-contract,
+  $received-contract-accent
+);
 @include row-color("default-row", transparent, white);
-
-// --main-bg: rgb(73, 91, 227);
-// --secondary-bg: rgb(17, 58, 119);
-// --gray-blue: rgb(186, 194, 240);
-// --watermelon: rgb(255, 108, 128);
-// --mint-green: rgb(117, 255, 156);
-
-// --bright-blue: oklch(51.01% 0.274 263.83);
-// --electric-violet: oklch(53.18% 0.28 296.97);
-// --french-violet: oklch(47.66% 0.246 305.88);
-// --vivid-pink: oklch(69.02% 0.277 332.77);
-// --hot-red: oklch(61.42% 0.238 15.34);
-// --orange-red: oklch(63.32% 0.24 31.68);
-
-// --gray-900: oklch(19.37% 0.006 300.98);
-// --gray-700: oklch(36.98% 0.014 302.71);
-// --gray-400: oklch(70.9% 0.015 304.04);
