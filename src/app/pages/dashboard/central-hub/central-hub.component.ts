@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CvCounterComponent } from './cv-counter/cv-counter.component';
 import { MarketAnalystComponent } from './market-analyst/market-analyst.component';
 import { PositionsListComponent } from './positions-list/positions-list.component';
@@ -14,5 +14,8 @@ import { StatusPreviewComponent } from './status-preview/status-preview.componen
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CentralHubComponent {
+  @Input() centralHubCvCounter = signal<number>(0);
+  @Output() genericEmitter = new EventEmitter<void>();
+  constructor() { }
 
 }

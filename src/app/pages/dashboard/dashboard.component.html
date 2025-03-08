@@ -3,10 +3,17 @@
   <hr />
   <div class="dashboard-components">
     <app-sidebar></app-sidebar>
-    <app-central-hub></app-central-hub>
+    <div class="central-hub-wrapper">
+      @defer (when isData) {
+      <app-central-hub [centralHubCvCounter]="cvCounter"></app-central-hub>
+      } @placeholder {
+      <h1>
+        No Data Found,
+        <a type="button" class="cvCounter-placeholder-cta" (click)="addRow()"
+          >Click To Add
+        </a>
+      </h1>
+      }
+    </div>
   </div>
-
-  <!-- <section class="dashboard-content"> -->
-  <!-- <router-outlet></router-outlet> -->
-  <!-- </section> -->
 </section>

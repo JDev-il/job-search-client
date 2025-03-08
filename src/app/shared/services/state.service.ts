@@ -112,6 +112,8 @@ export class StateService {
       .pipe(
         take(1),
         tap((dataRows: ITableDataRow[]) => {
+          this.tableDataResponse$ = dataRows;
+          this.isCachedRequest.set(true);
           if (!dataRows.length) {
             this.isDataExists.set(false);
           }

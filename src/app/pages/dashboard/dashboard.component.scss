@@ -5,6 +5,13 @@
   }
   .dashboard-components {
     display: flex;
+    .central-hub-wrapper {
+      a {
+        color: var(--watermelon);
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 
   //TODO: Saved for later
