@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { catchError, Observable, Subject, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, Subject, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
 import { UserMessages, ValidationMessages } from '../../core/models/enum/messages.enum';
 import { CountriesEnum, FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
@@ -13,12 +13,13 @@ export class StateService {
   private readonly spinner = signal<boolean>(true);
   private readonly destroyed$ = signal<boolean>(false);
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
-  private tableDataResponse$: WritableSignal<ITableDataRow[]> = signal([] as ITableDataRow[]);
+  private tableDataResponse: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([] as ITableDataRow[]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
   private countries: WritableSignal<Country[]> = signal<Country[]>([] as Country[]);
   private currentCountry: WritableSignal<Country> = signal<Country>({} as Country);
   private currentCitiesByCountry: WritableSignal<City> = signal<City>({} as City);
   private filteredCities: WritableSignal<string[]> = signal<string[]>([] as string[]);
+  public isCachedRequest: WritableSignal<boolean> = signal<boolean>(true);
   public currentCountryName: WritableSignal<string> = signal<string>(CountriesEnum.default);
   public isDataExists = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
@@ -78,21 +79,29 @@ export class StateService {
   }
 
   public authorizedUserDataRequest(): Observable<ITableDataRow[]> {
-    return this.apiService.authUserDataReq()
-      .pipe(
-        take(1),
-        tap((tableData) => {
-          if (tableData.length) {
-            this.tableDataResponse = tableData
-            this.isDataExists.set(true)
-          }
-        })
-      );
+    if (this.isCachedRequest()) {
+      return this.apiService.authUserDataReq()
+        .pipe(
+          take(1),
+          tap((tableData: ITableDataRow[]) => {
+            if (tableData.length) {
+              this.tableDataResponse$ = tableData;
+              this.isCachedRequest.set(false);
+              this.isDataExists.set(true);
+            }
+          })
+        );
+    }
+    return of(this.tableDataResponse());
   }
 
   public addOrUpdateApplication(row: ITableDataRow, formAction: FormEnum): Observable<ITableSaveRequest> {
     return this.apiService.addOrUpdateApplicationReq(row, formAction).pipe(
       take(1),
+      tap(() => {
+        this.isCachedRequest.set(true);
+        this.authorizedUserDataRequest().pipe(take(1)).subscribe();
+      }),
       catchError((err) => {
         return throwError(() => { console.error(err) })
       }))
@@ -102,6 +111,11 @@ export class StateService {
     return this.apiService.removeRowsReq(selectedRows, formAction)
       .pipe(
         take(1),
+        tap((dataRows: ITableDataRow[]) => {
+          if (!dataRows.length) {
+            this.isDataExists.set(false);
+          }
+        }),
         catchError((err) => {
           return throwError(() => { console.error(err) })
         }))
@@ -127,7 +141,6 @@ export class StateService {
         }),
       )
   }
-
 
   public markAsDestroyed(): void {
     this.destroyed$.set(true);
@@ -168,11 +181,11 @@ export class StateService {
     this.apiService.currentUserData$.set(userData);
   }
 
-  public get tableDataResponse(): ITableDataRow[] {
-    return this.tableDataResponse$();
+  public get tableDataResponse$(): ITableDataRow[] {
+    return this.tableDataResponse();
   }
-  public set tableDataResponse(tableData: ITableDataRow[]) {
-    this.tableDataResponse$.set(tableData);
+  public set tableDataResponse$(tableData: ITableDataRow[]) {
+    this.tableDataResponse.set(tableData);
   }
 
   public get allCountries(): Country[] {
@@ -221,4 +234,10 @@ export class StateService {
     }
   }
 
+  public get tableDataCache$(): Observable<ITableDataRow[]> {
+    return this.authorizedUserDataRequest()
+      .pipe(
+        take(1)
+      )
+  }
 }

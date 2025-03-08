@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { debounceTime, fromEvent, map, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, fromEvent, map, Subject, takeUntil, tap, throwError } from 'rxjs';
 import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
@@ -48,7 +48,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
   public dataSource = new MatTableDataSource([] as ITableDataRow[]);
   public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
-
+  public testingData = signal([] as ITableDataRow[]);
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ITableDataRow[]>;
 
@@ -60,14 +60,17 @@ export class ActivityTableComponent extends BaseDialogComponent {
       }
       const dataUser = this.stateService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
-        this.stateService.authorizedUserDataRequest()
-          .pipe(
-            map(data => data as ITableDataRow[]),
-            tap(data => {
-              this.dataSource.sort = this.sort;
+        if (this.stateService.isCachedRequest()) {
+          this.dataSource.sort = this.sort;
+          this.stateService.tableDataCache$.subscribe({
+            next: (data: ITableDataRow[]) => {
               this.dataSource.data = data as ITableDataRow[];
-            })
-        ).subscribe()
+            },
+            error: () => throwError(() => console.error('Error with data rendering'))
+          })
+        } else {
+          this.dataSource.data = this.stateService.tableDataResponse$
+        }
       }
     }, { allowSignalWrites: true });
     this.destroyRef.onDestroy(() => {

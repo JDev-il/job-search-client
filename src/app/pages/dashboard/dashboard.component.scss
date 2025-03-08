@@ -1,15 +1,10 @@
 .dashboard-container {
   max-width: 100%;
-  .dashboard-content {
-    width: 85%;
-    height: 100%;
-    margin: auto;
-    @media screen and (max-width: 1280px) {
-      width: 90%;
-      @media screen and (max-width: 768px) {
-        width: 100%;
-      }
-    }
+  hr {
+    margin: 0;
+  }
+  .dashboard-components {
+    display: flex;
   }
 
   //TODO: Saved for later
