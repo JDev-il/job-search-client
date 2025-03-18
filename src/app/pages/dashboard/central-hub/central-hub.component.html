@@ -1,17 +1,18 @@
-<section class="central-hub-div">
-  <div>
-    <app-cv-counter (cta)="genericEmitter.emit()" [counter]="centralHubCvCounter"></app-cv-counter>
+<section class="central-hub-container">
+  <div class="outer-left-hub">
+    <div class="inner-left-hub-grid">
+      <app-status-preview></app-status-preview>
+      <app-positions-list></app-positions-list>
+    </div>
   </div>
-  <div>
-    <app-positions-list></app-positions-list>
-  </div>
-  <div>
-    <app-status-preview></app-status-preview>
-  </div>
-  <div>
-    <app-progress-viewer></app-progress-viewer>
-  </div>
-  <div>
-    <app-market-analyst></app-market-analyst>
+  <div class="outer-right-hub">
+    <div class="inner-right-hub-grid">
+      <app-progress-viewer></app-progress-viewer>
+      <app-market-analyst></app-market-analyst>
+      <app-cv-counter
+        (cta)="genericEmitter.emit()"
+        [counter]="centralHubCvCounter"
+      ></app-cv-counter>
+    </div>
   </div>
 </section>

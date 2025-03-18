@@ -1,6 +1,6 @@
 <nav class="nav-container">
   <div class="nav-flex-wrapper">
-    <ul>
+    <ul class="routes-wrapper">
       <li>
         <a [routerLink]="'/'" [class.active]="isActive('/')">Dashboard</a>
       </li>
@@ -11,8 +11,8 @@
       </li>
     </ul>
     <div class="buttons-wrapper">
+      <button mat-raised-button (click)="myAccount()">Account</button>
       <button mat-raised-button (click)="logout()">Logout</button>
-      <button mat-raised-button (click)="myAccount()">My Account</button>
     </div>
   </div>
 </nav>

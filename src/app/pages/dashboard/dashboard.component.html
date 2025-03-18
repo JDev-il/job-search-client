@@ -1,19 +1,19 @@
-<section class="dashboard-container">
-  <h1>Header</h1>
-  <hr />
-  <div class="dashboard-components">
+<div class="dashboard-components">
+  <div class="dashboard-sidbar">
     <app-sidebar></app-sidebar>
-    <div class="central-hub-wrapper">
-      @defer (when isData) {
-      <app-central-hub [centralHubCvCounter]="cvCounter"></app-central-hub>
-      } @placeholder {
-      <h1>
-        No Data Found,
-        <a type="button" class="cvCounter-placeholder-cta" (click)="addRow()"
-          >Click To Add
-        </a>
-      </h1>
-      }
-    </div>
   </div>
-</section>
+  @defer (when isData) {
+  <div class="dashboard-central-hub">
+    <app-central-hub [centralHubCvCounter]="cvCounter"></app-central-hub>
+  </div>
+  } @placeholder {
+  <div class="dashboard-placeholder">
+    <span>
+      No Data Found
+      <a type="button" class="cv-counter-placeholder-cta" (click)="addRow()"
+        >Click To Add
+      </a>
+    </span>
+  </div>
+  }
+</div>

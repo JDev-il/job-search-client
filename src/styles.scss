@@ -33,7 +33,6 @@ body {
   $h6-size: reduceFontSize($h5-size);
 
   $p-size: 0.875rem;
-  $a-size: 0.75rem;
 
   h1 {
     font-size: $h1-size !important;
@@ -53,13 +52,7 @@ body {
   h6 {
     font-size: $h6-size !important;
   }
-
   p {
     font-size: $p-size;
-  }
-
-  button {
-    font-size: 0.85rem !important;
-    border-radius: 0.6rem !important;
   }
 }
