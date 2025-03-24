@@ -6,22 +6,19 @@
   background-color: var(--main-bg);
   .nav-flex-wrapper {
     display: flex;
-    width: 75%;
-    margin: 0 auto;
-    justify-content: space-evenly;
-    @media screen and (max-width: 768px) {
-      // background-color: bisque;
+    width: 85%;
+    margin: auto;
+    @media screen and (max-width: 992px) {
+      width: 95%;
     }
-
+    .routes-wrapper,
+    .buttons-wrapper {
+      width: 100%;
+      margin: auto;
+    }
     .routes-wrapper {
       padding: 0;
       display: flex;
-      @media screen and (max-width: 1280px) {
-      }
-      @media screen and (max-width: 992px) {
-      }
-      @media screen and (max-width: 768px) {
-      }
       li {
         list-style: none;
         max-width: 150px;
@@ -31,16 +28,12 @@
           color: var(--main-element);
           font-weight: 500;
         }
-        @media screen and (max-width: 1280px) {
-          @media screen and (max-width: 992px) {
-            @media screen and (max-width: 768px) {
-              transform: scale(0.85);
-              margin: 0;
-              @media screen and (max-width: 560px) {
-                transform: scale(0.78);
-              }
-            }
-          }
+        @media screen and (max-width: 768px) {
+          transform: scale(0.85);
+          margin: 0;
+        }
+        @media screen and (max-width: 560px) {
+          transform: scale(0.78);
         }
         a {
           display: flex;
@@ -63,27 +56,25 @@
         min-width: 0 !important;
         line-height: 1.2;
         overflow: hidden;
-        background: var(--main-element);
-        color: aliceblue;
+        color: #fff;
         box-shadow: none;
         padding: 0px 12px;
         height: 27px;
         background-color: var(--watermelon);
         margin-right: 8px;
         &:not(:last-child) {
-          margin-right: 8px;
+          margin-right: 30px;
           background-color: var(--main-element);
         }
         @media screen and (max-width: 768px) {
           transform: scale(0.85);
-          margin-right: 8px;
+          margin-right: 12px;
           &:not(:last-child) {
-            margin-right: 4px !important;
-            background-color: var(--gray-700);
+            margin-right: 15px;
           }
-          @media screen and (max-width: 560px) {
-            transform: scale(0.78);
-          }
+        }
+        @media screen and (max-width: 560px) {
+          transform: scale(0.85);
         }
       }
     }

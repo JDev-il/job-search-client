@@ -44,10 +44,14 @@ export class ApiService {
   }
 
   public addNewUserReq(userData: UserRequest): Observable<UserResponse> {
+    console.log(userData);
+
     return this.http.post<UserResponse>(`${this.env.local}${this.usersParams.path}${this.usersParams.add}`, userData);
   }
 
   public loginUserReq(userLoginForm: UserLogin): Observable<UserLogin> {
+    console.log(userLoginForm);
+
     return of(userLoginForm).pipe(
       switchMap(form => {
         const loginData = form.auth_token ? { ...form } : { email: form.email, password: form.password };
