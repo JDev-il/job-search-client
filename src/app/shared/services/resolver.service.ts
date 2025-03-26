@@ -17,10 +17,12 @@ export class AuthResolver implements Resolve<UserLogin | null> {
   resolve(): Observable<UserLogin | null> {
     return this.stateService.verifyUserToken().pipe(
       tap((user: UserLogin) => {
-        const userRes = <AuthUserResponse>{
+        const userRes = {
           email: user.email,
           password: user.password
-        };
+        } as AuthUserResponse;
+        console.log(userRes);
+
         this.stateService.usersResponseState = userRes;
       }),
       catchError(() => {

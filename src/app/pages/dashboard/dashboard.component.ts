@@ -20,19 +20,22 @@ import { SidebarComponent } from './sidebar/sidebar.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent extends BaseDialogComponent {
-  // > link sidebar routes to desired endpoints / pages that will be loaded into DashboardComponent area ['Dashboard']
+  //Todo: > link sidebar routes to desired endpoints / pages that will be loaded into DashboardComponent area ['Dashboard']
   private isDataExists = signal(false);
   public cvCounter = signal<number>(0);
   constructor(private stateService: StateService, private formService: FormsService, dialog: MatDialog) {
     super(dialog)
     effect(() => {
-      this.stateService.tableDataCache$.subscribe({
-        next: (data: ITableDataRow[]) => {
-          this.isDataExists.set(this.stateService.isDataExists());
-          this.cvCounter.set(data.length);
-        },
-        error: () => throwError(() => console.error('Error with data rendering'))
-      });
+      const dataUser = this.stateService.dataUserResponse$;
+      if (dataUser && dataUser.userId) {
+        this.stateService.authorizedUserDataRequest().subscribe({
+          next: (data: ITableDataRow[]) => {
+            this.isDataExists.set(this.stateService.isDataExists());
+            this.cvCounter.set(data.length);
+          },
+          error: () => throwError(() => console.error('Error with data rendering'))
+        });
+      }
     }, { allowSignalWrites: true });
   }
 

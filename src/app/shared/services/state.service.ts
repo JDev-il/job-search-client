@@ -237,9 +237,6 @@ export class StateService {
   }
 
   public get tableDataCache$(): Observable<ITableDataRow[]> {
-    return this.authorizedUserDataRequest()
-      .pipe(
-        take(1)
-      )
+    return this.authorizedUserDataRequest();
   }
 }

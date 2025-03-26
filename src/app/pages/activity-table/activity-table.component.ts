@@ -62,7 +62,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
       if (dataUser && dataUser.userId) {
         if (this.stateService.isCachedRequest()) {
           this.dataSource.sort = this.sort;
-          this.stateService.tableDataCache$.subscribe({
+          this.stateService.authorizedUserDataRequest().subscribe({
             next: (data: ITableDataRow[]) => {
               this.dataSource.data = data as ITableDataRow[];
             },
