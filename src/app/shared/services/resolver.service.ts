@@ -21,8 +21,6 @@ export class AuthResolver implements Resolve<UserLogin | null> {
           email: user.email,
           password: user.password
         } as AuthUserResponse;
-        console.log(userRes);
-
         this.stateService.usersResponseState = userRes;
       }),
       catchError(() => {

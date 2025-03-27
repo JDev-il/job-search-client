@@ -152,8 +152,14 @@
     <input matInput formControlName="hunch" />
   </mat-form-field>
 
+
   <mat-form-field appearance="outline">
     <mat-label>Any Notes?</mat-label>
-    <input matInput formControlName="notes" />
+    <textarea matInput
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              formControlName="notes"
+              cdkAutosizeMinRows="3"
+              cdkAutosizeMaxRows="3"></textarea>
   </mat-form-field>
 </form>

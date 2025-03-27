@@ -188,7 +188,7 @@
                 }
               }
             }
-            .cell-control:not(.combined-cell) {
+            .cell-control:not(.combined-cell):not(.overflow-cell) {
               height: 85px;
               font-size: medium;
               display: flex;
@@ -254,9 +254,16 @@
               max-height: 60px;
               overflow: auto;
               margin: auto;
+              @media screen and (max-width: 1280px) {
+                min-width: 220px;
+              }
             }
             .overflow-cell-unflex {
               align-items: unset !important;
+              text-align: left;
+              @media screen and (max-width: 1280px) {
+                min-width: unset;
+              }
             }
           }
         }
