@@ -18,7 +18,7 @@ export class StateService {
   private countries: WritableSignal<Country[]> = signal<Country[]>([] as Country[]);
   private currentCountry: WritableSignal<Country> = signal<Country>({} as Country);
   private currentCitiesByCountry: WritableSignal<City> = signal<City>({} as City);
-  private filteredCities: WritableSignal<string[]> = signal<string[]>([] as string[]);
+  private companiesList: WritableSignal<string[]> = signal<string[]>([] as string[])
   public isCachedRequest: WritableSignal<boolean> = signal<boolean>(true);
   public currentCountryName: WritableSignal<string> = signal<string>(CountriesEnum.default);
   public isDataExists = signal<boolean>(false);
@@ -27,6 +27,7 @@ export class StateService {
 
   constructor(private apiService: ApiService, private authService: AuthService) {
     this.getCities(this.currentCountryName()).subscribe();
+    this.getCompanies().subscribe();
   }
 
   public loginUser(loginForm: UserLogin): Observable<UserLogin | null> {
@@ -144,6 +145,18 @@ export class StateService {
       )
   }
 
+  public getCompanies(): Observable<string[]> {
+    return this.apiService.getCompaniesReq()
+      .pipe(
+        take(1),
+        tap(companies => {
+          if (companies) {
+            this.companiesList.set(companies);
+          }
+        })
+      );
+  }
+
   public markAsDestroyed(): void {
     this.destroyed$.set(true);
   }
@@ -205,11 +218,8 @@ export class StateService {
     this.currentCitiesByCountry.set(cities);
   }
 
-  public get filteredCitiesByCountry(): string[] {
-    return this.filteredCities();
-  }
-  public set filteredCitiesByCountry(cities: string[]) {
-    this.filteredCities.set(cities);
+  public get listOfCompanies(): string[] {
+    return this.companiesList();
   }
 
 

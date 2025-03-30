@@ -2,9 +2,9 @@ import { Component, effect, EventEmitter, Input, Output, signal, ViewChild, Writ
 import { AbstractControl, FormControl, FormGroup } from "@angular/forms";
 import { MatSelect } from "@angular/material/select";
 import { Subject } from "rxjs";
-import { City, Country } from "../../core/models/data.interface";
+import { Country } from "../../core/models/data.interface";
 import { PlatformEnum, PositionStackEnum, PositionTypeEnum, StatusEnum } from "../../core/models/enum/table-data.enum";
-import { ContinentsEnum } from "../../core/models/enum/utils.enum";
+import { ContinentsEnum, FieldType } from "../../core/models/enum/utils.enum";
 import { TableDataFormRow } from "../../core/models/forms.interface";
 import { StateService } from "../services/state.service";
 
@@ -26,17 +26,17 @@ export class FormsBaseComponent {
   protected filteredCountries: WritableSignal<Country[]> = signal([] as Country[]);
   protected currentCitiesList: WritableSignal<string[]> = signal<string[]>([]);
   protected filteredCities: WritableSignal<string[]> = signal([] as string[]);
+  protected filteredCompanies: WritableSignal<string[]> = signal([] as string[]);
+  protected companiesList: WritableSignal<string[]> = signal([] as string[]);
   protected companyCity = new FormControl('');
   protected destroy$ = new Subject<void>();
   protected statuses = signal(this.enumsToArray(StatusEnum));
   protected positionTypes = signal(this.enumsToArray(PositionTypeEnum));
   protected positionStacks = signal(this.enumsToArray(PositionStackEnum));
   protected applicationPlatform = signal(this.enumsToArray(PlatformEnum));
-  protected companyLocationField = signal('');
   protected companyCityField = signal('');
-  protected isCompanyCity = signal(false);
-  protected isCompanyLoction = signal(false);
-  protected isEditField = signal(true);
+  protected companyNameField = signal('');
+  protected FieldTypes = FieldType;
 
   constructor(public stateService: StateService) {
     effect(() => {
@@ -45,44 +45,31 @@ export class FormsBaseComponent {
         const cities = this.filterCities(this.companyCityField());
         this.filteredCities.set(cities);
       }
-      //! Keeping logic in case I want to include country change base on user's choice
-      // const countries = this.filterCountries(this.companyLocationField());
-      // this.filteredCountries.set(countries);
-      // if (this.companyCityField() || this.isCurrentCitiesList) {
-      //   const cities = this.filterCities(this.companyCityField());
-      //   this.filteredCities.set(cities);
-      // }
+      if (this.companyNameField() || this.stateService.listOfCompanies.length) {
+        this.companiesList.set(this.stateService.listOfCompanies);
+        const companies = this.filterCompanies(this.companyNameField());
+        this.filteredCompanies.set(companies);
+      }
     }, { allowSignalWrites: true });
   }
 
-  protected onSelectCountry(country: string): void {
-    this.companyLocationField.set(country);
-    this.isCompanyLoction.set(true);
-    if (!this.isCompanyCity()) {
-      this.stateService.getCities(country).subscribe((response: City) => {
-        if (response) {
-          this.resetCitiesList();
-          this.isCompanyCity.set(true);
-        }
-      })
-    } else {
-      this.resetCitiesList();
-    }
+  protected onSelect(data: string, type: FieldType): void {
+    type === FieldType.location ?
+      this.companyCityField.set(data) :
+      this.companyNameField.set(data);
   }
 
-  protected onSelectCity(city: string): void {
-    this.companyCityField.set(city);
-  }
-
-  protected onTypeCity(event: KeyboardEvent): void {
-    const companyCity = this.formType.get('companyLocation') as AbstractControl;
-    const value = companyCity?.value || '';
+  protected onTypeValue(event: KeyboardEvent, type: FieldType): void {
+    const abstractControl = this.abstractControlSwitch(type);
+    const value = abstractControl?.value || '';
     if (!value && event.key === 'Backspace') {
       this.resetCitiesList();
       event.preventDefault();
-      return;
     }
-    this.companyCityField.set(value);
+    type === FieldType.location ?
+      this.companyCityField.set(value) :
+      this.companyNameField.set(value);
+    return;
   }
 
   protected cleanFormField(field: AbstractControl<string | null>) {
@@ -108,13 +95,15 @@ export class FormsBaseComponent {
     });
   }
 
+  protected filterCompanies(query: string): string[] {
+    const companiesData = this.companiesList() as string[];
+    return companiesData.filter((company: string) => {
+      return company.toLowerCase().includes(query.toLowerCase())
+    });
+  }
 
   protected resetCitiesList(): void {
     this.currentCitiesList.set(this.stateService.citiesOfCurrentCountry.data);
-  }
-
-  protected isEditClicked(): void {
-    this.isEditField.set(false);
   }
 
   protected whichSelect(controlName: string) {
@@ -133,6 +122,20 @@ export class FormsBaseComponent {
         break;
     }
   }
+
+  private abstractControlSwitch(type: string): AbstractControl {
+    let control!: AbstractControl;
+    switch (type) {
+      case FieldType.location:
+        control = this.formType.get('companyLocation') as AbstractControl;
+        break;
+      case FieldType.name:
+        control = this.formType.get('companyName') as AbstractControl;
+        break;
+    }
+    return control;
+  }
+
 
   private get formType(): FormGroup<TableDataFormRow> {
     return this.incomingEditForm || this.newAddRowForm

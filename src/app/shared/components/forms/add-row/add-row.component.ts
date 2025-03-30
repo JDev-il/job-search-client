@@ -46,9 +46,7 @@ export class AddRowComponent extends FormsBaseComponent {
     return Object.keys(this.newAddRowForm.controls);
   }
 
-
   triggerResize() {
-    // Wait for content to render, then trigger textarea resize.
     afterNextRender(
       () => {
         this.autosize.resizeToFitContent(true);

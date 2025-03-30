@@ -3,26 +3,38 @@
   <mat-form-field appearance="outline">
     <mat-label>Company Name</mat-label>
     <input
+      (keyup)="onTypeValue($event, FieldTypes.name)"
+      type="text"
       matInput
       formControlName="companyName"
       placeholder="Name of Company"
+      [matAutocomplete]="nameAutoComplete"
     />
+    <mat-autocomplete #nameAutoComplete="matAutocomplete">
+      @for (company of filteredCompanies(); track $index) {
+      <mat-option
+        [value]="company | stringSanitizer"
+        (onSelectionChange)="onSelect(company, FieldTypes.name)"
+      >
+        {{ company | stringSanitizer }}
+      </mat-option>
+      }
+    </mat-autocomplete>
   </mat-form-field>
-
   <mat-form-field appearance="outline">
     <mat-label>Company Location</mat-label>
     <input
-      (keyup)="onTypeCity($event)"
+      (keyup)="onTypeValue($event, FieldTypes.location)"
       type="text"
       matInput
       formControlName="companyLocation"
-      [matAutocomplete]="auto"
+      [matAutocomplete]="cityAutoComplete"
     />
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete #cityAutoComplete="matAutocomplete">
       @for (city of filteredCities(); track $index) {
       <mat-option
         [value]="city | stringSanitizer"
-        (onSelectionChange)="onSelectCity(city)"
+        (onSelectionChange)="onSelect(city, FieldTypes.location)"
       >
         {{ city | stringSanitizer }}
       </mat-option>
@@ -79,11 +91,13 @@
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Any Notes?</mat-label>
-    <textarea matInput
-              cdkTextareaAutosize
-              #autosize="cdkTextareaAutosize"
-              formControlName="notes"
-              cdkAutosizeMinRows="3"
-              cdkAutosizeMaxRows="3"></textarea>
+    <textarea
+      matInput
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize"
+      formControlName="notes"
+      cdkAutosizeMinRows="3"
+      cdkAutosizeMaxRows="3"
+    ></textarea>
   </mat-form-field>
 </form>

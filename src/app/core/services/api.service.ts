@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { map, Observable, of, switchMap, throwError } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { City, Country } from '../models/data.interface';
 import { ParamsOrder, ParamsOrderBy } from '../models/enum/params.enum';
@@ -17,6 +17,7 @@ export class ApiService {
   private authParams = this.env.params.auth;
   private usersParams = this.env.params.users;
   private jobSearchParams = this.env.params.job_search;
+  private companiesParams = this.env.params.companies;
   private geoParams = this.env.geo;
   public currentUserData$ = signal<UserResponse>({} as UserResponse);
   public currentUserRequest$ = signal<UserLogin>({} as UserLogin);
@@ -29,6 +30,18 @@ export class ApiService {
         .sort((a, b) =>
           a.name.common.localeCompare(b.name.common))
       ));
+  }
+
+  public getCompaniesReq(): Observable<string[]> {
+    const url = this.companiesParams.base_url;
+    return forkJoin([
+      this.http.get<string[]>(`${url}/companies`),
+      this.http.get<string[]>(`${url}/companies_1`),
+      this.http.get<string[]>(`${url}/companies_2`),
+      this.http.get<string[]>(`${url}/companies_3`)
+    ]).pipe(
+      map(companies => companies.flat())
+    );
   }
 
   public getCitiesReq(country: string): Observable<City> {

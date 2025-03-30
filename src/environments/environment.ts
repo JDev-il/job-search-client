@@ -19,6 +19,14 @@ export const environment = {
     remote: 'http://192.168.68.56:3000',
     local: 'http://localhost:3000/',
     params: {
+      companies: {
+        base_url: "https://67e8e189bdcaa2b7f5b80458.mockapi.io/api/",
+        all: 'companies',
+        filters: {
+          quantity: 'companies/:q',
+          range: 'companies/:from-:to'
+        }
+      },
       users: {
         path: 'users',
         login: '/login',

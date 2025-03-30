@@ -53,3 +53,8 @@ export enum ROUTES {
   DASHBOARD = "",
   ACTIVITY = "activity",
 };
+
+export enum FieldType {
+  location = 'location',
+  name = 'name'
+}
