@@ -77,6 +77,7 @@ export class GenericDialogComponent {
 
   public closeDialog(): void {
     this.stateService.spinnerState = false;
+    this.stateService.isFetchingCities.set(false);
     this.dialogRef.close();
   }
 

@@ -25,11 +25,37 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   public getCountriesListReq(): Observable<Country[]> {
-    return this.http.get<Country[]>(`${this.geoParams.countries.baseUrl}${this.geoParams.countries.filter.all}`)
+    const url = this.geoParams.countries.baseUrl_mockApi;
+    return this.http.get<Country[]>(url)
       .pipe(map(data => data
         .sort((a, b) =>
           a.name.common.localeCompare(b.name.common))
       ));
+  }
+
+  public getCitiesReq(country: string): Observable<City> {
+    if (country === CountriesEnum.primary) {
+      return this.http
+        .get<City[]>(this.geoParams.cities.israeli)
+        .pipe(
+          map((res) => res[0])
+        );
+    }
+    const citiesData: CityReqParams = {
+      order: ParamsOrder.ASC,
+      orderBy: ParamsOrderBy.NAME,
+      country: country.toLowerCase()
+    };
+    return this.http
+      .post<City>(`${this.geoParams.cities.baseUrl}${this.geoParams.cities.filter}`, citiesData)
+      .pipe(
+        map((res): City => (
+          {
+            error: res.error,
+            msg: res.msg,
+            data: res.data.map((entry: any) => entry.city) ?? []
+          }))
+      );
   }
 
   public getCompaniesReq(): Observable<string[]> {
@@ -44,17 +70,6 @@ export class ApiService {
     );
   }
 
-  public getCitiesReq(country: string): Observable<City> {
-    if (country !== CountriesEnum.default) {
-      const citiesData = {
-        order: ParamsOrder.ASC,
-        orderBy: ParamsOrderBy.NAME,
-        country: country.toLowerCase()
-      } as CityReqParams;
-      return this.http.post<City>(`${this.geoParams.cities.baseUrl}${this.geoParams.cities.filter}`, citiesData)
-    }
-    return this.http.post<City>(`${this.geoParams.cities.baseUrl}${this.geoParams.cities.citiesList}`, { country: country.toLowerCase() });
-  }
 
   public addNewUserReq(userData: UserRequest): Observable<UserResponse> {
     return this.http.post<UserResponse>(`${this.env.local}${this.usersParams.path}${this.usersParams.add}`, userData);

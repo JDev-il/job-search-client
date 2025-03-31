@@ -44,7 +44,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
   private destroy$ = new Subject<void>();
   public positionStack: WritableSignal<PositionStackEnum[]> = signal<PositionStackEnum[]>([]);
   public selectedRows: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
-  public displayedColumns: string[] = ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
+  public displayedColumns: string[] = [];
   public dataSource = new MatTableDataSource([] as ITableDataRow[]);
   public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
@@ -54,6 +54,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
 
   constructor(private formService: FormsService, private stateService: StateService, private uiService: UIService, private destroyRef: DestroyRef, private renderer: Renderer2, dialog: MatDialog) {
     super(dialog);
+    this.displayedColumns = this.stateService.displayColumns;
     effect(() => {
       if (this.stateService.getDestroyedState()) {
         return;

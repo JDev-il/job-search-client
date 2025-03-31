@@ -127,13 +127,13 @@
               Application
               <div class="sub-header">
                 <h4>Platform</h4>
-                <h4>Date Applied</h4>
+                <h4>Applied</h4>
               </div>
             </div>
           </th>
           <td mat-cell *matCellDef="let row">
             <div class="cell-control">
-              <div class="">
+              <div class="application">
                 <td>{{ row.applicationPlatform }}</td>
                 <td>{{ row.applicationDate | date : "MMM d, y" }}</td>
               </div>
@@ -164,16 +164,17 @@
             <div class="header">Notes</div>
           </th>
           <td mat-cell *matCellDef="let row">
-            <div
-              class="cell-control overflow-cell"
-              [ngClass]="{
-                'overflow-cell-unflex': isEnoughLength(row.notes?.length)
-              }"
-            >
+            @if(row.notes){
+            <div class="cell-control overflow-cell">
               <td>
                 {{ row.notes }}
               </td>
             </div>
+            } @else {
+            <div class="cell-control">
+              <td>N/A</td>
+            </div>
+            }
           </td>
         </ng-container>
         <tr

@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { catchError, Observable, of, Subject, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, Subject, switchMap, take, tap, throwError } from 'rxjs';
 import { UserMessages, ValidationMessages } from '../../core/models/enum/messages.enum';
 import { CountriesEnum, FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
@@ -20,13 +20,15 @@ export class StateService {
   private currentCitiesByCountry: WritableSignal<City> = signal<City>({} as City);
   private companiesList: WritableSignal<string[]> = signal<string[]>([] as string[])
   public isCachedRequest: WritableSignal<boolean> = signal<boolean>(true);
-  public currentCountryName: WritableSignal<string> = signal<string>(CountriesEnum.default);
+  public currentCountryName: WritableSignal<string> = signal<string>('');
   public isDataExists = signal<boolean>(false);
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
+  public isFetchingCities = signal(false);
 
   constructor(private apiService: ApiService, private authService: AuthService) {
-    this.getCities(this.currentCountryName()).subscribe();
+    this.getAllCountries().subscribe();
+    this.getCitiesByCountry(CountriesEnum.primary).subscribe();
     this.getCompanies().subscribe();
   }
 
@@ -125,20 +127,22 @@ export class StateService {
       ;
   }
 
-  public getAllCountries(): Observable<Country[]> { // Triggered at the highest level
+  public getAllCountries(): Observable<Country[]> {
     return this.apiService.getCountriesListReq().pipe(
-      takeUntil(this.destroy$),
-      tap(data => {
+      take(1),
+      tap((data: Country[]) => {
         this.countries.set(data);
       })
     )
   }
 
-  public getCities(country: string): Observable<City> {
+  public getCitiesByCountry(country: string): Observable<City> {
+    this.currentCountryName.set(country);
     return this.apiService.getCitiesReq(country)
       .pipe(
         take(1),
         tap((cities: City) => {
+          this.currentCitiesByCountry.set(cities);
           cities.data = cities.data.sort((a: string, b: string) => a.localeCompare(b.toLowerCase()));
           this.citiesOfCurrentCountry = cities;
         }),
@@ -248,5 +252,9 @@ export class StateService {
 
   public get tableDataCache$(): Observable<ITableDataRow[]> {
     return this.authorizedUserDataRequest();
+  }
+
+  public get displayColumns(): string[] {
+    return ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
   }
 }

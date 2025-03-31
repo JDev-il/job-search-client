@@ -41,23 +41,36 @@
       }
     </mat-autocomplete>
   </mat-form-field>
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" class="company-location-input">
     <mat-label>Company Location</mat-label>
     <input
       (keyup)="onTypeValue($event, FieldTypes.location)"
       type="text"
-      placeholder="Which City?"
       matInput
-      (keyup)="onTypeValue($event, FieldTypes.location)"
+      [placeholder]="placeholderText"
       formControlName="companyLocation"
-      [matAutocomplete]="locationAutoComplete"
+      [matAutocomplete]="locationEditAutoComplete"
     />
-    <mat-autocomplete #locationAutoComplete="matAutocomplete">
-      @for (city of filteredCities(); track city) {
-      <mat-option [value]="city | stringSanitizer">
+
+    <a (click)="changeCountryRequest($event)">Change country?</a>
+
+    <mat-autocomplete #locationEditAutoComplete="matAutocomplete">
+      @if (stateService.isFetchingCities()) { @for (country of
+      filteredCountries(); track $index) {
+      <mat-option
+        (onSelectionChange)="onSelectCountry(country.name.common)"
+        [value]="country.name.common | stringSanitizer"
+      >
+        {{ country.name.common | stringSanitizer }}
+      </mat-option>
+      } } @else { @for (city of filteredCities(); track $index) {
+      <mat-option
+        [value]="city | stringSanitizer"
+        (onSelectionChange)="onSelect(city, FieldTypes.country)"
+      >
         {{ city | stringSanitizer }}
       </mat-option>
-      }
+      } }
     </mat-autocomplete>
   </mat-form-field>
   <mat-form-field appearance="outline">

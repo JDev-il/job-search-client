@@ -61,4 +61,5 @@ export class AddRowComponent extends FormsBaseComponent {
       this.formEmit.emit(this.newAddRowForm);
     }
   }
+
 }

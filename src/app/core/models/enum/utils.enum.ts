@@ -37,7 +37,7 @@ export enum ContinentsEnum {
 }
 
 export enum CountriesEnum {
-  default = "israel"
+  primary = "Israel"
 }
 
 export enum CountryTypesEnum {
@@ -56,5 +56,6 @@ export enum ROUTES {
 
 export enum FieldType {
   location = 'location',
-  name = 'name'
+  name = 'name',
+  country = 'country'
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, DestroyRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,7 +29,8 @@ import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
     CommonModule,
   ],
   templateUrl: './edit-row.component.html',
-  styleUrls: ['../styles/form-style.scss', './edit-row.component.scss']
+  styleUrls: ['../styles/form-style.scss', './edit-row.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditRowComponent extends FormsBaseComponent {
 

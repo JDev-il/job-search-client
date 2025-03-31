@@ -16,6 +16,7 @@ export class BaseDialogComponent {
       backdropClass: 'generic-dialog-backdrop',
       minWidth: 'unset',
       minHeight: 'unset',
+      autoFocus: false,
       data: dialogData
     });
   }
