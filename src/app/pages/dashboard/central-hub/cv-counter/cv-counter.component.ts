@@ -18,6 +18,6 @@ export class CvCounterComponent {
   }
 
   get currentCounter(): number {
-    return (this.counter ?? 0)(); // Use fallback if undefined
+    return (this.counter ?? 0)();
   }
 }

@@ -48,7 +48,7 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
-  // Fallback Route for Undefined Paths
+  // Undefined Paths
   {
     path: '**',
     redirectTo: 'not-found'
