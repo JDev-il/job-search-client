@@ -41,7 +41,6 @@ export class GenericDialogComponent {
       if (this.stateService.getDestroyedState()) {
         return;
       }
-      this.countriesList.set(this.stateService.allCountries);
       this.dialogRef.afterClosed().subscribe(() => {
         if (this.authService.isAuthenticated && data.notification) {
           this.routingService.toDashboard();

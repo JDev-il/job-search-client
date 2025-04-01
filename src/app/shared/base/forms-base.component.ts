@@ -137,8 +137,8 @@ export class FormsBaseComponent {
   protected changeCountryRequest(e: MouseEvent): void {
     e.preventDefault();
     this.stateService.isFetchingCities.set(true);
-    this.filteredCountries.set(this.countries());
     this.companyCityField.set('');
+    this.filteredCountries.set(this.countries());
     if (!this.newAddRowForm) {
       this.incomingEditForm.get('companyLocation')?.reset();
     } else {
@@ -159,7 +159,7 @@ export class FormsBaseComponent {
 
   protected get placeholderText(): string {
     return !this.stateService.isFetchingCities()
-      ? `Choose a City in ${this.stateService.currentCountryName()}`
+      ? `Search a City in ${this.stateService.currentCountryName()}`
       : 'Choose a Country'
   };
 

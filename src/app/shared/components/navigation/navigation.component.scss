@@ -54,14 +54,13 @@
       justify-content: center;
       align-items: center;
       .mdc-button {
-        border-radius: 0.6em !important;
         min-width: 0 !important;
         line-height: 1.2;
         overflow: hidden;
-        color: #fff;
+        color: var(--element2);
         box-shadow: none;
         padding: 0px 12px;
-        height: 27px;
+        height: 30px;
         background-color: var(--watermelon);
         margin-right: 8px;
         &:not(:last-child) {

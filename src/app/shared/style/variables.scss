@@ -9,6 +9,7 @@
   .mat-mdc-form-field-infix {
     display: flex;
     a {
+      transition: all 0.1s ease-in-out;
       position: relative;
       z-index: 888888;
       cursor: pointer;
@@ -18,6 +19,24 @@
       display: flex;
       width: 30%;
       justify-content: flex-end;
+      &:active {
+        color: var(--main-element);
+      }
+      @media screen and (max-width: 992px) {
+        width: 35%;
+      }
+    }
+  }
+}
+.mat-mdc-form-field-icon-suffix {
+  mat-datepicker-toggle {
+    svg {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
     }
   }
 }

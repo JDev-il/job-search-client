@@ -1,7 +1,8 @@
 @import "../../shared/style/status.scss";
 .activity-table-wrapper {
   margin: 0 auto;
-  max-width: 85%;
+  max-width: 75%;
+  transition: all 0.015s ease-in;
   @media screen and (max-width: 992px) {
     max-width: 100%;
   }
@@ -10,34 +11,51 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 25px;
+    top: 35px;
+    @media screen and (max-width: 992px) {
+      flex-flow: column;
+    }
     .actions-contiainer {
       position: relative;
       bottom: 8px;
-      left: 8px;
       display: flex;
       align-items: center;
       width: 100%;
       .action-buttons {
         display: flex;
         button {
+          transition: all 0.08s ease-in;
           &:not(:first-child) {
-            margin-left: 15px;
+            @media screen and (min-width: 992px) {
+              margin-left: 30px;
+            }
           }
           min-width: fit-content;
           border-radius: 0.6em;
-          background-color: var(--element2);
+          background-color: var(--main-element);
+          color: #ffeee7;
+          &:disabled {
+            background-color: #08122680;
+            color: #d0cbd652;
+          }
         }
         .remove-rows {
           background-color: var(--watermelon);
           color: #faf9fd;
         }
+        @media screen and (max-width: 992px) {
+          left: 0;
+          width: 100%;
+          justify-content: space-evenly;
+        }
+      }
+      @media screen and (max-width: 992px) {
+        left: 0;
       }
     }
     .search-container {
       position: relative;
       width: 100%;
-      right: 8px;
       .search-input {
         width: 100%;
         .mat-mdc-form-field {
@@ -50,6 +68,10 @@
             }
           }
         }
+      }
+      @media screen and (max-width: 992px) {
+        width: 95%;
+        top: 10px;
       }
     }
   }
@@ -67,8 +89,10 @@
       box-shadow: none;
       overflow-y: auto;
       .selected {
+        transition: all 0.08s ease-in;
         background-color: #ff6c8282 !important;
         text-decoration: line-through;
+        color: #ffeee7;
         .combined-cell-content {
           button {
             color: #ffeee7 !important;
@@ -144,6 +168,9 @@
           .header-checkbox-selection {
             flex-flow: row;
             justify-content: center;
+            .mdc-checkbox__background {
+              border: 2px solid var(--element2) !important;
+            }
           }
         }
         .mat-mdc-row {
@@ -305,11 +332,9 @@
       }
     }
     .no-data-div {
-      position: relative;
-      margin: auto;
       h1 {
         text-align: center;
-        color: var(--watermelon);
+        color: var(--gray-400);
       }
     }
   }

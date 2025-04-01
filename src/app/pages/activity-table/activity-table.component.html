@@ -10,13 +10,19 @@
         >
           Remove {{ selection.selected.length }} Rows
         </button>
-        <button mat-button (click)="addNewRow()">Add Row</button>
+        <button mat-button (click)="addNewRow()">Add Application</button>
       </div>
     </div>
     <div class="search-container">
       <div class="search-input">
         <mat-form-field appearance="outline">
-          <mat-label>Search in table</mat-label>
+          <mat-label>
+            @if (!isDataExists) {
+              Add Application To Enable Search..
+            } @else {
+              Search in table
+            }
+          </mat-label>
           <input
             matInput
             (keyup)="applyFilter($event)"
@@ -146,6 +152,7 @@
             <div class="header">Hunch</div>
           </th>
           <td mat-cell *matCellDef="let row">
+            @if(row.hunch){
             <div
               class="cell-control"
               [ngClass]="{
@@ -156,6 +163,11 @@
                 {{ row.hunch }}
               </td>
             </div>
+            } @else {
+            <div class="cell-control">
+              <td>N/A</td>
+            </div>
+            }
           </td>
         </ng-container>
 
@@ -191,7 +203,7 @@
     </div>
     } @else {
     <div class="no-data-div">
-      <h1>No Data..</h1>
+      <h1>No Data</h1>
     </div>
     }
   </div>
