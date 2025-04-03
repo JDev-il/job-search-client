@@ -1,7 +1,7 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { catchError, Observable, of, Subject, switchMap, take, tap, throwError } from 'rxjs';
-import { UserMessages, ValidationMessages } from '../../core/models/enum/messages.enum';
-import { CountriesEnum, FormEnum, NotificationsEnum } from '../../core/models/enum/utils.enum';
+import { ErrorMessages, NotificationsStatusEnum, UserMessages } from '../../core/models/enum/messages.enum';
+import { CountriesEnum, FormEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { City, Country } from './../../core/models/data.interface';
@@ -25,6 +25,7 @@ export class StateService {
   public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
   public isFetchingCities = signal(false);
+  public isRegistrationError = signal(false);
 
   constructor(private apiService: ApiService, private authService: AuthService) {
     this.getAllCountries().subscribe();
@@ -39,6 +40,7 @@ export class StateService {
 
   public addNewUser(user: UserRequest): Observable<UserToken> {
     return this.apiService.addNewUserReq(user).pipe(
+      take(1),
       tap((userData: UserResponse) => {
         this.dataUserResponse.set(userData);
       }),
@@ -47,7 +49,7 @@ export class StateService {
           .pipe(
             take(1)
           );
-      }),
+      })
     );
   }
 
@@ -231,22 +233,32 @@ export class StateService {
     return {
       success: {
         login: {
-          title: NotificationsEnum.successlogin,
-          message: UserMessages.success
+          title: NotificationsStatusEnum.successlog,
+          message: UserMessages.loginsuccess
         },
         register: {
-          title: NotificationsEnum.successregister,
-          message: UserMessages.success
+          title: NotificationsStatusEnum.successreg,
+          message: UserMessages.registrationsuccess
         }
       },
-      error: {
-        title: NotificationsEnum.error,
-        message: UserMessages.error
+      fail: {
+        invalidUser: {
+          title: NotificationsStatusEnum.error,
+          message: ErrorMessages.invalidusername
+        },
+        invalidPassword: {
+          title: NotificationsStatusEnum.error,
+          message: ErrorMessages.invalidpassword
+        },
+        userExists: {
+          title: NotificationsStatusEnum.error,
+          message: ErrorMessages.userexistserror
+        },
+        userLogin: {
+          title: NotificationsStatusEnum.error,
+          message: ErrorMessages.userloginerror
+        },
       },
-      invalid: {
-        title: NotificationsEnum.error,
-        message: ValidationMessages.invalidUsername
-      }
     }
   }
 

@@ -1,16 +1,16 @@
+export enum ActionLables {
+  dismiss = "Dismiss",
+  close = "Close",
+  tryagain = "Try Again",
+  ok = "Ok",
+  thanks = "Thanks!"
+}
+
 export enum ButtonsEnum {
   loginhover = "Register now",
   loginunhover = "Don't have an account?",
   registerhover = "Login now",
   registerunhover = "I have an account"
-}
-
-export enum NotificationsEnum {
-  error = "Error",
-  successlogin = "Login Success",
-  successregister = "Registered Successfully!",
-  failed = "Failed..",
-  oops = "Oops!",
 }
 
 export enum FormEnum {

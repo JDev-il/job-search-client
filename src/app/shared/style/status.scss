@@ -3,7 +3,7 @@ $awaiting-response: #a4c2f4;
 $hr-reached-back: #ff9375;
 $awaiting-decision: #2193de;
 $decided-to-pass: #dd7e6b;
-$below-salary-expectation: #a64d79;
+$below-expectation: #a64d79;
 $did-not-pass-hr: #ff0100;
 $awaiting-interview: #a2c4c9;
 $interview-scheduled: #3d78d8;
@@ -44,7 +44,7 @@ $awaiting-response-accent: generate-accent($awaiting-response);
 $hr-reached-back-accent: generate-accent($hr-reached-back);
 $awaiting-decision-accent: generate-accent($awaiting-decision);
 $decided-to-pass-accent: generate-accent($decided-to-pass);
-$below-salary-expectation-accent: generate-accent($below-salary-expectation);
+$below-expectation-accent: generate-accent($below-expectation);
 $did-not-pass-hr-accent: generate-accent($did-not-pass-hr);
 $awaiting-interview-accent: generate-accent($awaiting-interview);
 $interview-scheduled-accent: generate-accent($interview-scheduled);
@@ -94,9 +94,9 @@ $received-contract-accent: generate-accent($received-contract);
   $decided-to-pass-accent
 );
 @include row-color(
-  "below-salary-expectation",
-  $below-salary-expectation,
-  $below-salary-expectation-accent
+  "below-expectation",
+  $below-expectation,
+  $below-expectation-accent
 );
 @include row-color(
   "did-not-pass-hr",

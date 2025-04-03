@@ -87,7 +87,5 @@
     </form>
   </section>
 </div>
-
-@if (spinnerState) {
+<div SnackBar #snackBarRef="SnackBar"></div>
 <app-spinner [isSpinner]="spinnerState" [isActivityTable]="false"></app-spinner>
-}

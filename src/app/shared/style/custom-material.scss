@@ -55,7 +55,6 @@ $client-theme: mat.define-theme(
   // --gray-700: oklch(36.98% 0.014 302.71);
   // --gray-400: oklch(70.9% 0.015 304.04);
 
-
   --red-to-pink-to-purple-vertical-gradient: linear-gradient(
     180deg,
     var(--orange-red) 0%,
@@ -76,6 +75,62 @@ $client-theme: mat.define-theme(
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  @include mat.all-component-themes($client-theme);
+
+  // MatSnackBar
+  .snack-bar-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    animation: snack-enter both 0.28s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    top: 59%;
+    @keyframes snack-enter {
+      0% {
+        top: 60%;
+      }
+      100% {
+        top: 59%;
+      }
+    }
+  }
+
+  .snack-bar-container.success-login, .snack-bar-container.success-register {
+    .mdc-snackbar__surface,
+    .mat-mdc-snackbar-surface {
+      background-color: var(--main-element);
+      .mat-mdc-snack-bar-label {
+        color: var(--mint-green);
+        .mat-mdc-snack-bar-actions {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .snack-bar-container.error {
+    .mdc-snackbar__surface,
+    .mat-mdc-snackbar-surface {
+      background-color: var(--watermelon);
+      .mat-mdc-snack-bar-label {
+        color: var(--gray-700);
+        .mat-mdc-snack-bar-actions {
+          button {
+            height: 35px;
+            color: var(--element2);
+            background-color: var(--gray-700);
+          }
+        }
+      }
+    }
+  }
+
+  // MatSpinner
+  .mdc-circular-progress__indeterminate-circle-graphic {
+    stroke: var(--mint-green) !important;
+  }
+
+  // MatTable Border
   .mat-mdc-table tbody tr:first-child td:first-child {
     border-top-left-radius: 0.6rem;
   }
@@ -88,12 +143,4 @@ $client-theme: mat.define-theme(
   .mat-mdc-table tbody tr:last-child td:last-child {
     border-bottom-right-radius: 0.6rem;
   }
-  .mat-mdc-table thead tr:first-child th:first-child {
-    border-top-left-radius: 0.6rem;
-  }
-  .mat-mdc-table thead tr:first-child th:last-child {
-    border-top-right-radius: 0.6rem;
-  }
-
-  @include mat.all-component-themes($client-theme);
 }

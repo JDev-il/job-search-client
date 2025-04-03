@@ -1,7 +1,10 @@
 import { Directive, inject, Input } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { AccountMessages } from '../../core/models/enum/messages.enum';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { tap } from 'rxjs';
+import { NotificationDialog } from '../../core/models/dialog.interface';
+import { NotificationsStatusEnum } from '../../core/models/enum/messages.enum';
 import { StateService } from '../services/state.service';
+import { RoutingService } from './../services/routing.service';
 
 @Directive({
   selector: '[SnackBar]',
@@ -10,26 +13,28 @@ import { StateService } from '../services/state.service';
 })
 export class SnackBarDirective {
   private _snackBar = inject(MatSnackBar);
-
-  @Input() durationInSeconds: number = 5;
-  @Input() snackBarMessage: string = '';
-  @Input() actionLabel: string = 'Dismiss';
-  @Input() customClass: string[] = ['snack-bar-container'];
+  private durationInSeconds!: number;
+  private snackBarMessage: string = '';
   @Input() spinnerState!: boolean;
 
-  constructor(private stateService: StateService) { }
+  constructor(private stateService: StateService, private routingService: RoutingService) { }
 
-  public openSnackBar(text: AccountMessages): void {
-    this.snackBarMessage = text;
+  public openSnackBar(data: NotificationDialog, actionLable?: string): void {
+    const isRedirecting = (data.title === NotificationsStatusEnum.successlog || data.title === NotificationsStatusEnum.successreg);
+    this.snackBarMessage = data.message;
     if (this.snackBarMessage) {
-      const snackBarRef = <MatSnackBarRef<any>>this._snackBar.open(
+      const snackBarRef = this._snackBar.open(
         this.snackBarMessage,
-        this.actionLabel,
+        actionLable || 'Dismiss',
         {
+          duration: isRedirecting ? 2500 : 0,
           horizontalPosition: 'center',
-          panelClass: this.customClass
+          panelClass: ['snack-bar-container', `${data.title}`]
         },
       );
+      if (isRedirecting) {
+        snackBarRef.afterDismissed().pipe(tap(() => this.routingService.toDashboard())).subscribe()
+      }
       snackBarRef.onAction().subscribe((): void => {
         this.stateService.spinnerState = this.spinnerState;
       });

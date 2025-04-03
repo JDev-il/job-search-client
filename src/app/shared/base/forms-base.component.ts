@@ -83,12 +83,6 @@ export class FormsBaseComponent {
     return;
   }
 
-  protected cleanFormField(field: AbstractControl<string | null>) {
-    field.setValue('');
-    field.markAsPristine();
-    field.markAsUntouched();
-  }
-
   protected enumsToArray(enums: {}): string[] {
     return Object.values(enums)
   }
@@ -178,7 +172,6 @@ export class FormsBaseComponent {
     }
     return control;
   }
-
 
   private get formType(): FormGroup<TableDataFormRow> {
     return this.incomingEditForm || this.newAddRowForm;

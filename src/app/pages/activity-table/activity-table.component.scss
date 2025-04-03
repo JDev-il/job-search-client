@@ -2,9 +2,17 @@
 .activity-table-wrapper {
   margin: 0 auto;
   max-width: 75%;
+  max-height: 100%;
   transition: all 0.015s ease-in;
-  @media screen and (max-width: 992px) {
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
+  @media screen and (max-width: 1280px) {
     max-width: 100%;
+    max-height: 100%;
+    height: 960px;
+  }
+  @media screen and (max-width: 992px) {
+    height: 800px;
   }
   .outer-table-container {
     position: relative;
@@ -14,6 +22,7 @@
     top: 35px;
     @media screen and (max-width: 992px) {
       flex-flow: column;
+      top: 40px;
     }
     .actions-contiainer {
       position: relative;
@@ -23,6 +32,11 @@
       width: 100%;
       .action-buttons {
         display: flex;
+        position: relative;
+        left: 0;
+        @media screen and (max-width: 1280px) {
+          left: 30px;
+        }
         button {
           transition: all 0.08s ease-in;
           &:not(:first-child) {
@@ -54,24 +68,25 @@
       }
     }
     .search-container {
-      position: relative;
       width: 100%;
-      .search-input {
+      .mat-mdc-form-field {
         width: 100%;
-        .mat-mdc-form-field {
-          width: 100%;
-          .mdc-text-field {
-            .mat-mdc-form-field-infix {
-              label {
-                color: var(--main-element) !important;
-              }
+        .mdc-text-field {
+          .mat-mdc-form-field-infix {
+            label {
+              color: var(--main-element) !important;
             }
           }
         }
       }
+      @media screen and (max-width: 1280px) {
+        position: relative;
+        right: 30px;
+      }
       @media screen and (max-width: 992px) {
         width: 95%;
-        top: 10px;
+        top: 2vh;
+        right: 0;
       }
     }
   }
@@ -80,14 +95,27 @@
     width: 100%;
     margin: 5vh auto;
     @media screen and (max-width: 992px) {
-      margin: 3vh auto;
+      margin: 6vh auto;
+      overflow-y: auto;
     }
     .table-container {
-      position: relative;
-      max-height: 75vh;
-      width: 100%;
       box-shadow: none;
+      max-height: 75vh;
       overflow-y: auto;
+      border-radius: 1em;
+      @media screen and (max-width: 1880px) {
+        max-height: 75vh;
+      }
+      @media screen and (max-width: 1280px) {
+        max-width: 95%;
+        max-height: 65vh;
+        margin: auto;
+      }
+      @media screen and (max-width: 992px) {
+        max-width: 100%;
+        border-radius: 0;
+        max-height: 60vh;
+      }
       .selected {
         transition: all 0.08s ease-in;
         background-color: #ff6c8282 !important;
@@ -100,28 +128,27 @@
         }
       }
       .mat-mdc-table {
-        border-radius: 0.6rem;
         min-width: unset;
         width: 100%;
         border: 0;
         table-layout: unset;
         background-color: #1c2536;
-        padding: 15px 15px 10px;
+        padding: 0 15px 10px;
         .mat-mdc-header-row {
           position: relative;
           z-index: 3;
+          height: 7rem;
           .mat-mdc-header-cell {
             backdrop-filter: blur(8px);
             margin: 0 !important;
             padding: 15px !important;
             z-index: 100;
-            height: 5rem;
             font-size: 1.4em;
             border-color: unset;
             color: var(--generic-white);
             font-weight: 600;
             border-bottom-width: 0 !important;
-            min-width: 10vw;
+            width: 165px;
             @media screen and (max-width: 992px) {
               font-size: 1.2em;
             }
@@ -188,6 +215,9 @@
             .combined-cell {
               text-align: center;
               .combined-cell-content {
+                .mdc-checkbox__background {
+                  border: 2px solid var(--element2) !important;
+                }
                 button {
                   border-radius: 0.2em;
                   padding: 0;
@@ -231,6 +261,14 @@
               .company {
                 :nth-child(1) {
                   font-weight: 600;
+                }
+              }
+              .application {
+                :nth-child(2) {
+                  @media screen and (min-width: 992px) {
+                    position: relative;
+                    left: 15px;
+                  }
                 }
               }
               .company,
@@ -293,6 +331,9 @@
                 }
               }
             }
+            .text-cell {
+              text-align: center !important;
+            }
             .overflow-cell {
               height: 65px;
               overflow-y: auto;
@@ -316,11 +357,11 @@
           }
         }
         @media screen and (max-width: 992px) {
-          margin: 10px;
-          padding: 0px 15px 10px;
+          margin: 0;
+          padding: 0px 10px 8px;
           .mat-mdc-header-cell,
           .mat-mdc-cell {
-            padding: 6px;
+            padding: 2px;
           }
         }
       }

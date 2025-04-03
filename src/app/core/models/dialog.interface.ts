@@ -1,6 +1,6 @@
 import { FormGroup } from '@angular/forms';
-import { AccountMessages, SessionMessages, UserMessages, ValidationMessages } from "./enum/messages.enum";
-import { FormEnum, NotificationsEnum } from "./enum/utils.enum";
+import { AccountMessages, ErrorMessages, NotificationsStatusEnum, SessionMessages, UserMessages } from "./enum/messages.enum";
+import { FormEnum } from "./enum/utils.enum";
 import { TableDataFormRow } from "./forms.interface";
 
 
@@ -10,8 +10,8 @@ export interface GenericDialogType {
 }
 
 export interface NotificationDialog {
-  title: NotificationsEnum,
-  message: UserMessages | AccountMessages | ValidationMessages | SessionMessages | DataTransfer
+  title: NotificationsStatusEnum,
+  message: UserMessages | AccountMessages | ErrorMessages | SessionMessages | string
 }
 
 export interface FormDialog {

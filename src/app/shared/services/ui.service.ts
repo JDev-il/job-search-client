@@ -18,7 +18,7 @@ export class UIService {
       case StatusEnum.DECIDED_TO_PASS:
         return "decided-to-pass";
       case StatusEnum.LOW_SALARY:
-        return "below-salary-expectation";
+        return "below-expectation";
       case StatusEnum.DID_NOT_PASS_HR:
         return "did-not-pass-hr";
       case StatusEnum.AWAITING_INTERVIEW:

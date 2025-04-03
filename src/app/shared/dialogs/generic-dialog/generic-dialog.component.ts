@@ -5,10 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Country } from '../../../core/models/data.interface';
 import { FormDialog, GenericDialogType } from '../../../core/models/dialog.interface';
-import { ContinentsEnum, FormEnum, NotificationsEnum } from '../../../core/models/enum/utils.enum';
+import { NotificationsStatusEnum } from '../../../core/models/enum/messages.enum';
+import { ContinentsEnum, FormEnum } from '../../../core/models/enum/utils.enum';
 import { AuthService } from '../../../core/services/auth.service';
 import { AddRowComponent } from '../../components/forms/add-row/add-row.component';
 import { EditRowComponent } from '../../components/forms/edit-row/edit-row.component';
+import { FirstToUpperCasePipe } from '../../pipes/custom-upper-case.pipe';
 import { RoutingService } from '../../services/routing.service';
 import { TableDataFormRow } from './../../../core/models/forms.interface';
 import { StateService } from './../../services/state.service';
@@ -16,14 +18,14 @@ import { StateService } from './../../services/state.service';
 @Component({
   selector: 'app-generic-dialog',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, AddRowComponent, EditRowComponent],
+  imports: [CommonModule, MatButtonModule, AddRowComponent, EditRowComponent, FirstToUpperCasePipe],
   templateUrl: './generic-dialog.component.html',
   styleUrl: './generic-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenericDialogComponent {
   public dataType: WritableSignal<GenericDialogType> = signal<GenericDialogType>({});
-  public notifyText = NotificationsEnum;
+  public notifyText = NotificationsStatusEnum;
   public countriesList: WritableSignal<Country[]> = signal([] as Country[]);
   public currentContinent!: ContinentsEnum;
   public editFormSnapshot!: TableDataFormRow;
@@ -57,7 +59,7 @@ export class GenericDialogComponent {
   }
 
   public get isSuccess(): boolean {
-    return this.dataType().notification?.title === this.notifyText.successlogin || this.dataType().notification?.title === this.notifyText.successregister;
+    return this.dataType().notification?.title === this.notifyText.successlog || this.dataType().notification?.title === this.notifyText.successreg;
   }
 
   public get form(): FormDialog | undefined {
