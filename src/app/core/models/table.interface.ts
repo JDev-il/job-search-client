@@ -18,7 +18,7 @@ export interface ITableDataRow {
   companyName: string;
   positionStack: PositionStackEnum[];
   positionType: PositionTypeEnum;
-  applicationDate: Date | null;
+  applicationDate: Date | string | null;
   applicationPlatform: PlatformEnum | null;
   hunch: string;
   notes: string;

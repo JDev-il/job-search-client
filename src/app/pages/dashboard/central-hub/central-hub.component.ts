@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+
+import { ITableDataRow } from '../../../core/models/table.interface';
+import { StateService } from './../../../shared/services/state.service';
 import { CvCounterComponent } from './cv-counter/cv-counter.component';
 import { MarketAnalystComponent } from './market-analyst/market-analyst.component';
 import { PositionsListComponent } from './positions-list/positions-list.component';
@@ -16,6 +19,16 @@ import { StatusPreviewComponent } from './status-preview/status-preview.componen
 export class CentralHubComponent {
   @Input() centralHubCvCounter = signal<number>(0);
   @Output() genericEmitter = new EventEmitter<void>();
-  constructor() { }
+  private currentPositionsList: WritableSignal<ITableDataRow[] | null> = signal(null);
+  public status: WritableSignal<string[]> = signal<string[]>([]);
+  constructor(private stateService: StateService) {
+    effect(() => {
+      this.status.set(this.stateService.statusPreviewsList);
+      this.currentPositionsList.set(this.stateService.tableDataResponse$)
+    }, { allowSignalWrites: true })
+  }
 
+  // public sanitizeSvg(path: string): SafeHtml {
+  //   return this.sanitizeService.svgSanitize(path)
+  // }
 }

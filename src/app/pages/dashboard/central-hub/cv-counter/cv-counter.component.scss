@@ -1,2 +1,19 @@
 .cv-counter-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  img {
+    position: relative;
+    margin: auto;
+    display: flex;
+    height: 25px;
+  }
+  .cv-count {
+    border: 1px solid var(--main-element);
+    border-radius: 8px;
+    padding: 3px;
+    margin: 0 5px;
+    font-size: x-large;
+    font-weight: 500;
+  }
 }

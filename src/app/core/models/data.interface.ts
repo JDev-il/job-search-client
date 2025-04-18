@@ -1,3 +1,5 @@
+import { WritableSignal } from "@angular/core"
+
 export interface Country {
   name: {
     common: string,
@@ -25,4 +27,9 @@ export interface CityData {
   city: string,
   country: string,
   populationCounts: {}[]
+}
+
+export interface DatePickRange {
+  from: WritableSignal<Date | null>,
+  to: WritableSignal<Date | null>
 }

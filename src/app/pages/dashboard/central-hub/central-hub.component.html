@@ -5,7 +5,7 @@
         (cta)="genericEmitter.emit()"
         [counter]="centralHubCvCounter"
       ></app-cv-counter>
-      <app-status-preview></app-status-preview>
+      <app-status-preview [allStatuses]="status()"></app-status-preview>
       <app-progress-viewer></app-progress-viewer>
     </div>
   </div>

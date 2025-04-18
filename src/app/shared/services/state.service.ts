@@ -19,13 +19,16 @@ export class StateService {
   private currentCountry: WritableSignal<Country> = signal<Country>({} as Country);
   private currentCitiesByCountry: WritableSignal<City> = signal<City>({} as City);
   private companiesList: WritableSignal<string[]> = signal<string[]>([] as string[])
+  private statusPreviewList: WritableSignal<string[]> = signal<string[]>([]);
+
   public isCachedRequest: WritableSignal<boolean> = signal<boolean>(true);
   public currentCountryName: WritableSignal<string> = signal<string>('');
   public isDataExists = signal<boolean>(false);
-  public destroy$: Subject<boolean> = new Subject();
   public buttonText = signal<string>("Don't have an account?");
   public isFetchingCities = signal(false);
   public isRegistrationError = signal(false);
+  public destroy$: Subject<boolean> = new Subject();
+
 
   constructor(private apiService: ApiService, private authService: AuthService) {
     this.getAllCountries().subscribe();
@@ -90,6 +93,8 @@ export class StateService {
           take(1),
           tap((tableData: ITableDataRow[]) => {
             if (tableData.length) {
+              const statuses = tableData.map(td => td.status);
+              this.statusPreviewList.set(statuses);
               this.tableDataResponse$ = tableData;
               this.isCachedRequest.set(false);
               this.isDataExists.set(true);
@@ -262,9 +267,10 @@ export class StateService {
     }
   }
 
-  public get tableDataCache$(): Observable<ITableDataRow[]> {
-    return this.authorizedUserDataRequest();
+  public get statusPreviewsList(): string[] {
+    return this.statusPreviewList();
   }
+
 
   public get displayColumns(): string[] {
     return ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
