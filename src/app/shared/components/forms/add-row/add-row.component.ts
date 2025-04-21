@@ -1,6 +1,6 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, inject, Injector, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -33,7 +33,6 @@ import { StateService } from '../../../services/state.service';
 })
 export class AddRowComponent extends FormsBaseComponent {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
-  private _injector = inject(Injector);
   constructor(private destroyRef: DestroyRef, stateService: StateService) {
     super(stateService);
     this.destroyRef.onDestroy(() => {
@@ -46,20 +45,9 @@ export class AddRowComponent extends FormsBaseComponent {
     return Object.keys(this.newAddRowForm.controls);
   }
 
-  triggerResize() {
-    afterNextRender(
-      () => {
-        this.autosize.resizeToFitContent(true);
-      },
-      {
-        injector: this._injector,
-      },
-    );
-  }
   public formSubmit(): void {
     if (this.newAddRowForm.valid) {
       this.formEmit.emit(this.newAddRowForm);
     }
   }
-
 }

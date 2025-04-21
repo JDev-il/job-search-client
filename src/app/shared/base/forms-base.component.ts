@@ -157,6 +157,12 @@ export class FormsBaseComponent {
       : 'Choose a Country'
   };
 
+  protected filterPastDates = (date: Date | null): boolean => {
+    const today = new Date();
+    return date ? date <= today : false;
+  };
+
+
   private abstractControlSwitch(type: string): AbstractControl {
     let control!: AbstractControl;
     switch (type) {

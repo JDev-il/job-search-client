@@ -4,7 +4,7 @@ import { ErrorMessages, NotificationsStatusEnum, UserMessages } from '../../core
 import { CountriesEnum, FormEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
-import { City, Country } from './../../core/models/data.interface';
+import { City, Country, TimeLine } from './../../core/models/data.interface';
 import { ITableDataRow, ITableSaveRequest } from './../../core/models/table.interface';
 import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from './../../core/models/users.interface';
 
@@ -21,6 +21,7 @@ export class StateService {
   private companiesList: WritableSignal<string[]> = signal<string[]>([] as string[])
   private statusPreviewList: WritableSignal<string[]> = signal<string[]>([]);
 
+  public cvProgressTimeline: WritableSignal<TimeLine[]> = signal<TimeLine[]>([]);
   public isCachedRequest: WritableSignal<boolean> = signal<boolean>(true);
   public currentCountryName: WritableSignal<string> = signal<string>('');
   public isDataExists = signal<boolean>(false);
@@ -28,7 +29,7 @@ export class StateService {
   public isFetchingCities = signal(false);
   public isRegistrationError = signal(false);
   public destroy$: Subject<boolean> = new Subject();
-
+  public chronicalDates = signal<string[]>([]);
 
   constructor(private apiService: ApiService, private authService: AuthService) {
     this.getAllCountries().subscribe();
@@ -168,6 +169,14 @@ export class StateService {
       );
   }
 
+  public getTimeLineList(): Observable<TimeLine[]> {
+    return this.apiService.getTimelineDataReq()
+      .pipe(
+        take(1),
+        catchError(err => throwError(() => console.error(`Error with incoming data from => ${err.url}`)))
+      )
+  }
+
   public markAsDestroyed(): void {
     this.destroyed$.set(true);
   }
@@ -271,8 +280,8 @@ export class StateService {
     return this.statusPreviewList();
   }
 
-
   public get displayColumns(): string[] {
     return ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
   }
+
 }

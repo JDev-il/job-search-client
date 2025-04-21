@@ -1,3 +1,14 @@
 <div class="progress-container">
-  <h2>progress graph</h2>
+  <apx-chart
+  #chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [xaxis]="chartOptions.xaxis"
+    [grid]="chartOptions.grid"
+    [stroke]="chartOptions.stroke"
+    [title]="chartOptions.title"
+    [markers]="chartOptions.markers"
+    [yaxis]="chartOptions.yaxis"
+    [fill]="chartOptions.fill"
+  ></apx-chart>
 </div>

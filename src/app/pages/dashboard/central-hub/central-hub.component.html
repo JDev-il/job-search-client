@@ -6,7 +6,10 @@
         [counter]="centralHubCvCounter"
       ></app-cv-counter>
       <app-status-preview [allStatuses]="status()"></app-status-preview>
-      <app-progress-viewer></app-progress-viewer>
+      <app-progress-viewer
+      [positions]="progressData"
+      [counter]="centralHubCvCounter"
+      ></app-progress-viewer>
     </div>
   </div>
   <div class="outer-right-hub">

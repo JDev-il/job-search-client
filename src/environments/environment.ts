@@ -1,6 +1,14 @@
 export const environment = {
   production: false,
   apiUrls: {
+    remote: 'http://192.168.68.56:3000',
+    local: 'http://localhost:3000/',
+    timeline: {
+      baseUrl_mockApi: "https://6804a77d79cb28fb3f5b7ae5.mockapi.io/api/timeline",
+      params: {
+        data: "years_months"
+      }
+    },
     geo: {
       countries: {
         baseUrl_mockApi: "https://67ea3d9d34bcedd95f62aea6.mockapi.io/api/countries",
@@ -16,10 +24,8 @@ export const environment = {
         citiesList: 'countries/cities',
         filter: "countries/population/cities/filter",
         israeli: "https://67e8e189bdcaa2b7f5b80458.mockapi.io/api/cities"
-      }
+      },
     },
-    remote: 'http://192.168.68.56:3000',
-    local: 'http://localhost:3000/',
     params: {
       companies: {
         base_url: "https://67e8e189bdcaa2b7f5b80458.mockapi.io/api/",

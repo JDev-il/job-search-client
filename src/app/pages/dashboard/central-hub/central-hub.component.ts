@@ -19,16 +19,13 @@ import { StatusPreviewComponent } from './status-preview/status-preview.componen
 export class CentralHubComponent {
   @Input() centralHubCvCounter = signal<number>(0);
   @Output() genericEmitter = new EventEmitter<void>();
-  private currentPositionsList: WritableSignal<ITableDataRow[] | null> = signal(null);
   public status: WritableSignal<string[]> = signal<string[]>([]);
+  public progressData: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
+  public progressDates: WritableSignal<string[]> = signal<string[]>([]);
   constructor(private stateService: StateService) {
     effect(() => {
       this.status.set(this.stateService.statusPreviewsList);
-      this.currentPositionsList.set(this.stateService.tableDataResponse$)
+      this.progressData.set(this.stateService.tableDataResponse$);
     }, { allowSignalWrites: true })
   }
-
-  // public sanitizeSvg(path: string): SafeHtml {
-  //   return this.sanitizeService.svgSanitize(path)
-  // }
 }

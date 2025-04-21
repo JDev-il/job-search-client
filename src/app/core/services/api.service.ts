@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { City, Country } from '../models/data.interface';
+import { City, Country, TimeLine } from '../models/data.interface';
 import { ParamsOrder, ParamsOrderBy } from '../models/enum/params.enum';
 import { CountriesEnum, FormEnum } from '../models/enum/utils.enum';
 import { CityReqParams } from '../models/requests.intefrace';
@@ -19,10 +19,16 @@ export class ApiService {
   private jobSearchParams = this.env.params.job_search;
   private companiesParams = this.env.params.companies;
   private geoParams = this.env.geo;
+  private timelineParams = this.env.timeline;
   public currentUserData$ = signal<UserResponse>({} as UserResponse);
   public currentUserRequest$ = signal<UserLogin>({} as UserLogin);
 
   constructor(private http: HttpClient) { }
+
+  public getTimelineDataReq(): Observable<TimeLine[]> {
+    const url = `${this.timelineParams.baseUrl_mockApi}/${this.timelineParams.params.data}`;
+    return this.http.get<TimeLine[]>(url);
+  }
 
   public getCountriesListReq(): Observable<Country[]> {
     const url = this.geoParams.countries.baseUrl_mockApi;

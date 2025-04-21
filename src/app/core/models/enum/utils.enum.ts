@@ -59,3 +59,8 @@ export enum FieldType {
   name = 'name',
   country = 'country'
 }
+
+export enum TimeLineTypes {
+  y = "years",
+  m = "months"
+}

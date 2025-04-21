@@ -2,11 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule, MatDateRangeInput, MatDateRangePicker } from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { DatePickRange } from '../../../../core/models/data.interface';
 import { StringSanitizerPipe } from '../../../../shared/pipes/string-sanitizer.pipe';
 
 @Component({
@@ -16,11 +14,8 @@ import { StringSanitizerPipe } from '../../../../shared/pipes/string-sanitizer.p
     MatButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatDateRangePicker,
-    MatDateRangeInput,
     MatDatepickerModule,
     MatFormFieldModule,
-    MatIcon,
     CommonModule],
   providers: [StringSanitizerPipe],
   templateUrl: './cv-counter.component.html',
@@ -30,7 +25,6 @@ import { StringSanitizerPipe } from '../../../../shared/pipes/string-sanitizer.p
 export class CvCounterComponent {
   @Input() counter = signal<number>(0);
   @Output() cta = new EventEmitter<void>();
-  @Output() rangeEmit = new EventEmitter<DatePickRange>()
   public icons: Record<string, SafeResourceUrl> = {};
   public isRangePicker = signal(false);
   constructor(private sanitize: StringSanitizerPipe) {

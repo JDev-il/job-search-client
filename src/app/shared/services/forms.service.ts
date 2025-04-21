@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TableDataForm } from '../../core/models/forms.interface';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { TableDataFormRow } from './../../core/models/forms.interface';
@@ -41,7 +41,7 @@ export class FormsService {
       positionType: this.fb.control('', Validators.required),
       positionStack: this.fb.control([''], Validators.required),
       applicationPlatform: this.fb.control('', Validators.required),
-      applicationDate: this.fb.control('', Validators.required),
+      applicationDate: this.fb.control('', [this.futureDateValidator]),
       notes: this.fb.control(''),
       hunch: this.fb.control('')
     })
@@ -58,7 +58,7 @@ export class FormsService {
       positionType: this.fb.control(row?.positionType ?? '', Validators.required),
       positionStack: this.fb.control(row?.positionStack ?? [''], Validators.required),
       applicationPlatform: this.fb.control(row?.applicationPlatform ?? '', Validators.required),
-      applicationDate: this.fb.control(row?.applicationDate ?? null, Validators.required),
+      applicationDate: this.fb.control(row?.applicationDate ?? null, [this.futureDateValidator]),
       notes: this.fb.control(row?.notes ?? ''),
       hunch: this.fb.control(row?.hunch ?? '')
     })
@@ -69,4 +69,14 @@ export class FormsService {
     const confirmPassword = form.get('confirm_password')?.value;
     return password === confirmPassword ? null : { isConfirmed: true };
   }
+
+  futureDateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const inputDate = new Date(control.value);
+    const today = new Date();
+    inputDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    return inputDate > today ? { futureDateNotAllowed: true } : null;
+  }
+
 }

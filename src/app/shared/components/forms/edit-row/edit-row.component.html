@@ -164,6 +164,7 @@
     <input
       matInput
       [matDatepicker]="picker"
+      [matDatepickerFilter]="filterPastDates"
       formControlName="applicationDate"
     />
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
