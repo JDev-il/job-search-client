@@ -34,8 +34,21 @@ export interface TimeLine {
   months: Month[]
 }
 
+export interface IAxis {
+  x: number,
+  y: number
+  //public cvProgressAxes: { x: number; y: number }[] = [];
+}
+
 export interface Month {
   numeric: string,
   alphabetic: string,
   periodic: string
+}
+
+export interface NavBarLink {
+  name: string,
+  route: string,
+  icon: string,
+  index: number
 }

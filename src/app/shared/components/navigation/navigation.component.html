@@ -1,18 +1,34 @@
 <nav class="nav-container">
-  <div class="nav-flex-wrapper">
-    <ul class="routes-wrapper">
+  <div class="nav-control">
+    <div class="logo-block">
+      <img src="../../../../assets/images/wedevz-logo.png" alt="" />
+    </div>
+    <div class="routes-wrapper">
+      @for (link of navBarLinks; track $index){ @if (link.name) {
       <li>
-        <a [routerLink]="'/'" [class.active]="isActive('/')">Dashboard</a>
-      </li>
-      <li>
-        <a [routerLink]="'/activity'" [class.active]="isActive('/activity')"
-          >Activity Table</a
+        <a
+          [ngClass]="{ active: isActive(link.route) }"
+          [routerLink]="link.route"
         >
+          <mat-icon matListIcon>{{ link.icon }}</mat-icon>
+        </a>
       </li>
-    </ul>
-    <div class="buttons-wrapper">
-      <button mat-raised-button (click)="myAccount()">Account</button>
-      <button mat-raised-button (click)="logout()">Logout</button>
+      } @else { } }
+      <div class="nav-actions">
+        <li>
+          <a (click)="navBarAction('account')">
+            <mat-icon matListIcon>account_circle</mat-icon>
+          </a>
+        </li>
+        <li>
+          <a (click)="navBarAction('logout')">
+            <mat-icon matListIcon>exit_to_app</mat-icon>
+          </a>
+        </li>
+      </div>
     </div>
   </div>
 </nav>
+
+<!-- { name: '', route: 'account', icon: 'account_circle', index: 2 }, -->
+<!-- { name: '', route: 'logout', icon: 'exit_to_app', index: 3 }, -->

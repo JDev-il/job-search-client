@@ -1,5 +1,7 @@
 <div class="layout-container">
   <app-navigation></app-navigation>
-  <router-outlet />
+  <div class="router-outlet-main">
+    <router-outlet />
+  </div>
 </div>
 <app-spinner [isSpinner]="spinnerState" [isActivityTable]="false"></app-spinner> <!---Dashboard & Activity Pages-->

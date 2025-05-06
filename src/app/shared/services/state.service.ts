@@ -1,4 +1,14 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
+import {
+  ApexChart,
+  ApexFill,
+  ApexGrid,
+  ApexMarkers,
+  ApexStroke,
+  ApexTitleSubtitle,
+  ApexXAxis,
+  ApexYAxis
+} from 'ng-apexcharts';
 import { catchError, Observable, of, Subject, switchMap, take, tap, throwError } from 'rxjs';
 import { ErrorMessages, NotificationsStatusEnum, UserMessages } from '../../core/models/enum/messages.enum';
 import { CountriesEnum, FormEnum } from '../../core/models/enum/utils.enum';
@@ -7,6 +17,22 @@ import { AuthService } from '../../core/services/auth.service';
 import { City, Country, TimeLine } from './../../core/models/data.interface';
 import { ITableDataRow, ITableSaveRequest } from './../../core/models/table.interface';
 import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from './../../core/models/users.interface';
+import { ChartPoint } from './ui.service';
+
+export type ChartOptions = {
+  series: {
+    name: string,
+    data: ChartPoint[]
+  }[];
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  grid: ApexGrid;
+  fill: ApexFill;
+  markers: ApexMarkers;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
+};
 
 @Injectable({ providedIn: 'root' })
 export class StateService {
@@ -21,6 +47,8 @@ export class StateService {
   private companiesList: WritableSignal<string[]> = signal<string[]>([] as string[])
   private statusPreviewList: WritableSignal<string[]> = signal<string[]>([]);
 
+  public chartOptionsSource: WritableSignal<ChartOptions> = signal({} as ChartOptions);
+  public currentTabIndex: WritableSignal<number> = signal(0);
   public cvProgressTimeline: WritableSignal<TimeLine[]> = signal<TimeLine[]>([]);
   public isCachedRequest: WritableSignal<boolean> = signal<boolean>(true);
   public currentCountryName: WritableSignal<string> = signal<string>('');
@@ -173,6 +201,10 @@ export class StateService {
     return this.apiService.getTimelineDataReq()
       .pipe(
         take(1),
+        tap((data) => {
+          this.cvProgressTimeline.set(data);
+        }
+        ),
         catchError(err => throwError(() => console.error(`Error with incoming data from => ${err.url}`)))
       )
   }
@@ -283,5 +315,6 @@ export class StateService {
   public get displayColumns(): string[] {
     return ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
   }
+
 
 }

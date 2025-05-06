@@ -2,12 +2,25 @@
   margin: 0;
   padding: 0;
   height: 100%;
-  max-width: 75%;
+  width: 100%;
   display: flex;
   flex-flow: column;
-  justify-content: space-evenly;
-  align-items: center;
-  margin: auto;
+  .mat-mdc-tab-body {
+    margin: auto;
+    .mat-mdc-tab-body-content {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .mat-mdc-tab-header {
+    display: none;
+  }
+  // max-width: 75%;
+  // justify-content: space-evenly;
+  // align-items: center;
+  // margin: auto;
   div {
     height: 100%;
     width: 65%;

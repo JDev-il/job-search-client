@@ -6,6 +6,11 @@
   bottom: 0;
   left: 0;
   right: 0;
+  background-color: #f3f5f6;
+  .router-outlet-main {
+    position: relative;
+    top: 5%;
+  }
   @media screen and (max-width: 1440px) {
     position: fixed;
   }

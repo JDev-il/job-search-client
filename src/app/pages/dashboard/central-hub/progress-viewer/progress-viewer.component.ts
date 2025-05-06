@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, Input, signal, ViewChild } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChartOptions } from './../../../../shared/services/state.service';
 
 import { ITableDataRow } from '../../../../core/models/table.interface';
-import { ChartOptions, UIService } from '../../../../shared/services/ui.service';
+import { UIService } from '../../../../shared/services/ui.service';
 @Component({
   selector: 'app-progress-viewer',
   standalone: true,
@@ -42,6 +43,5 @@ export class ProgressViewerComponent {
   ngOnInit(): void {
     this.uiService.cvProgressChartAnimation.update(() => this.positions().length > 0 ? true : false);
     this.chartOptions = this.uiService.progressChartInitializer();
-    console.log(this.uiService.cvProgressDataInit());
   }
 }

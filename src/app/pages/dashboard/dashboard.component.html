@@ -1,10 +1,7 @@
 <div class="dashboard-components">
-  <div class="dashboard-sidbar">
-    <app-sidebar></app-sidebar>
-  </div>
   @defer (when isData) {
   <div class="dashboard-central-hub">
-    <app-central-hub [centralHubCvCounter]="cvCounter"></app-central-hub>
+    <app-central-hub [centralHubCvCounter]="cvCounter" [tabIndex]="currentTabIndex"></app-central-hub>
   </div>
   } @placeholder {
   <div class="dashboard-placeholder">

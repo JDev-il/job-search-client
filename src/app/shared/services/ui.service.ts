@@ -2,35 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { StatusEnum } from '../../core/models/enum/table-data.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexFill,
-  ApexGrid,
-  ApexMarkers,
-  ApexStroke,
-  ApexTitleSubtitle,
-  ApexXAxis,
-  ApexYAxis
-} from 'ng-apexcharts';
 import { Observable, of, tap } from 'rxjs';
-import { TimeLine } from '../../core/models/data.interface';
-import { StateService } from './state.service';
+import { NavBarLink, TimeLine } from '../../core/models/data.interface';
+import { ChartOptions, StateService } from './state.service';
 
-export type ChartOptions = {
-  series: {
-    name: string,
-    data: ChartPoint[]
-  }[];
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  grid: ApexGrid;
-  fill: ApexFill;
-  markers: ApexMarkers;
-  yaxis: ApexYAxis;
-  stroke: ApexStroke;
-  title: ApexTitleSubtitle;
-};
+
 export type ChartPoint = { x: number; y: number };
 
 @Injectable({ providedIn: 'root' })
@@ -38,6 +14,13 @@ export class UIService {
   public cvProgressChartAnimation = signal<boolean>(true);
   public cvProgressAxes: { x: number; y: number }[] = [];
   constructor(private stateService: StateService) { }
+
+  public get navBarLinks(): NavBarLink[] {
+    return [
+      { name: 'Dashboard', route: '', icon: 'dashboard', index: 0 },
+      { name: 'Activity', route: 'activity', icon: 'view_list', index: 1 },
+    ];
+  }
 
   public getTimeLinesCategories(forceRefresh = false): Observable<TimeLine[]> {
     if (!forceRefresh && this.stateService.cvProgressTimeline().length > 0) {
@@ -150,8 +133,6 @@ export class UIService {
       x: new Date(date).getDate(),
       y: count + 1
     }));
-
-    const sortedDates = sorted.map(([date]) => date);
     this.cvProgressAxes = counts;
   }
 
