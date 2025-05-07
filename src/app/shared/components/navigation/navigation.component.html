@@ -1,3 +1,4 @@
+@if (isWindowMobile()) {
 <nav class="nav-container">
   <div class="nav-control">
     <div class="logo-block">
@@ -13,7 +14,7 @@
           <mat-icon matListIcon>{{ link.icon }}</mat-icon>
         </a>
       </li>
-      } @else { } }
+      }}
       <div class="nav-actions">
         <li>
           <a
@@ -32,6 +33,53 @@
     </div>
   </div>
 </nav>
+} @else {
+<mat-drawer-container class="drawer-container" autosize>
+  <mat-drawer #drawer mode="side" opened class="drawer-side">
+    <nav class="nav-container">
+      <div class="nav-control">
+        <div class="logo-block">
+          <img src="../../../../assets/images/wedevz-logo.png" alt="" />
+        </div>
+        <div class="routes-wrapper">
+          @for (link of navBarLinks; track $index){ @if (link.name) {
+          <li>
+            <a
+              [ngClass]="{ active: isActive(link.route) }"
+              [routerLink]="link.route"
+            >
+              <mat-icon matListIcon>{{ link.icon }}</mat-icon>
+            </a>
+          </li>
+          } }
+          <div class="nav-actions">
+            <li>
+              <a
+                [class.active]="isActive('account')"
+                (click)="navBarAction('account')"
+              >
+                <mat-icon matListIcon>account_circle</mat-icon>
+              </a>
+            </li>
+            <li>
+              <a (click)="navBarAction('logout')">
+                <mat-icon matListIcon>exit_to_app</mat-icon>
+              </a>
+            </li>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </mat-drawer>
 
-<!-- { name: '', route: 'account', icon: 'account_circle', index: 2 }, -->
-<!-- { name: '', route: 'logout', icon: 'exit_to_app', index: 3 }, -->
+  <mat-drawer-content class="drawer-content">
+    <a (click)="openDrawer(drawer)" class="toggle-button">
+      @if (isDrawerOpened) {
+      <mat-icon matTooltip="Close Sidebar">arrow_back_ios</mat-icon>
+      } @else {
+      <mat-icon matTooltip="Open Sidebar">arrow_forward_ios</mat-icon>
+      }
+    </a>
+  </mat-drawer-content>
+</mat-drawer-container>
+}
