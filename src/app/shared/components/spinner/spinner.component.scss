@@ -24,24 +24,47 @@
   backdrop-filter: blur(3px);
 }
 
-.non-credential-page-spinner {
-  top: 20vh;
-}
-.non-credential-page-overlay {
+.activity-page-spinner-container {
   position: absolute;
-  top: 20%;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  justify-self: anchor-center;
-  width: 75%;
-  max-height: 75%;
-  border-radius: 1em;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  .activity-page-spinner {
+    position: absolute;
+    text-align: center;
+    z-index: 6;
+    .mat-mdc-progress-spinner {
+      max-width: 4rem;
+    }
+    @media screen and (max-width: 992px) {
+      border-radius: 0;
+    }
+  }
+  .activity-page-overlay {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.6941176471);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    border-radius: 1em;
+    @media screen and (max-width: 992px) {
+      border-radius: 0;
+    }
+  }
   @media screen and (max-width: 1280px) {
     width: 95%;
   }
   @media screen and (max-width: 992px) {
-    top: 25%;
     width: 100%;
-    border-radius: 0;
   }
 }
 

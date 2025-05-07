@@ -1,16 +1,15 @@
 @if (isSpinner) {
-<div
-  class="spinner-container"
-  [ngClass]="isActivityTable ? 'non-credential-page-spinner' : ''"
->
-  <mat-spinner />
-</div>
-<div
-  class="overlay"
-  [ngClass]="isActivityTable ? 'non-credential-page-overlay' : ''"
-></div>
-} @else if (isSmallSpinner) {
-<div class="small-spinner">
-  <mat-spinner />
-</div>
+  @if (isActivityTable) {
+  <div class="activity-page-spinner-container">
+    <div class="activity-page-spinner">
+      <mat-spinner />
+    </div>
+  <div class="activity-page-overlay"></div>
+  </div>
+  } @else {
+  <div class="spinner-container">
+    <mat-spinner />
+  </div>
+  <div class="overlay"></div>
+  }
 }

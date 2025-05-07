@@ -19,7 +19,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 35px;
+    // top: 35px;
     @media screen and (max-width: 992px) {
       flex-flow: column;
       top: 40px;
@@ -94,6 +94,7 @@
     height: 100%;
     width: 100%;
     margin: 5vh auto;
+    position: relative;
     @media screen and (max-width: 992px) {
       margin: 6vh auto;
       overflow-y: auto;
