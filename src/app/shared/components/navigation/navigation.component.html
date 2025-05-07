@@ -16,7 +16,10 @@
       } @else { } }
       <div class="nav-actions">
         <li>
-          <a (click)="navBarAction('account')">
+          <a
+            [class.active]="isActive('account')"
+            (click)="navBarAction('account')"
+          >
             <mat-icon matListIcon>account_circle</mat-icon>
           </a>
         </li>

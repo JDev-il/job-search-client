@@ -4,10 +4,10 @@
   left: 0;
   top: 0;
   bottom: 0;
-  background: #fff;
+  background: #271d3a1a;
+  backdrop-filter: blur(4px);
   z-index: 888;
   padding: 0 5px;
-  box-shadow: 0px 0px 10px -4px rgba(39, 29, 58, 0.3);
   .logo-block {
     max-width: 100%;
     img {
@@ -48,6 +48,7 @@
           transform: scale(0.78);
         }
         a {
+          transition: all 0.185s cubic-bezier(0.455, 0.03, 0.515, 0.955);
           border-radius: 99999px;
           overflow: hidden;
           display: flex;
@@ -57,6 +58,9 @@
           border-radius: 0.2em;
           text-decoration: none;
           color: var(--main-element);
+          &:hover {
+            color: rgba(39, 29, 58, 0.5);
+          }
         }
       }
       .nav-actions {

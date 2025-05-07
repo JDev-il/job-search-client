@@ -5,6 +5,7 @@ import { NavBarLink } from '../../core/models/data.interface';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
+import { FaderDirective } from '../../shared/directives/fader.directive';
 import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
 import { CentralHubComponent } from "./central-hub/central-hub.component";
@@ -14,7 +15,8 @@ import { CentralHubComponent } from "./central-hub/central-hub.component";
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   imports: [
-    CentralHubComponent
+    CentralHubComponent,
+    FaderDirective
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

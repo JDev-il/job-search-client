@@ -39,13 +39,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/activity-table/activity-table.component').then((c) => c.ActivityTableComponent)
       },
+      {
+        path: 'account',
+        loadComponent: () =>
+          import('./shared/pages/my-account/my-account.component').then((c) => c.MyAccountComponent),
+        canActivate: [authGuard]
+      },
     ],
-  },
-  {
-    path: 'account',
-    loadComponent: () =>
-      import('./shared/pages/my-account/my-account.component').then((c) => c.MyAccountComponent),
-    canActivate: [authGuard]
   },
 
   // Undefined Paths

@@ -15,6 +15,7 @@ import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { FaderDirective } from '../../shared/directives/fader.directive';
 import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
 import { ITableDataRow } from './../../core/models/table.interface';
@@ -27,6 +28,7 @@ import { UIService } from './../../shared/services/ui.service';
   styleUrl: './activity-table.component.scss',
   imports: [
     SpinnerComponent,
+    FaderDirective,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
