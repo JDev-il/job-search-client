@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, Input, signal, ViewChild } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { ChartOptions } from './../../../../shared/services/state.service';
+import { ChartOptions } from '../../../shared/services/state.service';
 
-import { ITableDataRow } from '../../../../core/models/table.interface';
-import { UIService } from '../../../../shared/services/ui.service';
+import { ITableDataRow } from '../../../core/models/table.interface';
+import { UIService } from '../../../shared/services/ui.service';
 @Component({
   selector: 'app-progress-viewer',
   standalone: true,

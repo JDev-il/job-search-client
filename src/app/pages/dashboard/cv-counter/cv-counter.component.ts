@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { StringSanitizerPipe } from '../../../../shared/pipes/string-sanitizer.pipe';
+import { StringSanitizerPipe } from '../../../shared/pipes/string-sanitizer.pipe';
 
 @Component({
   selector: 'app-cv-counter',
@@ -33,20 +33,7 @@ export class CvCounterComponent {
       this.icons[icon] = this.sanitize.svgSanitize(`assets/images/${icon}.svg`);
     }
   }
-
-  public sendCV(): void {
-    this.cta.emit();
-  }
-
   public get cvCount(): number {
-    return (this.counter ?? 0)();
+    return this.counter() ?? 0;
   }
-
-  public changeDateRange(): void {
-    this.isRangePicker.set(true);
-  }
-  public hideRangePicker(): void {
-    this.isRangePicker.update(() => false);
-  }
-
 }

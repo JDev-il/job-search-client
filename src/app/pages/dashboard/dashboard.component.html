@@ -1,23 +1,7 @@
-<div class="dashboard-components" fader>
-  @defer (when isData) {
-  <div class="dashboard-central-hub">
-    <app-central-hub
-      [centralHubCvCounter]="cvCounter"
-      [tabIndex]="currentTabIndex"
-    ></app-central-hub>
+<div class="dashboard-container" fader>
+  <div class="dashboard-components-wrapper">
+    <!-- @defer (when isData) { -->
+     <div class="components-container">
+     </div>
   </div>
-  } @placeholder {
-  <div class="dashboard-placeholder">
-    <div class="placeholder-content">
-      <p>
-        No Data Found<a
-          type="button"
-          class="cv-counter-placeholder-cta"
-          (click)="addRow()"
-          >Add an Application
-        </a>
-      </p>
-    </div>
-  </div>
-  }
 </div>

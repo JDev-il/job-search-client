@@ -1,0 +1,21 @@
+.cv-counter-container {
+  position: absolute;
+  border: 0.1rem solid #cdcdcd;
+  border-radius: 1rem;
+  height: 335px;
+  width: 150px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  img {
+    max-height: 25px;
+  }
+  .cv-count {
+    width: min-content;
+    border-radius: 8px;
+    padding: 3px;
+    margin: 0 5px;
+    font-size: x-large;
+    font-weight: 500;
+  }
+}

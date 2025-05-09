@@ -29,23 +29,19 @@ import { AuthService } from './../../../core/services/auth.service';
     CommonModule
   ],
   templateUrl: './navigation.component.html',
-  styleUrl: './navigation.component.scss',
+  styleUrls: ['./navigation.component.scss', '../../style/custom-material.scss'],
 })
 export class NavigationComponent {
   public isDrawerOpened: boolean = true;
   public isWindowMobile: WritableSignal<boolean> = signal(false);
   public icons: Record<string, SafeResourceUrl> = {};
-  constructor(private router: Router, private routingService: RoutingService, private authService: AuthService, private uiService: UIService) { }
+  constructor(private router: Router, private routingService: RoutingService, private authService: AuthService, private uiService: UIService) {
+    this.updateViewportWidth()
+  }
 
   @HostListener('window:resize', ['$event'])
-  onResize(e: Event) {
-    const window = e.target as Window;
-    if (window.innerWidth <= 1280) {
-      this.isWindowMobile.set(true);
-    } else {
-      this.isWindowMobile.set(false);
-    }
-
+  onResize() {
+    this.updateViewportWidth();
   }
 
   public get navBarLinks(): NavBarLink[] {
@@ -68,8 +64,13 @@ export class NavigationComponent {
     }
   }
 
-  openDrawer(drawer: MatDrawer) {
+  public openDrawer(drawer: MatDrawer) {
     drawer.toggle();
     this.isDrawerOpened = drawer.opened;
+  }
+
+  private updateViewportWidth(): void {
+    const width = window.innerWidth;
+    this.isWindowMobile.set(width <= 1280);
   }
 }

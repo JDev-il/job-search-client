@@ -1,39 +1,4 @@
-@if (isWindowMobile()) {
-<nav class="nav-container">
-  <div class="nav-control">
-    <div class="logo-block">
-      <img src="../../../../assets/images/wedevz-logo.png" alt="" />
-    </div>
-    <div class="routes-wrapper">
-      @for (link of navBarLinks; track $index){ @if (link.name) {
-      <li>
-        <a
-          [ngClass]="{ active: isActive(link.route) }"
-          [routerLink]="link.route"
-        >
-          <mat-icon matListIcon>{{ link.icon }}</mat-icon>
-        </a>
-      </li>
-      }}
-      <div class="nav-actions">
-        <li>
-          <a
-            [class.active]="isActive('account')"
-            (click)="navBarAction('account')"
-          >
-            <mat-icon matListIcon>account_circle</mat-icon>
-          </a>
-        </li>
-        <li>
-          <a (click)="navBarAction('logout')">
-            <mat-icon matListIcon>exit_to_app</mat-icon>
-          </a>
-        </li>
-      </div>
-    </div>
-  </div>
-</nav>
-} @else {
+@if (!isWindowMobile()) {
 <mat-drawer-container class="drawer-container" autosize>
   <mat-drawer #drawer mode="side" opened class="drawer-side">
     <nav class="nav-container">
@@ -43,43 +8,78 @@
         </div>
         <div class="routes-wrapper">
           @for (link of navBarLinks; track $index){ @if (link.name) {
-          <li>
-            <a
-              [ngClass]="{ active: isActive(link.route) }"
-              [routerLink]="link.route"
-            >
-              <mat-icon matListIcon>{{ link.icon }}</mat-icon>
-            </a>
-          </li>
+          <a
+            [matTooltip]="link.name"
+            matTooltipPosition="right"
+            [ngClass]="{ active: isActive(link.route) }"
+            [routerLink]="link.route"
+          >
+            <mat-icon>{{ link.icon }}</mat-icon>
+            <span>{{ link.name }}</span>
+          </a>
           } }
           <div class="nav-actions">
-            <li>
-              <a
-                [class.active]="isActive('account')"
-                (click)="navBarAction('account')"
-              >
-                <mat-icon matListIcon>account_circle</mat-icon>
-              </a>
-            </li>
-            <li>
-              <a (click)="navBarAction('logout')">
-                <mat-icon matListIcon>exit_to_app</mat-icon>
-              </a>
-            </li>
+            <a
+              matTooltip="Account"
+              matTooltipPosition="right"
+              [class.active]="isActive('account')"
+              (click)="navBarAction('account')"
+            >
+              <mat-icon matListIcon>account_circle</mat-icon>
+              <span>Account</span>
+            </a>
+            <a
+              matTooltip="Logout"
+              matTooltipPosition="right"
+              (click)="navBarAction('logout')"
+            >
+              <mat-icon matListIcon>exit_to_app</mat-icon>
+            </a>
           </div>
         </div>
       </div>
     </nav>
   </mat-drawer>
-
   <mat-drawer-content class="drawer-content">
-    <a (click)="openDrawer(drawer)" class="toggle-button">
-      @if (isDrawerOpened) {
-      <mat-icon matTooltip="Close Sidebar">arrow_back_ios</mat-icon>
-      } @else {
-      <mat-icon matTooltip="Open Sidebar">arrow_forward_ios</mat-icon>
-      }
-    </a>
+    <div class="toggle-button">
+      <a (click)="openDrawer(drawer)">
+        @if (isDrawerOpened) {
+        <mat-icon matTooltip="Close Sidebar" matTooltipPosition="right"
+          >keyboard_arrow_left</mat-icon
+        >
+        } @else {
+        <mat-icon matTooltip="Open Sidebar" matTooltipPosition="right"
+          >keyboard_arrow_right</mat-icon
+        >
+        }
+      </a>
+    </div>
   </mat-drawer-content>
 </mat-drawer-container>
+} @else {
+<nav class="nav-container">
+  <div class="nav-control">
+    <div class="logo-block">
+      <img src="../../../../assets/images/wedevz-logo.png" alt="" />
+    </div>
+    <div class="routes-wrapper">
+      @for (link of navBarLinks; track $index){ @if (link.name) {
+      <a [ngClass]="{ active: isActive(link.route) }" [routerLink]="link.route">
+        <mat-icon matListIcon>{{ link.icon }}</mat-icon>
+      </a>
+      }}
+      <div class="nav-actions">
+        <a
+          [class.active]="isActive('account')"
+          (click)="navBarAction('account')"
+        >
+          <mat-icon matListIcon>account_circle</mat-icon>
+        </a>
+        <a (click)="navBarAction('logout')">
+          <mat-icon matListIcon>exit_to_app</mat-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
 }

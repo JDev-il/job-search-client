@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { StatusEnum } from '../../core/models/enum/table-data.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 
@@ -6,11 +6,16 @@ import { Observable, of, tap } from 'rxjs';
 import { NavBarLink, TimeLine } from '../../core/models/data.interface';
 import { ChartOptions, StateService } from './state.service';
 
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
+
 
 export type ChartPoint = { x: number; y: number };
 
 @Injectable({ providedIn: 'root' })
 export class UIService {
+  private platformId = inject(PLATFORM_ID);
+
   public cvProgressChartAnimation = signal<boolean>(true);
   public cvProgressAxes: { x: number; y: number }[] = [];
   constructor(private stateService: StateService) { }
@@ -18,7 +23,7 @@ export class UIService {
   public get navBarLinks(): NavBarLink[] {
     return [
       { name: 'Dashboard', route: '', icon: 'dashboard', index: 0 },
-      { name: 'Activity', route: 'activity', icon: 'view_list', index: 1 },
+      { name: 'Activity Table', route: 'activity', icon: 'view_list', index: 1 },
     ];
   }
 
@@ -172,5 +177,15 @@ export class UIService {
       default:
         return '';
     }
+  }
+
+  public isMobile(): boolean {
+    return isPlatformBrowser(this.platformId) &&
+      /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+  }
+
+  public isWebView(): boolean {
+    const ua = navigator.userAgent || '';
+    return /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(ua) || ua.includes('wv');
   }
 }

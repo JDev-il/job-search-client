@@ -4,80 +4,93 @@
   left: 0;
   top: 0;
   bottom: 0;
-  background: rgb(214, 214, 214);
+  background: rgba(209, 209, 214, 1);
   z-index: 888;
-  padding: 0 0.35rem;
+  width: 100%;
   .logo-block {
-    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 2px;
     img {
-      width: 40px;
-      border-radius: 12px;
-      margin: 12px 5px;
+      width: 2.5rem;
+      border-radius: 0.6rem;
+      margin: 0.6rem 0.42rem;
+      pointer-events: none;
+      @media screen and (max-width: 1280px) {
+        width: 2rem;
+      }
     }
   }
   .nav-control {
     height: 100%;
     display: flex;
-    flex: 1 1 auto;
     flex-flow: column;
+    align-items: center;
+    width: 100%;
     .routes-wrapper {
       width: min-content;
       display: flex;
       flex-flow: column;
-      margin: 0 auto;
-      li {
-        margin: 2px 0;
-        list-style: none;
-        font-weight: 300;
-        width: 100%;
-        .active {
-          border-radius: 8px;
+      width: 100%;
+      margin-top: 18px;
+      a {
+        transition: all 0.15s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 10px 0 10px 10px;
+        text-align: center;
+        text-decoration: none;
+        color: rgba(39, 29, 58, 0.75);
+        font-size: smaller;
+        font-weight: 500;
+        span {
+          padding-left: 5px;
+        }
+        mat-icon {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 1.3rem;
+          @media screen and (max-width: 1280px) {
+            padding-left: 0;
+          }
+        }
+        &:hover {
+          color: rgba(39, 29, 58, 0.5);
+        }
+        &.active {
           background-color: rgba(39, 29, 58, 0.076);
-          font-weight: 500;
+          font-weight: 900;
+          color: #47356f;
           .mat-icon,
           .material-icons {
-            color: var(--watermelon);
+            color: #ff6482;
           }
         }
         @media screen and (max-width: 768px) {
-          transform: scale(0.85);
+          transform: scale(0.88);
           margin: 0;
         }
         @media screen and (max-width: 560px) {
-          transform: scale(0.78);
-        }
-        a {
-          transition: all 0.185s cubic-bezier(0.455, 0.03, 0.515, 0.955);
-          border-radius: 99999px;
-          overflow: hidden;
-          display: flex;
-          padding: 8px;
-          justify-content: center;
-          cursor: pointer;
-          border-radius: 0.2em;
-          text-decoration: none;
-          color: var(--main-element);
-          &:hover {
-            color: rgba(39, 29, 58, 0.5);
-          }
+          transform: scale(0.8);
         }
       }
       .nav-actions {
         position: absolute;
         bottom: 0;
+        width: 100%;
       }
     }
   }
   @media screen and (max-width: 1280px) {
     position: relative;
     .logo-block {
-      img {
-        width: 30px;
-        border-radius: 12px;
-        margin: 0;
-        position: relative;
-        top: 3px;
-      }
+      position: relative;
+      left: 5px;
+      top: 0;
     }
     .nav-control {
       height: auto;
@@ -88,10 +101,16 @@
         width: unset;
         flex-flow: row;
         margin: 5px 8px;
+        a {
+          padding: 4px;
+          border-radius: 0.2em;
+        }
+
         .nav-actions {
           right: 0;
           bottom: unset;
           display: flex;
+          width: unset;
         }
       }
     }
@@ -101,13 +120,14 @@
 .drawer-container {
   height: 100vh;
   padding: 0;
-  position: absolute;
+  position: relative;
   background-color: transparent;
 }
 
 .drawer-side {
-  width: 3.75rem;
+  width: 4rem;
   border: 0;
+  flex: 1 1 auto;
 }
 
 .drawer-content {
@@ -118,5 +138,5 @@
 .toggle-button {
   display: inline-block;
   cursor: pointer;
-  margin: 25px 15px;
+  margin: 15px 5px;
 }

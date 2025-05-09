@@ -95,7 +95,8 @@ $client-theme: mat.define-theme(
     }
   }
 
-  .snack-bar-container.success-login, .snack-bar-container.success-register {
+  .snack-bar-container.success-login,
+  .snack-bar-container.success-register {
     .mdc-snackbar__surface,
     .mat-mdc-snackbar-surface {
       background-color: var(--main-element);
@@ -142,5 +143,18 @@ $client-theme: mat.define-theme(
   }
   .mat-mdc-table tbody tr:last-child td:last-child {
     border-bottom-right-radius: 0.6rem;
+  }
+}
+
+.mat-drawer,
+.drawer-side,
+.mat-drawer-side {
+  border-top-right-radius: 0.6rem;
+  border-bottom-right-radius: 0.6rem;
+  width: 9rem;
+  @media screen and (max-width: 1280px) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-radius: 0;
   }
 }
