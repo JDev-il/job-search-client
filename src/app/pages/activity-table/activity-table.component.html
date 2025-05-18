@@ -38,7 +38,12 @@
       class="table-container mat-elevation-z8"
       [ngClass]="{ 'hidden-scroll': localSpinner }"
     >
-      <table mat-table [dataSource]="dataSource" matSort>
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        (matSortChange)="sortData($event)"
+        matSort
+      >
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef>
             <div class="header header-checkbox-selection">
@@ -70,7 +75,15 @@
 
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>
-            <div class="header" mat-sort-header>Status</div>
+            <div
+              class="header sorting-header"
+              matTooltip="Sort by Status"
+              matTooltipShowDelay="300"
+              matTooltipTouchGestures="off"
+              mat-sort-header
+            >
+              Status
+            </div>
           </th>
           <td mat-cell *matCellDef="let row">
             <div class="cell-control">
@@ -131,7 +144,15 @@
               Application
               <div class="sub-header">
                 <h4>Platform</h4>
-                <h4>Applied</h4>
+                <h4
+                  mat-sort-header
+                  class="sorting-header"
+                  matTooltip="Sort by Date"
+                  matTooltipShowDelay="300"
+                  matTooltipTouchGestures="off"
+                >
+                  Applied
+                </h4>
               </div>
             </div>
           </th>

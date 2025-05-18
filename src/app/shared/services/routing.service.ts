@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ROUTES } from '../../core/models/enum/utils.enum';
-
 @Injectable({ providedIn: 'root' })
 export class RoutingService {
   constructor(private router: Router) { }
@@ -19,5 +18,8 @@ export class RoutingService {
   }
   public toActivity(): void {
     this.router.navigateByUrl(ROUTES.ACTIVITY);
+  }
+  public checkIsActive(route: string): boolean {
+    return this.router.url === `/${route}`;
   }
 }

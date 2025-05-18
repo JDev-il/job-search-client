@@ -1,7 +1,13 @@
 <div class="dashboard-container" fader>
   <div class="dashboard-components-wrapper">
-    <!-- @defer (when isData) { -->
-     <div class="components-container">
-     </div>
+    <ng-container>
+      <app-filter
+        (filterValue)="filterDataByDays($event)"
+        [currentDayFilter]="filteredDays"
+      ></app-filter>
+    </ng-container>
+    <ng-container>
+      <app-progress-viewer></app-progress-viewer>
+    </ng-container>
   </div>
 </div>

@@ -1,0 +1,16 @@
+.mat-button-toggle-group {
+  border: 0;
+  box-shadow: 0 0 5px -2px var(--main-element) !important;
+  border-radius: 1em;
+  max-height: 50px;
+  max-width: fit-content;
+  display: flex;
+  align-items: center;
+  .mat-button-toggle-checked {
+    background-color: var(--main-element) !important;
+    color: #fff;
+  }
+  .mat-button-toggle {
+    border: 0;
+  }
+}

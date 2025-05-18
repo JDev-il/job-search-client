@@ -10,6 +10,6 @@ export class FaderDirective {
   }
 
   ngOnInit(): void {
-    this.renderer.addClass(this.el, "fadein-opacity")
+    this.renderer.addClass(this.el, "fadein-opacity");
   }
 }

@@ -383,4 +383,12 @@
       }
     }
   }
+  .sorting-header {
+    &:hover {
+      color: var(--watermelon);
+    }
+    ::selection {
+      color: inherit;
+    }
+  }
 }

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { City, Country, TimeLine } from '../models/data.interface';
+import { ChartTimeLine, City, Country } from '../models/data.interface';
 import { ParamsOrder, ParamsOrderBy } from '../models/enum/params.enum';
 import { CountriesEnum, FormEnum } from '../models/enum/utils.enum';
 import { CityReqParams } from '../models/requests.intefrace';
@@ -25,9 +25,9 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  public getTimelineDataReq(): Observable<TimeLine[]> {
+  public getChartDataReq(): Observable<ChartTimeLine[]> {
     const url = `${this.timelineParams.baseUrl_mockApi}/${this.timelineParams.params.data}`;
-    return this.http.get<TimeLine[]>(url);
+    return this.http.get<ChartTimeLine[]>(url);
   }
 
   public getCountriesListReq(): Observable<Country[]> {

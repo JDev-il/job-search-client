@@ -1,38 +1,13 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import {
-  ApexChart,
-  ApexFill,
-  ApexGrid,
-  ApexMarkers,
-  ApexStroke,
-  ApexTitleSubtitle,
-  ApexXAxis,
-  ApexYAxis
-} from 'ng-apexcharts';
 import { catchError, Observable, of, Subject, switchMap, take, tap, throwError } from 'rxjs';
+import { ChartData } from '../../core/models/chart.interface';
 import { ErrorMessages, NotificationsStatusEnum, UserMessages } from '../../core/models/enum/messages.enum';
 import { CountriesEnum, FormEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
-import { City, Country, TimeLine } from './../../core/models/data.interface';
+import { ChartTimeLine, City, Country } from './../../core/models/data.interface';
 import { ITableDataRow, ITableSaveRequest } from './../../core/models/table.interface';
 import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from './../../core/models/users.interface';
-import { ChartPoint } from './ui.service';
-
-export type ChartOptions = {
-  series: {
-    name: string,
-    data: ChartPoint[]
-  }[];
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  grid: ApexGrid;
-  fill: ApexFill;
-  markers: ApexMarkers;
-  yaxis: ApexYAxis;
-  stroke: ApexStroke;
-  title: ApexTitleSubtitle;
-};
 
 @Injectable({ providedIn: 'root' })
 export class StateService {
@@ -46,10 +21,13 @@ export class StateService {
   private currentCitiesByCountry: WritableSignal<City> = signal<City>({} as City);
   private companiesList: WritableSignal<string[]> = signal<string[]>([] as string[])
   private statusPreviewList: WritableSignal<string[]> = signal<string[]>([]);
+  private globalFilteredChartData: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
 
-  public chartOptionsSource: WritableSignal<ChartOptions> = signal({} as ChartOptions);
+  // public chartOptionsSource: WritableSignal<ChartOptions> = signal({} as ChartOptions);
+  public currentChartData: WritableSignal<ChartData[]> = signal<ChartData[]>([]);
   public currentTabIndex: WritableSignal<number> = signal(0);
-  public cvProgressTimeline: WritableSignal<TimeLine[]> = signal<TimeLine[]>([]);
+  public lastSortedDataSource: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
+  public cvProgressTimeline: WritableSignal<ChartTimeLine[]> = signal<ChartTimeLine[]>([]);
   public isCachedRequest: WritableSignal<boolean> = signal<boolean>(true);
   public currentCountryName: WritableSignal<string> = signal<string>('');
   public isDataExists = signal<boolean>(false);
@@ -58,6 +36,7 @@ export class StateService {
   public isRegistrationError = signal(false);
   public destroy$: Subject<boolean> = new Subject();
   public chronicalDates = signal<string[]>([]);
+  public daysFilter = signal<number>(0);
 
   constructor(private apiService: ApiService, private authService: AuthService) {
     this.getAllCountries().subscribe();
@@ -197,14 +176,13 @@ export class StateService {
       );
   }
 
-  public getTimeLineList(): Observable<TimeLine[]> {
-    return this.apiService.getTimelineDataReq()
+  public getChartData(): Observable<ChartTimeLine[]> {
+    return this.apiService.getChartDataReq()
       .pipe(
         take(1),
         tap((data) => {
           this.cvProgressTimeline.set(data);
-        }
-        ),
+        }),
         catchError(err => throwError(() => console.error(`Error with incoming data from => ${err.url}`)))
       )
   }
@@ -255,6 +233,16 @@ export class StateService {
     this.tableDataResponse.set(tableData);
   }
 
+  public get globalFilteredData$(): ITableDataRow[] {
+    return this.globalFilteredChartData();
+  }
+  public set globalFilteredData$(filteredData: ITableDataRow[]) {
+    this.globalFilteredChartData.set(filteredData);
+  }
+  public set globalFilteredDataUpdate$(filteredData: ITableDataRow[]) {
+    this.globalFilteredChartData.update((f) => f = filteredData);
+  }
+
   public get allCountries(): Country[] {
     return this.countries();
   }
@@ -273,6 +261,7 @@ export class StateService {
   public get listOfCompanies(): string[] {
     return this.companiesList();
   }
+
 
 
   public get notificationsType() {

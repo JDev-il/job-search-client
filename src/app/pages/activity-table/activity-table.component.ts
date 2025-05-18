@@ -8,8 +8,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { debounceTime, fromEvent, map, Subject, takeUntil, tap, throwError } from 'rxjs';
 import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
@@ -20,6 +21,7 @@ import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
 import { ITableDataRow } from './../../core/models/table.interface';
 import { UIService } from './../../shared/services/ui.service';
+
 
 @Component({
   selector: 'app-activity-table',
@@ -37,6 +39,7 @@ import { UIService } from './../../shared/services/ui.service';
     MatCheckboxModule,
     MatIconModule,
     MatInputModule,
+    MatTooltipModule,
     CommonModule,
   ],
   encapsulation: ViewEncapsulation.None,
@@ -63,8 +66,8 @@ export class ActivityTableComponent extends BaseDialogComponent {
       }
       const dataUser = this.stateService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
+        this.dataSource.sort = this.sort;
         if (this.stateService.isCachedRequest()) {
-          this.dataSource.sort = this.sort;
           this.stateService.authorizedUserDataRequest().subscribe({
             next: (data: ITableDataRow[]) => {
               this.dataSource.data = data as ITableDataRow[];
@@ -72,7 +75,10 @@ export class ActivityTableComponent extends BaseDialogComponent {
             error: () => throwError(() => console.error('Error with data rendering'))
           })
         } else {
-          this.dataSource.data = this.stateService.tableDataResponse$
+          this.dataSource.data = this.stateService.tableDataResponse$;
+        }
+        if (this.verifyLastSortedData) {
+          this.dataSource.data = this.stateService.lastSortedDataSource()
         }
       }
     }, { allowSignalWrites: true });
@@ -179,6 +185,24 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.updateTable();
   }
 
+  public sortData(sort: Sort) {
+    if (sort.direction === '') {
+      return;
+    }
+    const data = this.dataSource.data.slice();
+    this.dataSource.data = data.sort((a: ITableDataRow, b: ITableDataRow) => {
+      switch (sort.active) {
+        case 'status':
+          return this.uiService.compareAndSort(a.status, b.status, sort.direction === 'asc');
+        case 'application':
+          return this.uiService.compareAndSort(new Date(a.applicationDate!.toString()).toISOString(), new Date(b.applicationDate!.toString()).toISOString(), sort.direction === 'asc');
+        default:
+          return 0;
+      }
+    });
+    this.stateService.lastSortedDataSource.set(this.dataSource.data);
+  }
+
   public isEnoughLength(length: number): boolean {
     return length > 250;
   }
@@ -191,6 +215,10 @@ export class ActivityTableComponent extends BaseDialogComponent {
     return this.stateService.isDataExists();
   }
 
+  private get verifyLastSortedData(): boolean {
+    return this.stateService.lastSortedDataSource() && this.stateService.lastSortedDataSource().length > 0;
+  }
+
   private updateTable() {
     if (!this.dataSource.data.length) {
       this.stateService.isDataExists.set(false);
@@ -198,6 +226,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.dataSource._updateChangeSubscription();
     this.table.renderRows();
   }
+
   private syncSelectedRows(): void {
     this.selectedRows.set([...this.selection.selected]);
   }

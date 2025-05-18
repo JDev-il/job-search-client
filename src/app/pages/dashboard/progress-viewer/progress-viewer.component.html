@@ -1,14 +1,5 @@
 <div class="progress-container">
-  <apx-chart
-  #chart
-    [series]="chartOptions.series"
-    [chart]="chartOptions.chart"
-    [xaxis]="chartOptions.xaxis"
-    [grid]="chartOptions.grid"
-    [stroke]="chartOptions.stroke"
-    [title]="chartOptions.title"
-    [markers]="chartOptions.markers"
-    [yaxis]="chartOptions.yaxis"
-    [fill]="chartOptions.fill"
-  ></apx-chart>
+  <app-progress-chart
+    [incomingChartSeriesDate]="chartDataSeriesBuilder"
+  ></app-progress-chart>
 </div>

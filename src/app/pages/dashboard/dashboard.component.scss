@@ -1,8 +1,26 @@
 .dashboard-container {
-  display: flex;
+  position: relative;
+  width: 100%;
   height: 100%;
-  justify-content: center;
+  display: flex;
   .dashboard-components-wrapper {
-    //! Continue from here >> finish Dashboard components implementation
+    width: 85%;
+    height: 85%;
+    margin: auto;
+
+
+
+
+
+    @media screen and (max-width: 1280px) {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+    }
+    @media screen and (max-width: 768px) {
+      left: 0rem;
+    }
   }
 }

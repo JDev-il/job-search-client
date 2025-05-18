@@ -1,0 +1,15 @@
+<mat-button-toggle-group
+  name="favoriteColor"
+  aria-label="Favorite Color"
+  [hideSingleSelectionIndicator]="true"
+  (change)="onChangeFilter($event)"
+>
+  <mat-button-toggle [checked]="true" value="0">All Time</mat-button-toggle>
+  <mat-button-toggle value="1">1 Day</mat-button-toggle>
+  <mat-button-toggle [checked]="currentDayFilter() === 7" value="7"
+    >7 Days</mat-button-toggle
+  >
+  <mat-button-toggle [checked]="currentDayFilter() === 30" value="30"
+    >30 Days</mat-button-toggle
+  >
+</mat-button-toggle-group>

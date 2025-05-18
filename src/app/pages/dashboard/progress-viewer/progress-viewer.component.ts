@@ -1,47 +1,29 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, Input, signal, ViewChild } from '@angular/core';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { ChartOptions } from '../../../shared/services/state.service';
 
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, Input, signal } from '@angular/core';
+import { ChartData } from '../../../core/models/chart.interface';
 import { ITableDataRow } from '../../../core/models/table.interface';
+import { ProgressChartComponent } from "../../../shared/components/charts/progress-chart/progress-chart.component";
+import { StateService } from '../../../shared/services/state.service';
 import { UIService } from '../../../shared/services/ui.service';
 @Component({
   selector: 'app-progress-viewer',
   standalone: true,
-  imports: [NgApexchartsModule],
   templateUrl: './progress-viewer.component.html',
   styleUrl: './progress-viewer.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ProgressChartComponent]
 })
 
 export class ProgressViewerComponent {
-  @ViewChild('') chart: ElementRef<ApexChart> = new ElementRef<ApexChart>({});
+  @Input() filteredChartData = signal<ITableDataRow[]>([]);
   @Input() positions = signal<ITableDataRow[]>([]);
   @Input() counter = signal<number>(0);
   @Input() isAnimationRequired?: boolean;
-  public chartOptions!: ChartOptions;
-  public categories: string[] = [];
+  public chartDataSeriesBuilder = signal<ChartData[]>([]);
 
-  constructor(private cd: ChangeDetectorRef, private uiService: UIService) {
-    this.uiService.getTimeLinesCategories().subscribe();
+  constructor(private cd: ChangeDetectorRef, private uiService: UIService, private stateService: StateService) {
     effect(() => {
-      this.uiService.cvProgressDataInit();
-      if (this.uiService.cvProgressAxes.length > 0) {
-        this.chartOptions.series = [
-          {
-            name: 'CVs Sent',
-            data: this.uiService.cvProgressAxes
-          }
-        ];
-        this.chartOptions.xaxis = {
-          type: 'datetime',
-        };
-      }
-      this.cd.markForCheck();
-    });
-  }
-
-  ngOnInit(): void {
-    this.uiService.cvProgressChartAnimation.update(() => this.positions().length > 0 ? true : false);
-    this.chartOptions = this.uiService.progressChartInitializer();
+      this.chartDataSeriesBuilder.set(this.uiService.chartDataBuilder());
+    }, { allowSignalWrites: true });
   }
 }

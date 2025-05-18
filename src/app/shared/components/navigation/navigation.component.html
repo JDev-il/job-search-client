@@ -13,6 +13,7 @@
             matTooltipPosition="right"
             [ngClass]="{ active: isActive(link.route) }"
             [routerLink]="link.route"
+            (click)="navBarAction('')"
           >
             <mat-icon>{{ link.icon }}</mat-icon>
             <span>{{ link.name }}</span>
@@ -41,9 +42,12 @@
     </nav>
   </mat-drawer>
   <mat-drawer-content class="drawer-content">
-    <div class="toggle-button">
+    <div
+      class="toggle-button"
+      [ngClass]="{ 'drawer-button-expand': isDrawerOpened() || isWindowMobile() }"
+    >
       <a (click)="openDrawer(drawer)">
-        @if (isDrawerOpened) {
+        @if (isDrawerOpened()) {
         <mat-icon matTooltip="Close Sidebar" matTooltipPosition="right"
           >keyboard_arrow_left</mat-icon
         >

@@ -28,16 +28,15 @@ export interface CityData {
   populationCounts: {}[]
 }
 
-export interface TimeLine {
+export interface ChartTimeLine {
   id: number,
   year: string,
-  months: Month[]
+  months: Month[],
 }
 
 export interface IAxis {
   x: number,
   y: number
-  //public cvProgressAxes: { x: number; y: number }[] = [];
 }
 
 export interface Month {
