@@ -1,19 +1,23 @@
+import { ChartData } from './../../core/models/chart.interface';
 
 import { Injectable, inject, signal } from '@angular/core';
-import { StatusEnum } from '../../core/models/enum/table-data.enum';
-import { ITableDataRow } from '../../core/models/table.interface';
+import { FilteringColumnNamesEnum, StatusEnum } from '../../core/models/enum/table-data.enum';
+import { ITableDataRow, TColNames } from '../../core/models/table.interface';
 
 import { ChartTimeLine, NavBarLink } from '../../core/models/data.interface';
 import { StateService } from './state.service';
 
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
-import { ChartData } from '../../core/models/chart.interface';
+import { Sort } from '@angular/material/sort';
 
+export interface MapCount {
+  x: string,
+  y: number
+}
 @Injectable({ providedIn: 'root' })
 export class UIService {
   private platformId = inject(PLATFORM_ID);
-
   public cvProgressChartAnimation = signal<boolean>(true);
   public cvProgressAxes: { x: number; y: number }[] = [];
   constructor(private stateService: StateService) { }
@@ -23,6 +27,10 @@ export class UIService {
       { name: 'Dashboard', route: '', icon: 'dashboard', index: 0 },
       { name: 'Activity Table', route: 'activity', icon: 'view_list', index: 1 },
     ];
+  }
+
+  public get displayColumns(): TColNames[] {
+    return ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
   }
 
   public chartDataBuilder(): ChartData[] {
@@ -53,10 +61,6 @@ export class UIService {
     const newDate = new Date();
     newDate.setDate(newDate.getDate() - days);
     return newDate;
-  }
-
-  public compareAndSort(a: number | string, b: number | string, isAsc: boolean) {
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
   public get timeLineCategories(): ChartTimeLine[] {
@@ -108,5 +112,25 @@ export class UIService {
   public isWebView(): boolean {
     const ua = navigator.userAgent || '';
     return /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(ua) || ua.includes('wv');
+  }
+
+  public sortDataSource(source: ITableDataRow[], sort: Sort): ITableDataRow[] {
+    const filteringNames = FilteringColumnNamesEnum
+    const data = source.slice();
+    const sortedData = data.sort((a: ITableDataRow, b: ITableDataRow) => {
+      switch (sort.active) {
+        case filteringNames.status:
+          return this.stateService.compareAndSortData(a.status, b.status, sort.direction === 'asc');
+        case filteringNames.application:
+          return this.stateService.compareAndSortData(new Date(a.applicationDate!.toString()).toISOString(), new Date(b.applicationDate!.toString()).toISOString(), sort.direction === 'asc');
+        case filteringNames.position:
+          return this.stateService.compareAndSortData(a.positionType, b.positionType, sort.direction === 'asc');
+        case filteringNames.company:
+          return (this.stateService.compareAndSortData(a.companyName, b.companyName, sort.direction === 'asc')) || this.stateService.compareAndSortData(a.companyLocation, b.companyLocation, sort.direction === 'asc');
+        default:
+          return 0;
+      }
+    }) as ITableDataRow[];
+    return sortedData;
   }
 }

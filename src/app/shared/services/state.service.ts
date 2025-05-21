@@ -14,7 +14,7 @@ export class StateService {
   private readonly spinner = signal<boolean>(true);
   private readonly destroyed$ = signal<boolean>(false);
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
-  private tableDataResponse: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([] as ITableDataRow[]);
+  private tableDataResponse: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
   private countries: WritableSignal<Country[]> = signal<Country[]>([] as Country[]);
   private currentCountry: WritableSignal<Country> = signal<Country>({} as Country);
@@ -104,6 +104,7 @@ export class StateService {
               const statuses = tableData.map(td => td.status);
               this.statusPreviewList.set(statuses);
               this.tableDataResponse$ = tableData;
+              this.lastSortedDataSource.set(tableData);
               this.isCachedRequest.set(false);
               this.isDataExists.set(true);
             }
@@ -130,6 +131,7 @@ export class StateService {
       .pipe(
         take(1),
         tap((dataRows: ITableDataRow[]) => {
+          this.lastSortedDataSource.set(dataRows);
           this.tableDataResponse$ = dataRows;
           this.isCachedRequest.set(true);
           if (!dataRows.length) {
@@ -301,9 +303,7 @@ export class StateService {
     return this.statusPreviewList();
   }
 
-  public get displayColumns(): string[] {
-    return ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
+  public compareAndSortData(a: number | string, b: number | string, isAsc?: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
-
-
 }

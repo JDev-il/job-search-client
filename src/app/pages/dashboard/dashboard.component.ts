@@ -10,9 +10,6 @@ import { FaderDirective } from '../../shared/directives/fader.directive';
 import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
 import { UIService } from '../../shared/services/ui.service';
-import { CvCounterComponent } from './cv-counter/cv-counter.component';
-import { MarketAnalystComponent } from "./market-analyst/market-analyst.component";
-import { PositionsListComponent } from './positions-list/positions-list.component';
 import { ProgressViewerComponent } from "./progress-viewer/progress-viewer.component";
 @Component({
   selector: 'app-dashboard',
@@ -20,11 +17,8 @@ import { ProgressViewerComponent } from "./progress-viewer/progress-viewer.compo
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   imports: [
-    CvCounterComponent,
     FaderDirective,
-    MarketAnalystComponent,
     ProgressViewerComponent,
-    PositionsListComponent,
     FilterComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -33,3 +33,6 @@ export interface ITableSaveRequest {
   userId: number,
   tableData: ITableDataRow
 }
+
+export type TColNames = 'select' | 'status' | 'company' | 'position' | 'application' | 'hunch' | 'note';
+

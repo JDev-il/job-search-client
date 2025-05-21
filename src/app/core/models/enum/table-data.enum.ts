@@ -72,3 +72,10 @@ export enum FormPlaceholdersEnum {
   hunch = "What's your hunch about the application?",
   notes = "Anything to add?"
 }
+
+export enum FilteringColumnNamesEnum {
+  status = 'status',
+  application = 'application',
+  position = 'position',
+  company = 'company'
+}

@@ -99,7 +99,15 @@
             <div class="header">
               Company
               <div class="sub-header">
-                <h4>Name</h4>
+                <h4
+                  class="sorting-header"
+                  matTooltip="Sort by Name"
+                  matTooltipShowDelay="300"
+                  matTooltipTouchGestures="off"
+                  mat-sort-header
+                >
+                  Name
+                </h4>
                 <h4>Location</h4>
               </div>
             </div>
@@ -119,7 +127,15 @@
             <div class="header">
               Position
               <div class="sub-header">
-                <h4>Type</h4>
+                <h4
+                  class="sorting-header"
+                  matTooltip="Sort by Type"
+                  matTooltipShowDelay="300"
+                  matTooltipTouchGestures="off"
+                  mat-sort-header
+                >
+                  Type
+                </h4>
                 <h4>Stack</h4>
               </div>
             </div>
@@ -151,7 +167,7 @@
                   matTooltipShowDelay="300"
                   matTooltipTouchGestures="off"
                 >
-                  Applied
+                  Date
                 </h4>
               </div>
             </div>

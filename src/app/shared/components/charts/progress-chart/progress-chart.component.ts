@@ -21,6 +21,7 @@ export class ProgressChartComponent {
       }
     ],
     chart: {
+      //! Add labels with company names inside
       height: 360,
       width: 550,
       type: "line" as ChartType,
@@ -43,17 +44,28 @@ export class ProgressChartComponent {
           enabled: true,
           speed: 220
         },
-        speed: 800
-      }
+        speed: 800,
+        enabled: true
+      },
+      dropShadow: { opacity: .6, color: "#081226" },
     } as ApexChart,
     stroke: {
-      width: 3,
-      curve: 'smooth',
-      lineCap: 'round'
+      width: 2,
     } as ApexStroke,
     yAxis: {
       forceNiceScale: true,
     } as ApexYAxis,
+    xAxis: {
+      forceNiceScale: true,
+      labels: {
+        offsetX: 2,
+        offsetY: 5,
+        style: {
+          fontSize: '10px'
+        }
+      },
+      min: 6
+    } as ApexXAxis,
     title: {
       text: 'Resume Sending Rate',
       align: 'center',

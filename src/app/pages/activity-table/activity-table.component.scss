@@ -383,12 +383,26 @@
       }
     }
   }
+
   .sorting-header {
-    &:hover {
-      color: var(--watermelon);
-    }
+    color: #ffddc8;
     ::selection {
       color: inherit;
+    }
+    :hover {
+      color: #ffd0b3;
+    }
+    &[aria-sort="ascending"] {
+      color: rgb(156, 255, 184);
+      .mat-sort-header-arrow {
+        color: rgb(156, 255, 184);
+      }
+    }
+    &[aria-sort="descending"] {
+      color: rgb(255, 136, 136);
+      .mat-sort-header-arrow {
+        color: rgb(255, 136, 136);
+      }
     }
   }
 }

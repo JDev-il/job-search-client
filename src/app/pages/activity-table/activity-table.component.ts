@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, Renderer2, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, effect, Renderer2, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -57,9 +57,9 @@ export class ActivityTableComponent extends BaseDialogComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ITableDataRow[]>;
 
-  constructor(private formService: FormsService, private stateService: StateService, private uiService: UIService, private destroyRef: DestroyRef, private renderer: Renderer2, dialog: MatDialog) {
+  constructor(private cd: ChangeDetectorRef, private formService: FormsService, private stateService: StateService, private uiService: UIService, private destroyRef: DestroyRef, private renderer: Renderer2, dialog: MatDialog) {
     super(dialog);
-    this.displayedColumns = this.stateService.displayColumns;
+    this.displayedColumns = this.uiService.displayColumns;
     effect(() => {
       if (this.stateService.getDestroyedState()) {
         return;
@@ -176,6 +176,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     } else {
       const selectedJobIds = new Set(this.selectedRows().map((row) => row.jobId));
       const filteredDataSource = [...this.dataSource.data].filter((row) => !selectedJobIds.has(row.jobId));
+      this.stateService.lastSortedDataSource.set(filteredDataSource);
       this.dataSource.data = filteredDataSource;
     }
     this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.remove).subscribe();
@@ -183,23 +184,14 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.selection.clear();
     this.syncSelectedRows();
     this.updateTable();
+    this.cd.detectChanges()
   }
 
-  public sortData(sort: Sort) {
+  public sortData(sort: Sort): void {
     if (sort.direction === '') {
       return;
     }
-    const data = this.dataSource.data.slice();
-    this.dataSource.data = data.sort((a: ITableDataRow, b: ITableDataRow) => {
-      switch (sort.active) {
-        case 'status':
-          return this.uiService.compareAndSort(a.status, b.status, sort.direction === 'asc');
-        case 'application':
-          return this.uiService.compareAndSort(new Date(a.applicationDate!.toString()).toISOString(), new Date(b.applicationDate!.toString()).toISOString(), sort.direction === 'asc');
-        default:
-          return 0;
-      }
-    });
+    this.dataSource.data = this.uiService.sortDataSource(this.dataSource.data, sort);
     this.stateService.lastSortedDataSource.set(this.dataSource.data);
   }
 
