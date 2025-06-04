@@ -133,16 +133,16 @@ $client-theme: mat.define-theme(
 
   // MatTable Border
   .mat-mdc-table tbody tr:first-child td:first-child {
-    border-top-left-radius: 0.6rem;
+    border-top-left-radius: 1.2rem;
   }
   .mat-mdc-table tbody tr:first-child td:last-child {
-    border-top-right-radius: 0.6rem;
+    border-top-right-radius: 1.2rem;
   }
   .mat-mdc-table tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 0.6rem;
+    border-bottom-left-radius: 1.2rem;
   }
   .mat-mdc-table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 0.6rem;
+    border-bottom-right-radius: 1.2rem;
   }
   .mat-sort-header-arrow {
     position: absolute;

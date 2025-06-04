@@ -37,6 +37,10 @@ export class StateService {
   public destroy$: Subject<boolean> = new Subject();
   public chronicalDates = signal<string[]>([]);
   public daysFilter = signal<number>(0);
+  public companyNames: Map<string, number> = new Map();
+
+  // Charts Data
+  public progressChart: WritableSignal<ChartData[]> = signal<ChartData[]>([]);
 
   constructor(private apiService: ApiService, private authService: AuthService) {
     this.getAllCountries().subscribe();
@@ -119,7 +123,6 @@ export class StateService {
       take(1),
       tap(() => {
         this.isCachedRequest.set(true);
-        this.authorizedUserDataRequest().pipe(take(1)).subscribe();
       }),
       catchError((err) => {
         return throwError(() => { console.error(err) })
@@ -131,9 +134,9 @@ export class StateService {
       .pipe(
         take(1),
         tap((dataRows: ITableDataRow[]) => {
-          this.lastSortedDataSource.set(dataRows);
           this.tableDataResponse$ = dataRows;
-          this.isCachedRequest.set(true);
+          this.lastSortedDataSource.set(this.tableDataResponse$);
+          this.isCachedRequest.set(false);
           if (!dataRows.length) {
             this.isDataExists.set(false);
           }
@@ -263,8 +266,6 @@ export class StateService {
   public get listOfCompanies(): string[] {
     return this.companiesList();
   }
-
-
 
   public get notificationsType() {
     return {

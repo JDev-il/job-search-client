@@ -1,4 +1,3 @@
-import { ChartData } from './../../core/models/chart.interface';
 
 import { Injectable, inject, signal } from '@angular/core';
 import { FilteringColumnNamesEnum, StatusEnum } from '../../core/models/enum/table-data.enum';
@@ -33,38 +32,18 @@ export class UIService {
     return ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
   }
 
-  public chartDataBuilder(): ChartData[] {
-    let data: ITableDataRow[] = [];
-    if (this.stateService.daysFilter() === 0) {
-      data = this.stateService.tableDataResponse$.slice();
-    } else {
-      data = this.stateService.globalFilteredData$.slice();
-    }
-    const dateCountMap = new Map<string, number>();
-    for (const row of data) {
-      const dateRaw = row.applicationDate;
-      if (!dateRaw) continue;
-      const dateKey = new Date(dateRaw).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit'
-      });
-      dateCountMap.set(dateKey, (dateCountMap.get(dateKey) || 0) + 1);
-    }
-    const chartData = Array.from(dateCountMap.entries())
-      .map(([x, y]) => ({ x, y }))
-      .sort((a, b) => new Date(a.x).getTime() - new Date(b.x).getTime());
-    return chartData;
+  public get timeLineCategories(): ChartTimeLine[] {
+    return this.stateService.cvProgressTimeline();
+  }
+
+  public get chartReady(): boolean {
+    return !!this.stateService.progressChart().length;
   }
 
   public calcDays(days: number): Date {
     const newDate = new Date();
     newDate.setDate(newDate.getDate() - days);
     return newDate;
-  }
-
-  public get timeLineCategories(): ChartTimeLine[] {
-    return this.stateService.cvProgressTimeline();
   }
 
   public colorSwitch(row: ITableDataRow): string {

@@ -1,10 +1,14 @@
-<apx-chart
-  [series]="chartOptions().series"
-  [chart]="chartOptions().chart"
-  [title]="chartOptions().title"
-  [stroke]="chartOptions().stroke"
-  [fill]="chartOptions().fill"
-  [markers]="chartOptions().markers"
-  [yaxis]="chartOptions().yAxis"
-  [xaxis]="chartOptions().xAxis"
-></apx-chart>
+<div class="progress-chart-container">
+  @if (isChartReady()) {
+  <apx-chart
+    [series]="chartOptions().series"
+    [chart]="chartOptions().chart"
+    [title]="chartOptions().title"
+    [fill]="chartOptions().fill"
+    [markers]="chartOptions().markers"
+    [yaxis]="chartOptions().yaxis"
+    [xaxis]="chartOptions().xaxis"
+    [tooltip]="chartOptions().tooltip"
+  ></apx-chart>
+  }
+</div>

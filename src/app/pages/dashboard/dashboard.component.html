@@ -4,10 +4,11 @@
       <app-filter
         (filterValue)="filterDataByDays($event)"
         [currentDayFilter]="filteredDays"
+        [isDataLength]="isData"
       ></app-filter>
     </ng-container>
     <ng-container>
-      <app-progress-viewer></app-progress-viewer>
+      <app-progress-chart></app-progress-chart>
     </ng-container>
   </div>
 </div>

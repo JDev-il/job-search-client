@@ -13,9 +13,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class FilterComponent {
   @Output() filterValue: EventEmitter<string> = new EventEmitter();
   @Input() currentDayFilter: WritableSignal<number> = signal(0);
-  constructor() { }
+  @Input() isDataLength: boolean = false;
 
-  onChangeFilter(e: MatButtonToggleChange) {
+  public onChangeFilter(e: MatButtonToggleChange) {
     this.filterValue.emit(e.value);
   }
 }

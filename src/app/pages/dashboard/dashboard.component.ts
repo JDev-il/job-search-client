@@ -5,20 +5,21 @@ import { NavBarLink } from '../../core/models/data.interface';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
+import { ProgressChartComponent } from '../../shared/components/charts/progress-chart/progress-chart.component';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
 import { FaderDirective } from '../../shared/directives/fader.directive';
 import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
 import { UIService } from '../../shared/services/ui.service';
-import { ProgressViewerComponent } from "./progress-viewer/progress-viewer.component";
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   imports: [
+    ProgressChartComponent,
     FaderDirective,
-    ProgressViewerComponent,
     FilterComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush

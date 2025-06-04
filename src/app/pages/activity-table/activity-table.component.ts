@@ -78,7 +78,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
           this.dataSource.data = this.stateService.tableDataResponse$;
         }
         if (this.verifyLastSortedData) {
-          this.dataSource.data = this.stateService.lastSortedDataSource()
+          this.dataSource.data = this.stateService.lastSortedDataSource();
         }
       }
     }, { allowSignalWrites: true });
@@ -137,6 +137,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
       this.selection.select(...this.dataSource.data);
     }
     this.syncSelectedRows();
+    this.updateTable();
   }
 
   public onToggleRow(row: ITableDataRow): void {
