@@ -7,8 +7,20 @@
         [isDataLength]="isData"
       ></app-filter>
     </ng-container>
-    <ng-container>
-      <app-progress-chart></app-progress-chart>
-    </ng-container>
+    <div class="charts">
+      <div class="top-area-charts">
+        <ng-container>
+          <app-progress-chart></app-progress-chart>
+        </ng-container>
+        <ng-container>
+          <app-status-chart></app-status-chart>
+        </ng-container>
+      </div>
+      <div class="bottom-area-charts">
+        <ng-container>
+          <app-market-chart></app-market-chart>
+        </ng-container>
+      </div>
+    </div>
   </div>
 </div>

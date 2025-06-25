@@ -1,6 +1,6 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { catchError, Observable, of, Subject, switchMap, take, tap, throwError } from 'rxjs';
-import { ChartData } from '../../core/models/chart.interface';
+import { ChartDataType1, ChartDataType2 } from '../../core/models/chart.interface';
 import { ErrorMessages, NotificationsStatusEnum, UserMessages } from '../../core/models/enum/messages.enum';
 import { CountriesEnum, FormEnum } from '../../core/models/enum/utils.enum';
 import { ApiService } from '../../core/services/api.service';
@@ -24,7 +24,7 @@ export class StateService {
   private globalFilteredChartData: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
 
   // public chartOptionsSource: WritableSignal<ChartOptions> = signal({} as ChartOptions);
-  public currentChartData: WritableSignal<ChartData[]> = signal<ChartData[]>([]);
+  public currentChartData: WritableSignal<ChartDataType1[]> = signal<ChartDataType1[]>([]);
   public currentTabIndex: WritableSignal<number> = signal(0);
   public lastSortedDataSource: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
   public cvProgressTimeline: WritableSignal<ChartTimeLine[]> = signal<ChartTimeLine[]>([]);
@@ -37,10 +37,11 @@ export class StateService {
   public destroy$: Subject<boolean> = new Subject();
   public chronicalDates = signal<string[]>([]);
   public daysFilter = signal<number>(0);
-  public companyNames: Map<string, number> = new Map();
 
   // Charts Data
-  public progressChart: WritableSignal<ChartData[]> = signal<ChartData[]>([]);
+  public progressChart = signal<ChartDataType1[]>([]);
+  public statusChart = signal<ChartDataType2[]>([]);
+
 
   constructor(private apiService: ApiService, private authService: AuthService) {
     this.getAllCountries().subscribe();

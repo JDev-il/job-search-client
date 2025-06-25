@@ -1,55 +1,50 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ViewEncapsulation } from '@angular/core';
 import { ChartType, NgApexchartsModule } from 'ng-apexcharts';
+import { IChartOptions } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
-
-import { ChartDataType1, IChartOptions } from '../../../../core/models/chart.interface';
 import { StateService } from '../../../services/state.service';
-import { UIService } from '../../../services/ui.service';
 import { ChartsService } from './../../../services/charts.service';
+import { UIService } from './../../../services/ui.service';
 
 @Component({
-  selector: 'app-progress-chart',
+  selector: 'app-status-chart',
   standalone: true,
   imports: [NgApexchartsModule],
-  templateUrl: './progress-chart.component.html',
-  styleUrls: ['./progress-chart.component.scss', '../../../style/charts.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './status-chart.component.html',
+  styleUrls: ['./status-chart.component.scss', '../../../style/charts.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ProgressChartComponent extends ChartsBaseComponent {
+export class StatusChartComponent extends ChartsBaseComponent {
   constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, stateService: StateService) {
     super(cd, uiService, chartsService, stateService);
     effect(() => {
-      this.chartsService.progressChartBuilder();
-      this.progressChartOptions.set(this.progressChart());
-      this.cd.markForCheck();
+      this.chartsService.statusChartBuilder();
+      this.statusChartOptions.set(this.statusChart());
     }, { allowSignalWrites: true })
   }
 
-  public progressChart(): IChartOptions {
+  public statusChart(): IChartOptions {
     return {
       series: [
         {
           name: 'Sent',
-          data: this.stateService.progressChart() as ChartDataType1[]
+          data: this.stateService.statusChart()
         }
       ] as ApexAxisChartSeries,
       chart: {
-        width: 640,
-        type: "bar" as ChartType,
+        type: 'donut' as ChartType,
         selection: {
           enabled: false
         },
         parentHeightOffset: 100,
         zoom: {
           enabled: true,
-          type: 'x' as const,
+          type: 'xy' as const,
           autoScaleYaxis: true,
           allowMouseWheelZoom: false,
         },
         toolbar: {
           show: true,
-          autoSelected: 'pan',
           tools: {
             download: false,
             zoom: false,
@@ -85,6 +80,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
       } as ApexChart,
       xaxis: {
         type: 'category',
+        categories: this.stateService.statusChart().map(row => row.x),
         labels: {
           style: {
             // fontSize: '10px'
@@ -100,12 +96,12 @@ export class ProgressChartComponent extends ChartsBaseComponent {
           position: 'bottom',
         },
         title: {
-          text: "CV Sent"
+          text: "Curent Status"
         },
         max: 10,
       } as ApexYAxis,
       title: {
-        text: 'CV Sending Rate',
+        text: 'Statuses',
         align: 'center',
         style: {
           // fontWeight: 300,
@@ -114,18 +110,17 @@ export class ProgressChartComponent extends ChartsBaseComponent {
         }
       } as ApexTitleSubtitle,
       fill: {
-        type: 'gradient',
-        gradient: {
-          shade: 'dark',
-          type: 'vertical',
-          colorStops: [
-            [
-              // { offset: 15, color: '#FF6C80', opacity: 1 },
-              // { offset: 0, color: '#533E83', opacity: 1 }
-              { offset: 0, color: '#2C2043', opacity: 1 }
-            ]
-          ]
-        }
+        type: '',
+        // gradient: {
+        //   shade: 'dark',
+        //   type: '',
+        //   colorStops: [
+        //     [
+        //       // { offset: 15, color: '#FF6C80', opacity: 1 },
+        //       // { offset: 0, color: '#533E83', opacity: 1 }
+        //     ]
+        //   ]
+        // }
       } as ApexFill,
       markers: {
         size: 6,

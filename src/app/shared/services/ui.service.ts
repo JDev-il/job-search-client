@@ -36,10 +36,6 @@ export class UIService {
     return this.stateService.cvProgressTimeline();
   }
 
-  public get chartReady(): boolean {
-    return !!this.stateService.progressChart().length;
-  }
-
   public calcDays(days: number): Date {
     const newDate = new Date();
     newDate.setDate(newDate.getDate() - days);

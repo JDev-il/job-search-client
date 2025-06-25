@@ -1,14 +1,20 @@
-<div class="progress-chart-container">
-  @if (isChartReady()) {
-  <apx-chart
-    [series]="chartOptions().series"
-    [chart]="chartOptions().chart"
-    [title]="chartOptions().title"
-    [fill]="chartOptions().fill"
-    [markers]="chartOptions().markers"
-    [yaxis]="chartOptions().yaxis"
-    [xaxis]="chartOptions().xaxis"
-    [tooltip]="chartOptions().tooltip"
-  ></apx-chart>
+<div class="chart-generic-container">
+  @if (isChartsReady.isProgressChart()) {
+  <div class="chart-data">
+    <apx-chart
+      [series]="progressChartOptions().series"
+      [chart]="progressChartOptions().chart"
+      [title]="progressChartOptions().title"
+      [fill]="progressChartOptions().fill"
+      [markers]="progressChartOptions().markers"
+      [yaxis]="progressChartOptions().yaxis"
+      [xaxis]="progressChartOptions().xaxis"
+      [tooltip]="progressChartOptions().tooltip"
+    ></apx-chart>
+  </div>
+  } @else {
+  <div class="chart-no-data">
+    <h3>No Data</h3>
+  </div>
   }
 </div>

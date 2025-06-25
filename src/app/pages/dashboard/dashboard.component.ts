@@ -6,11 +6,13 @@ import { FormEnum } from '../../core/models/enum/utils.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { ProgressChartComponent } from '../../shared/components/charts/progress-chart/progress-chart.component';
+import { StatusChartComponent } from '../../shared/components/charts/status-chart/status-chart.component';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
 import { FaderDirective } from '../../shared/directives/fader.directive';
 import { FormsService } from '../../shared/services/forms.service';
 import { StateService } from '../../shared/services/state.service';
 import { UIService } from '../../shared/services/ui.service';
+import { MarketChartComponent } from './../../shared/components/charts/market-chart/market-chart.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,39 +21,37 @@ import { UIService } from '../../shared/services/ui.service';
   styleUrl: './dashboard.component.scss',
   imports: [
     ProgressChartComponent,
+    StatusChartComponent,
+    MarketChartComponent,
     FaderDirective,
-    FilterComponent
+    FilterComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent extends BaseDialogComponent {
-  private localSortedTableDataResponse: ITableDataRow[] = [];
+  private localSortedTableDataResponse = signal<ITableDataRow[]>([]);
   private isDataExists = signal(false);
   public centralHubCvCounter = signal<number>(0);
   public tabIndex = signal<number>(0);
-  public cvCounter = signal<number>(0);
   public currentTabIndex = signal<number>(0);
   public status = signal<string[]>([]);
-  public progressData = signal<ITableDataRow[]>([]);
   public progressDates = signal<string[]>([]);
 
   constructor(private stateService: StateService, private uiService: UIService, private formService: FormsService, dialog: MatDialog) {
-    super(dialog)
+    super(dialog);
     effect(() => {
       const dataUser = this.stateService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
         this.stateService.authorizedUserDataRequest().subscribe({
           next: (data: ITableDataRow[]) => {
             this.isDataExists.set(this.stateService.isDataExists());
-            this.localSortedTableDataResponse = data.slice().sort((a: ITableDataRow, b: ITableDataRow) => new Date(b.applicationDate!.toString()).getTime() - new Date(a.applicationDate!.toString()).getTime())
-            this.cvCounter.set(data.length);
+            this.localSortedTableDataResponse.set(data.slice().sort((a: ITableDataRow, b: ITableDataRow) => new Date(b.applicationDate!.toString()).getTime() - new Date(a.applicationDate!.toString()).getTime()))
           },
           error: () => throwError(() => console.error('Error with data rendering'))
         });
       }
       this.currentTabIndex.set(this.stateService.currentTabIndex());
       this.status.set(this.stateService.statusPreviewsList);
-      this.progressData.set(this.stateService.tableDataResponse$);
     }, { allowSignalWrites: true });
   }
 
@@ -68,9 +68,9 @@ export class DashboardComponent extends BaseDialogComponent {
     const calcDate = this.uiService.calcDays(numValue).getTime();
     let filtered: ITableDataRow[] = [];
     if (numValue === 0) {
-      filtered = this.localSortedTableDataResponse;
+      filtered = this.localSortedTableDataResponse();
     } else {
-      filtered = this.localSortedTableDataResponse.slice().filter(x => {
+      filtered = this.localSortedTableDataResponse().slice().filter(x => {
         return new Date(x.applicationDate!.toString()).getTime() >= calcDate;
       })
     }

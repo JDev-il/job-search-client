@@ -1,0 +1,20 @@
+<div class="chart-generic-container">
+  @if (isChartsReady.isStatusChart()) {
+  <div class="chart-data">
+    <apx-chart
+      [series]="statusChartOptions().series"
+      [chart]="statusChartOptions().chart"
+      [title]="statusChartOptions().title"
+      [fill]="statusChartOptions().fill"
+      [markers]="statusChartOptions().markers"
+      [yaxis]="statusChartOptions().yaxis"
+      [xaxis]="statusChartOptions().xaxis"
+      [tooltip]="statusChartOptions().tooltip"
+    ></apx-chart>
+  </div>
+  } @else {
+  <div class="chart-no-data">
+    <h3>No Data</h3>
+  </div>
+  }
+</div>

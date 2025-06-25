@@ -1,0 +1,22 @@
+<div class="chart-generic-container">
+  <div class="market-chart-container">
+    @if (isChartsReady.isMarketChart()) {
+    <div class="chart-data">
+      <!-- <apx-chart -->
+      <!-- [series]="chartOptions().series" -->
+      <!-- [chart]="chartOptions().chart" -->
+      <!-- [title]="chartOptions().title" -->
+      <!-- [fill]="chartOptions().fill" -->
+      <!-- [markers]="chartOptions().markers" -->
+      <!-- [yaxis]="chartOptions().yaxis" -->
+      <!-- [xaxis]="chartOptions().xaxis" -->
+      <!-- [tooltip]="chartOptions().tooltip" -->
+      <!-- ></apx-chart> -->
+    </div>
+    } @else {
+    <div class="chart-no-data">
+      <h3>No Data</h3>
+    </div>
+    }
+  </div>
+</div>

@@ -22,6 +22,9 @@ export type IChartOptions = {
   tooltip: ApexTooltip;
 }
 
-export interface ChartData { // x = date string, y = cv quantity
+export interface ChartDataType1 { // x = date string, y = cv quantity, z = data?
   x: string; y: number
+}
+export interface ChartDataType2 { // x = date string, y = cv quantity, z = data?
+  x: string; y: string[]
 }
