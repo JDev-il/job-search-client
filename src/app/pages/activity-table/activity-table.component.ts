@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, effect, Renderer2, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, DestroyRef, effect, Renderer2, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -57,7 +57,14 @@ export class ActivityTableComponent extends BaseDialogComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ITableDataRow[]>;
 
-  constructor(private cd: ChangeDetectorRef, private formService: FormsService, private stateService: StateService, private uiService: UIService, private destroyRef: DestroyRef, private renderer: Renderer2, dialog: MatDialog) {
+  constructor(
+    private cd: ChangeDetectorRef,
+    private formService: FormsService,
+    private stateService: StateService,
+    private uiService: UIService,
+    private destroyRef: DestroyRef,
+    private renderer: Renderer2,
+    dialog: MatDialog) {
     super(dialog);
     this.displayedColumns = this.uiService.displayColumns;
     effect(() => {
@@ -75,7 +82,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
             error: () => throwError(() => console.error('Error with data rendering'))
           })
         } else {
-          this.dataSource.data = this.stateService.tableDataResponse$;
+          this.dataSource.data = this.stateService.tableDataResponse;
         }
         if (this.verifyLastSortedData) {
           this.dataSource.data = this.stateService.lastSortedDataSource();
@@ -89,6 +96,12 @@ export class ActivityTableComponent extends BaseDialogComponent {
       this.destroy$.complete();
     })
   }
+
+  public readonly isDataExistsComputed = computed(() => this.stateService.isDataExists());
+  public readonly selectedCount = computed(() => this.selectedRows().length);
+  public readonly isChecked = computed(() => this.selectedCount() > 0 && this.isAllSelected());
+  public readonly isCheckedNotAll = computed(() => this.selectedCount() > 0 && this.selectedCount() < this.dataSource.data.length);
+  public readonly isAllSelected = computed(() => this.selectedCount() === this.dataSource.data.length && this.dataSource.data.length > 0);
 
   public rowColorSwitch(row: ITableDataRow): string {
     return this.uiService.colorSwitch(row);
@@ -108,26 +121,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
           this.localSpinner.set(false);
         }
       });
-  }
-
-  public get isChecked(): boolean {
-    return this.selection.hasValue() && this.isAllSelected();
-  }
-
-  public get isCheckedNotAll(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected > 0 && numSelected < numRows;
-  }
-
-  public get currentDate(): Date {
-    return new Date();
-  }
-
-  public isAllSelected(): boolean {
-    const selectedRows = this.selection.selected.length;
-    const totalRows = this.dataSource.data.length;
-    return selectedRows === totalRows;
   }
 
   public toggleAllRows(): void {
@@ -185,7 +178,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     this.selection.clear();
     this.syncSelectedRows();
     this.updateTable();
-    this.cd.detectChanges()
+    this.cd.detectChanges();
   }
 
   public sortData(sort: Sort): void {
@@ -198,14 +191,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
 
   public isEnoughLength(length: number): boolean {
     return length > 250;
-  }
-
-  public get isPositions(): boolean {
-    return !!this.positionStack().length;
-  }
-
-  public get isDataExists(): boolean {
-    return this.stateService.isDataExists();
   }
 
   private get verifyLastSortedData(): boolean {

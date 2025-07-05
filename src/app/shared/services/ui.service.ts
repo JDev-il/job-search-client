@@ -19,6 +19,7 @@ export class UIService {
   private platformId = inject(PLATFORM_ID);
   public cvProgressChartAnimation = signal<boolean>(true);
   public cvProgressAxes: { x: number; y: number }[] = [];
+
   constructor(private stateService: StateService) { }
 
   public get navBarLinks(): NavBarLink[] {

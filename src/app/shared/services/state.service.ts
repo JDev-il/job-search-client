@@ -14,7 +14,7 @@ export class StateService {
   private readonly spinner = signal<boolean>(true);
   private readonly destroyed$ = signal<boolean>(false);
   private usersResponse: WritableSignal<AuthUserResponse> = signal<AuthUserResponse>({} as AuthUserResponse);
-  private tableDataResponse: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
+  private _tableDataResponse: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
   private dataUserResponse: WritableSignal<UserResponse> = signal({} as UserResponse);
   private countries: WritableSignal<Country[]> = signal<Country[]>([] as Country[]);
   private currentCountry: WritableSignal<Country> = signal<Country>({} as Country);
@@ -34,9 +34,10 @@ export class StateService {
   public buttonText = signal<string>("Don't have an account?");
   public isFetchingCities = signal(false);
   public isRegistrationError = signal(false);
-  public destroy$: Subject<boolean> = new Subject();
   public chronicalDates = signal<string[]>([]);
   public daysFilter = signal<number>(0);
+
+  public destroy$: Subject<boolean> = new Subject();
 
   // Charts Data
   public progressChart = signal<ChartDataType1[]>([]);
@@ -108,7 +109,7 @@ export class StateService {
             if (tableData.length) {
               const statuses = tableData.map(td => td.status);
               this.statusPreviewList.set(statuses);
-              this.tableDataResponse$ = tableData;
+              this._tableDataResponse.set(tableData);
               this.lastSortedDataSource.set(tableData);
               this.isCachedRequest.set(false);
               this.isDataExists.set(true);
@@ -116,7 +117,7 @@ export class StateService {
           })
         );
     }
-    return of(this.tableDataResponse());
+    return of(this._tableDataResponse());
   }
 
   public addOrUpdateApplication(row: ITableDataRow, formAction: FormEnum): Observable<ITableSaveRequest> {
@@ -135,8 +136,8 @@ export class StateService {
       .pipe(
         take(1),
         tap((dataRows: ITableDataRow[]) => {
-          this.tableDataResponse$ = dataRows;
-          this.lastSortedDataSource.set(this.tableDataResponse$);
+          this.tableDataResponse = dataRows;
+          this.lastSortedDataSource.set(this.tableDataResponse);
           this.isCachedRequest.set(false);
           if (!dataRows.length) {
             this.isDataExists.set(false);
@@ -144,8 +145,7 @@ export class StateService {
         }),
         catchError((err) => {
           return throwError(() => { console.error(err) })
-        }))
-      ;
+        }));
   }
 
   public getAllCountries(): Observable<Country[]> {
@@ -232,11 +232,11 @@ export class StateService {
     this.apiService.currentUserData$.set(userData);
   }
 
-  public get tableDataResponse$(): ITableDataRow[] {
-    return this.tableDataResponse();
+  public get tableDataResponse(): ITableDataRow[] {
+    return this._tableDataResponse();
   }
-  public set tableDataResponse$(tableData: ITableDataRow[]) {
-    this.tableDataResponse.set(tableData);
+  public set tableDataResponse(tableData: ITableDataRow[]) {
+    this._tableDataResponse.set(tableData);
   }
 
   public get globalFilteredData$(): ITableDataRow[] {

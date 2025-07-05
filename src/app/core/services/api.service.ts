@@ -136,7 +136,7 @@ export class ApiService {
   }
 
   private userPayload(formRow: ITableDataRow | ITableDataRow[]): ITableDataRow {
-    let payload = {
+    const payload = {
       ...formRow,
       userId: this.currentUserData$().userId
     } as ITableDataRow;

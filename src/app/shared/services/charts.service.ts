@@ -47,7 +47,7 @@ export class ChartsService {
   private chartDataSlicer(): ITableDataRow[] {
     let data: ITableDataRow[] = [] as ITableDataRow[];
     if (this.stateService.daysFilter() === 0) {
-      data = this.stateService.tableDataResponse$.slice();
+      data = this.stateService.tableDataResponse.slice();
     } else {
       data = this.stateService.globalFilteredData$.slice();
     }

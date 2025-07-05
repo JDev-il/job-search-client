@@ -17,14 +17,14 @@
       <div class="search-input">
         <mat-form-field appearance="outline">
           <mat-label>
-            @if (!isDataExists) { Add Application To Enable Search.. } @else {
+            @if (!isDataExistsComputed()) { Add Application To Enable Search.. } @else {
             Search in table }
           </mat-label>
           <input
             matInput
             (keyup)="applyFilter($event)"
             placeholder="Anything that starts with..."
-            [disabled]="!isDataExists"
+            [disabled]="!isDataExistsComputed()"
             #input
           />
         </mat-form-field>
@@ -32,11 +32,11 @@
     </div>
   </div>
   <div class="table-data-displayer">
-    @if (isDataExists) {
+    @if (isDataExistsComputed()) {
     <app-spinner [isSpinner]="localSpinner()" [isActivityTable]="true" />
     <div
       class="table-container mat-elevation-z8"
-      [ngClass]="{ 'hidden-scroll': localSpinner }"
+      [ngClass]="{ 'hidden-scroll': localSpinner() }"
     >
       <table
         mat-table
@@ -50,8 +50,8 @@
               Select
               <mat-checkbox
                 (change)="$event ? toggleAllRows() : null"
-                [checked]="isChecked"
-
+                [checked]="isChecked()"
+                [indeterminate]="isCheckedNotAll()"
               >
               </mat-checkbox>
             </div>
