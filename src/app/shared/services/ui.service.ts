@@ -4,11 +4,11 @@ import { FilteringColumnNamesEnum, StatusEnum } from '../../core/models/enum/tab
 import { ITableDataRow, TColNames } from '../../core/models/table.interface';
 
 import { ChartTimeLine, NavBarLink } from '../../core/models/data.interface';
-import { StateService } from './state.service';
 
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Sort } from '@angular/material/sort';
+import { DataService } from './data.service';
 
 export interface MapCount {
   x: string,
@@ -20,7 +20,7 @@ export class UIService {
   public cvProgressChartAnimation = signal<boolean>(true);
   public cvProgressAxes: { x: number; y: number }[] = [];
 
-  constructor(private stateService: StateService) { }
+  constructor(private dataService: DataService) { }
 
   public get navBarLinks(): NavBarLink[] {
     return [
@@ -34,7 +34,7 @@ export class UIService {
   }
 
   public get timeLineCategories(): ChartTimeLine[] {
-    return this.stateService.cvProgressTimeline();
+    return this.dataService.cvProgressTimeline();
   }
 
   public calcDays(days: number): Date {
@@ -96,13 +96,13 @@ export class UIService {
     const sortedData = data.sort((a: ITableDataRow, b: ITableDataRow) => {
       switch (sort.active) {
         case filteringNames.status:
-          return this.stateService.compareAndSortData(a.status, b.status, sort.direction === 'asc');
+          return this.dataService.compareAndSortData(a.status, b.status, sort.direction === 'asc');
         case filteringNames.application:
-          return this.stateService.compareAndSortData(new Date(a.applicationDate!.toString()).toISOString(), new Date(b.applicationDate!.toString()).toISOString(), sort.direction === 'asc');
+          return this.dataService.compareAndSortData(new Date(a.applicationDate!.toString()).toISOString(), new Date(b.applicationDate!.toString()).toISOString(), sort.direction === 'asc');
         case filteringNames.position:
-          return this.stateService.compareAndSortData(a.positionType, b.positionType, sort.direction === 'asc');
+          return this.dataService.compareAndSortData(a.positionType, b.positionType, sort.direction === 'asc');
         case filteringNames.company:
-          return (this.stateService.compareAndSortData(a.companyName, b.companyName, sort.direction === 'asc')) || this.stateService.compareAndSortData(a.companyLocation, b.companyLocation, sort.direction === 'asc');
+          return (this.dataService.compareAndSortData(a.companyName, b.companyName, sort.direction === 'asc')) || this.dataService.compareAndSortData(a.companyLocation, b.companyLocation, sort.direction === 'asc');
         default:
           return 0;
       }

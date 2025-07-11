@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
+import { DataService } from '../services/data.service';
 import { RoutingService } from '../services/routing.service';
-import { StateService } from '../services/state.service';
 
 @Component({
   selector: 'app-helper-base',
@@ -9,8 +9,8 @@ import { StateService } from '../services/state.service';
   standalone: true
 })
 export class HelperBaseComponent {
-  constructor(public stateService: StateService, public authService: AuthService, public routingService: RoutingService) {
-    this.stateService.userDataRequest().subscribe({
+  constructor(public dataService: DataService, public authService: AuthService, public routingService: RoutingService) {
+    this.dataService.userDataRequest().subscribe({
       next: (userData) => {
         if (!userData) {
           this.authService.logout(); this.routingService.toLogin();
@@ -21,9 +21,9 @@ export class HelperBaseComponent {
   }
 
   public get spinnerState(): boolean {
-    return this.stateService.spinnerState;
+    return this.dataService.spinnerState();
   }
   public set spinnerState(value: boolean) {
-    this.stateService.spinnerState = value;
+    this.dataService.setSpinnerState(value);
   }
 }

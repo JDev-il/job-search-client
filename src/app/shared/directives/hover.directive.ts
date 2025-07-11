@@ -1,7 +1,7 @@
 import { Directive, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonsEnum } from '../../core/models/enum/utils.enum';
-import { StateService } from '../services/state.service';
+import { DataService } from '../services/data.service';
 
 @Directive({
   selector: '[appHover]',
@@ -9,7 +9,7 @@ import { StateService } from '../services/state.service';
 })
 
 export class HoverDirective implements OnInit {
-  constructor(private stateService: StateService, private router: Router) {
+  constructor(private dataService: DataService, private router: Router) {
   }
   ngOnInit(): void {
     this.unSetText();
@@ -28,11 +28,15 @@ export class HoverDirective implements OnInit {
   }
 
   private setText(): void {
-    this.stateService.setHoverText = this.isLogin ? ButtonsEnum.loginhover : ButtonsEnum.registerhover;
+    this.dataService.setHoverText(
+      this.isLogin ? ButtonsEnum.loginhover : ButtonsEnum.registerhover
+    );
   }
 
   private unSetText(): void {
-    this.stateService.setHoverText = this.isLogin ? ButtonsEnum.loginunhover : ButtonsEnum.registerunhover;
+    this.dataService.setHoverText(
+      this.isLogin ? ButtonsEnum.loginunhover : ButtonsEnum.registerunhover
+    );
   }
 
 }

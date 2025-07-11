@@ -17,11 +17,10 @@ import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { FaderDirective } from '../../shared/directives/fader.directive';
+import { DataService } from '../../shared/services/data.service';
 import { FormsService } from '../../shared/services/forms.service';
-import { StateService } from '../../shared/services/state.service';
 import { ITableDataRow } from './../../core/models/table.interface';
 import { UIService } from './../../shared/services/ui.service';
-
 
 @Component({
   selector: 'app-activity-table',
@@ -54,13 +53,20 @@ export class ActivityTableComponent extends BaseDialogComponent {
   public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
   public testingData = signal([] as ITableDataRow[]);
+
+  public readonly isDataExistsComputed = computed(() => this.dataService.isDataExists());
+  public readonly selectedCount = computed(() => this.selectedRows().length);
+  public readonly isChecked = computed(() => this.selectedCount() > 0 && this.isAllSelected());
+  public readonly isCheckedNotAll = computed(() => this.selectedCount() > 0 && this.selectedCount() < this.dataSource.data.length);
+  public readonly isAllSelected = computed(() => this.selectedCount() === this.dataSource.data.length && this.dataSource.data.length > 0);
+
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ITableDataRow[]>;
 
   constructor(
     private cd: ChangeDetectorRef,
     private formService: FormsService,
-    private stateService: StateService,
+    private dataService: DataService,
     private uiService: UIService,
     private destroyRef: DestroyRef,
     private renderer: Renderer2,
@@ -68,40 +74,34 @@ export class ActivityTableComponent extends BaseDialogComponent {
     super(dialog);
     this.displayedColumns = this.uiService.displayColumns;
     effect(() => {
-      if (this.stateService.getDestroyedState()) {
+      if (this.dataService.getDestroyedState()) {
         return;
       }
-      const dataUser = this.stateService.dataUserResponse$;
+      const dataUser = this.dataService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
         this.dataSource.sort = this.sort;
-        if (this.stateService.isCachedRequest()) {
-          this.stateService.authorizedUserDataRequest().subscribe({
+        if (this.dataService.isCachedRequest()) {
+          this.dataService.authorizedUserDataRequest().subscribe({
             next: (data: ITableDataRow[]) => {
               this.dataSource.data = data as ITableDataRow[];
             },
             error: () => throwError(() => console.error('Error with data rendering'))
           })
         } else {
-          this.dataSource.data = this.stateService.tableDataResponse;
+          this.dataSource.data = this.dataService.tableDataResponse();
         }
         if (this.verifyLastSortedData) {
-          this.dataSource.data = this.stateService.lastSortedDataSource();
+          this.dataSource.data = this.dataService.lastSortedDataSource();
         }
       }
     }, { allowSignalWrites: true });
     this.destroyRef.onDestroy(() => {
-      this.stateService.markAsDestroyed();
-      this.stateService.resetDestroyed();
+      this.dataService.markAsDestroyed();
+      this.dataService.resetDestroyed();
       this.destroy$.next();
       this.destroy$.complete();
     })
   }
-
-  public readonly isDataExistsComputed = computed(() => this.stateService.isDataExists());
-  public readonly selectedCount = computed(() => this.selectedRows().length);
-  public readonly isChecked = computed(() => this.selectedCount() > 0 && this.isAllSelected());
-  public readonly isCheckedNotAll = computed(() => this.selectedCount() > 0 && this.selectedCount() < this.dataSource.data.length);
-  public readonly isAllSelected = computed(() => this.selectedCount() === this.dataSource.data.length && this.dataSource.data.length > 0);
 
   public rowColorSwitch(row: ITableDataRow): string {
     return this.uiService.colorSwitch(row);
@@ -169,11 +169,11 @@ export class ActivityTableComponent extends BaseDialogComponent {
       this.dataSource = new MatTableDataSource([] as ITableDataRow[]);
     } else {
       const selectedJobIds = new Set(this.selectedRows().map((row) => row.jobId));
-      const filteredDataSource = [...this.dataSource.data].filter((row) => !selectedJobIds.has(row.jobId));
-      this.stateService.lastSortedDataSource.set(filteredDataSource);
+      const filteredDataSource = this.dataSource.data.filter(row => !selectedJobIds.has(row.jobId));
+      this.dataService.setLastSortedDataSource(filteredDataSource);
       this.dataSource.data = filteredDataSource;
     }
-    this.stateService.removeMultipleRows(this.selectedRows(), FormEnum.remove).subscribe();
+    this.dataService.removeMultipleRows(this.selectedRows(), FormEnum.remove).subscribe();
     this.selectedRows.set([] as ITableDataRow[]);
     this.selection.clear();
     this.syncSelectedRows();
@@ -186,20 +186,20 @@ export class ActivityTableComponent extends BaseDialogComponent {
       return;
     }
     this.dataSource.data = this.uiService.sortDataSource(this.dataSource.data, sort);
-    this.stateService.lastSortedDataSource.set(this.dataSource.data);
+    this.dataService.setLastSortedDataSource(this.dataSource.data);
   }
 
-  public isEnoughLength(length: number): boolean {
+  public isHunchLength(length: number): boolean {
     return length > 250;
   }
 
   private get verifyLastSortedData(): boolean {
-    return this.stateService.lastSortedDataSource() && this.stateService.lastSortedDataSource().length > 0;
+    return this.dataService.lastSortedDataSource() && this.dataService.lastSortedDataSource().length > 0;
   }
 
   private updateTable() {
     if (!this.dataSource.data.length) {
-      this.stateService.isDataExists.set(false);
+      this.dataService.setIsDataExists(false);
     }
     this.dataSource._updateChangeSubscription();
     this.table.renderRows();

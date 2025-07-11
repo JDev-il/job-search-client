@@ -9,8 +9,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsBaseComponent } from '../../../base/forms-base.component';
-import { StateService } from '../../../services/state.service';
 import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
+import { DataService } from './../../../services/data.service';
 
 @Component({
   selector: 'app-edit-row',
@@ -35,8 +35,8 @@ import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
 export class EditRowComponent extends FormsBaseComponent {
 
   @Input() incomingFormTitle!: string;
-  constructor(private cd: ChangeDetectorRef, private destroyRef: DestroyRef, stateService: StateService) {
-    super(stateService);
+  constructor(private cd: ChangeDetectorRef, private destroyRef: DestroyRef, dataService: DataService) {
+    super(dataService);
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
       this.destroy$.complete();

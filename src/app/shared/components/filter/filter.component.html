@@ -4,15 +4,10 @@
   aria-label="Favorite Color"
   [hideSingleSelectionIndicator]="true"
   (change)="onChangeFilter($event)"
+  [value]="currentDayFilter()"
 >
-  <mat-button-toggle [checked]="true" value="0">All Time</mat-button-toggle>
-  <mat-button-toggle [checked]="currentDayFilter() === 2" value="2"
-    >1 Day</mat-button-toggle
-  >
-  <mat-button-toggle [checked]="currentDayFilter() === 7" value="7"
-    >7 Days</mat-button-toggle
-  >
-  <mat-button-toggle [checked]="currentDayFilter() === 30" value="30"
-    >30 Days</mat-button-toggle
-  >
+  <mat-button-toggle [checked]="currentDayFilter() === 0" value="0">All Time</mat-button-toggle>
+  <mat-button-toggle [checked]="currentDayFilter() === 2" value="2">1 Day</mat-button-toggle>
+  <mat-button-toggle [checked]="currentDayFilter() === 7" value="7">7 Days</mat-button-toggle>
+  <mat-button-toggle [checked]="currentDayFilter() === 30" value="30">30 Days</mat-button-toggle>
 </mat-button-toggle-group>

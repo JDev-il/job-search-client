@@ -9,8 +9,8 @@ import { ProgressChartComponent } from '../../shared/components/charts/progress-
 import { StatusChartComponent } from '../../shared/components/charts/status-chart/status-chart.component';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
 import { FaderDirective } from '../../shared/directives/fader.directive';
+import { DataService } from '../../shared/services/data.service';
 import { FormsService } from '../../shared/services/forms.service';
-import { StateService } from '../../shared/services/state.service';
 import { UIService } from '../../shared/services/ui.service';
 import { MarketChartComponent } from './../../shared/components/charts/market-chart/market-chart.component';
 
@@ -37,52 +37,64 @@ export class DashboardComponent extends BaseDialogComponent {
   public status = signal<string[]>([]);
   public progressDates = signal<string[]>([]);
 
-  constructor(private stateService: StateService, private uiService: UIService, private formService: FormsService, dialog: MatDialog) {
+  constructor(
+    private dataService: DataService,
+    private uiService: UIService,
+    private formService: FormsService,
+    dialog: MatDialog
+  ) {
     super(dialog);
     effect(() => {
-      const dataUser = this.stateService.dataUserResponse$;
+      const dataUser = this.dataService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
-        this.stateService.authorizedUserDataRequest().subscribe({
-          next: (data: ITableDataRow[]) => {
-            this.isDataExists.set(this.stateService.isDataExists());
-            this.localSortedTableDataResponse.set(data.slice().sort((a: ITableDataRow, b: ITableDataRow) => new Date(b.applicationDate!.toString()).getTime() - new Date(a.applicationDate!.toString()).getTime()))
-          },
-          error: () => throwError(() => console.error('Error with data rendering'))
-        });
+        this.fetchUserData();
       }
-      this.currentTabIndex.set(this.stateService.currentTabIndex());
-      this.status.set(this.stateService.statusPreviewsList);
+      this.currentTabIndex.set(this.dataService.currentTabIndex());
+      this.status.set(this.dataService.statusPreviewsList);
     }, { allowSignalWrites: true });
   }
 
   public tabIndexSetter(link: NavBarLink) {
-    this.stateService.currentTabIndex.set(link.index);
+    this.dataService.setCurrentTabIndex(link.index);
   }
 
   public addRow() {
     this.openDialog({ form: { formTitle: FormEnum.add, formType: this.formService.tableRowInit() } });
   }
 
-  public filterDataByDays(filterValue: string): void {
-    const numValue = +filterValue;
-    const calcDate = this.uiService.calcDays(numValue).getTime();
+  public filterDataByDays(filterValue: number): void {
+    const calcDate = this.uiService.calcDays(filterValue).getTime();
     let filtered: ITableDataRow[] = [];
-    if (numValue === 0) {
+    if (filterValue === 0) {
       filtered = this.localSortedTableDataResponse();
     } else {
       filtered = this.localSortedTableDataResponse().slice().filter(x => {
         return new Date(x.applicationDate!.toString()).getTime() >= calcDate;
-      })
+      });
     }
-    this.stateService.daysFilter.set(numValue);
-    this.stateService.globalFilteredData$ = filtered;
+    this.dataService.setDaysFilter(+filterValue);
+    this.dataService.setGlobalFilteredData(filtered);
   }
 
-  public get filteredDays(): WritableSignal<number> {
-    return this.stateService.daysFilter;
+  public filteredDays(): WritableSignal<number> {
+    return this.dataService.getDaysFilter();
   }
+
   public get isData(): boolean {
-    return this.isDataExists();
+    return this.dataService.isDataExists();
   }
 
+  private fetchUserData(): void {
+    this.dataService.authorizedUserDataRequest().subscribe({
+      next: (data: ITableDataRow[]) => {
+        this.isDataExists.set(this.dataService.isDataExists());
+        const sortedData = data.slice().sort((a, b) =>
+          new Date(b.applicationDate!.toString()).getTime() -
+          new Date(a.applicationDate!.toString()).getTime()
+        );
+        this.localSortedTableDataResponse.set(sortedData);
+      },
+      error: () => throwError(() => console.error('Error with data rendering'))
+    });
+  }
 }

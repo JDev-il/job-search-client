@@ -11,9 +11,9 @@ import { AuthService } from '../../../core/services/auth.service';
 import { AddRowComponent } from '../../components/forms/add-row/add-row.component';
 import { EditRowComponent } from '../../components/forms/edit-row/edit-row.component';
 import { FirstToUpperCasePipe } from '../../pipes/custom-upper-case.pipe';
+import { DataService } from '../../services/data.service';
 import { RoutingService } from '../../services/routing.service';
 import { TableDataFormRow } from './../../../core/models/forms.interface';
-import { StateService } from './../../services/state.service';
 
 @Component({
   selector: 'app-generic-dialog',
@@ -33,14 +33,14 @@ export class GenericDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<GenericDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GenericDialogType,
-    private stateService: StateService,
+    private dataService: DataService,
     private authService: AuthService,
     private routingService: RoutingService,
     private destroyRef: DestroyRef
   ) {
     effect(() => {
       this.dataType.set(data);
-      if (this.stateService.getDestroyedState()) {
+      if (this.dataService.getDestroyedState()) {
         return;
       }
       this.dialogRef.afterClosed().subscribe(() => {
@@ -53,8 +53,8 @@ export class GenericDialogComponent {
       if (this.shouldSkipDestroyActions) {
         return;
       }
-      this.stateService.markAsDestroyed();
-      this.stateService.resetDestroyed();
+      this.dataService.markAsDestroyed();
+      this.dataService.resetDestroyed();
     });
   }
 
@@ -72,13 +72,13 @@ export class GenericDialogComponent {
 
   public sendForm(form: FormGroup): void {
     const formTitle = this.data.form?.formTitle as FormEnum;
-    this.stateService.addOrUpdateApplication(form.value, formTitle).subscribe();
+    this.dataService.addOrUpdateApplication(form.value, formTitle).subscribe();
     this.dialogRef.close();
   }
 
   public closeDialog(): void {
-    this.stateService.spinnerState = false;
-    this.stateService.isFetchingCities.set(false);
+    this.dataService.setSpinnerState(false);
+    this.dataService.setFetchingCities(false);
     this.dialogRef.close();
   }
 

@@ -14,8 +14,8 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HoverDirective } from '../../directives/hover.directive';
 import { MaterialDirective } from '../../directives/material.directive';
 import { SnackBarDirective } from '../../directives/snackbar.directive';
+import { DataService } from '../../services/data.service';
 import { RoutingService } from '../../services/routing.service';
-import { StateService } from './../../services/state.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -41,7 +41,7 @@ export class LoginComponent extends BaseDialogComponent {
 
   constructor(
     private fb: FormBuilder,
-    private stateService: StateService,
+    private dataService: DataService,
     private routingService: RoutingService,
     private authService: AuthService,
     private cd: ChangeDetectorRef,
@@ -52,15 +52,15 @@ export class LoginComponent extends BaseDialogComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-    this.stateService.spinnerState = false;
+    this.dataService.setSpinnerState(false);
   }
 
   public get spinnerState(): boolean {
-    return this.stateService.spinnerState;
+    return this.dataService.spinnerState();
   }
 
   public get loginbuttonText() {
-    return this.stateService.buttonText()
+    return this.dataService.buttonText()
   }
 
   public toRegister(): void {
@@ -74,11 +74,11 @@ export class LoginComponent extends BaseDialogComponent {
         email: this.loginForm.value.email,
         password: this.loginForm.value.password
       };
-      const notificationType = this.stateService.notificationsType;
-      this.stateService.loginUser(loginForm).subscribe({
+      const notificationType = this.dataService.notificationsType;
+      this.dataService.loginUser(loginForm).subscribe({
         next: (user: UserLogin | null) => {
           if (user !== null && user.auth_token) {
-            this.stateService.spinnerState = true;
+            this.dataService.setSpinnerState(true);
             this.authService.setToken(user.auth_token);
             this.snackBar.openSnackBar({ message: notificationType.success.login.message, title: NotificationsStatusEnum.successlog }, ActionLables.ok);
           } else {

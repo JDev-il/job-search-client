@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, WritableSignal } from '@angular/core';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 @Component({
@@ -11,11 +11,16 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 })
 export class FilterComponent {
-  @Output() filterValue: EventEmitter<string> = new EventEmitter();
-  @Input() currentDayFilter: WritableSignal<number> = signal(0);
+  @Output() filterValue: EventEmitter<number> = new EventEmitter();
+  @Input({ required: true }) currentDayFilter!: WritableSignal<number>;
   @Input() isDataLength: boolean = false;
 
+  constructor() {
+  }
+
   public onChangeFilter(e: MatButtonToggleChange) {
+    const value = +e.value;
+    this.currentDayFilter.set(value);
     this.filterValue.emit(e.value);
   }
 }

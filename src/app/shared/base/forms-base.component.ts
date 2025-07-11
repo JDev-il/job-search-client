@@ -6,7 +6,7 @@ import { Country } from "../../core/models/data.interface";
 import { PlatformEnum, PositionStackEnum, PositionTypeEnum, StatusEnum } from "../../core/models/enum/table-data.enum";
 import { FieldType } from "../../core/models/enum/utils.enum";
 import { TableDataFormRow } from "../../core/models/forms.interface";
-import { StateService } from "../services/state.service";
+import { DataService } from "../services/data.service";
 
 @Component({
   selector: 'app-forms-base',
@@ -39,20 +39,20 @@ export class FormsBaseComponent {
   protected companyCityField = signal('');
   protected companyNameField = signal('');
 
-  constructor(public stateService: StateService) {
+  constructor(public dataService: DataService) {
     effect(() => {
       if (this.companyCityField() || this.isCurrentCitiesList) {
-        this.currentCitiesList.set(this.stateService.citiesOfCurrentCountry.data);
+        this.currentCitiesList.set(this.dataService.citiesOfCurrentCountry.data);
         const cities = this.filterCities(this.companyCityField());
         this.filteredCities.set(cities);
       }
-      if (this.companyNameField() || this.stateService.listOfCompanies.length) {
-        this.companiesList.set(this.stateService.listOfCompanies);
+      if (this.companyNameField() || this.dataService.listOfCompanies.length) {
+        this.companiesList.set(this.dataService.listOfCompanies);
         const companies = this.filterCompanies(this.companyNameField());
         this.filteredCompanies.set(companies);
       }
-      if (this.countryNameField() || this.stateService.allCountries) {
-        this.countries.set(this.stateService.allCountries);
+      if (this.countryNameField() || this.dataService.allCountries) {
+        this.countries.set(this.dataService.allCountries);
         const countries = this.filterCountries(this.countryNameField());
         this.filteredCountries.set(countries);
       }
@@ -108,7 +108,7 @@ export class FormsBaseComponent {
   }
 
   protected resetCitiesList(): void {
-    this.currentCitiesList.set(this.stateService.citiesOfCurrentCountry.data);
+    this.currentCitiesList.set(this.dataService.citiesOfCurrentCountry.data);
   }
 
   protected whichSelect(controlName: string) {
@@ -130,7 +130,7 @@ export class FormsBaseComponent {
 
   protected changeCountryRequest(e: MouseEvent): void {
     e.preventDefault();
-    this.stateService.isFetchingCities.set(true);
+    this.dataService.setFetchingCities(true);
     this.companyCityField.set('');
     this.filteredCountries.set(this.countries());
     if (!this.newAddRowForm) {
@@ -144,16 +144,16 @@ export class FormsBaseComponent {
     !this.newAddRowForm ?
       this.incomingEditForm.get('companyLocation')?.reset() :
       this.newAddRowForm.get('companyLocation')?.reset();
-    this.stateService.isFetchingCities.set(false);
-    this.stateService.getCitiesByCountry(country).subscribe({
+    this.dataService.setFetchingCities(false);
+    this.dataService.getCitiesByCountry(country).subscribe({
       next: cities => this.filteredCities.set(cities.data),
       error: (err) => throwError(() => err)
     })
   }
 
   protected get placeholderText(): string {
-    return !this.stateService.isFetchingCities()
-      ? `Search a City in ${this.stateService.currentCountryName()}`
+    return !this.dataService.isFetchingCities()
+      ? `Search a City in ${this.dataService.currentCountryName()}`
       : 'Choose a Country'
   };
 
@@ -184,7 +184,7 @@ export class FormsBaseComponent {
   }
 
   private get isCurrentCitiesList(): boolean {
-    return !!this.stateService.citiesOfCurrentCountry.data;
+    return !!this.dataService.citiesOfCurrentCountry.data;
   }
 
 }

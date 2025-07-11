@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { tap } from 'rxjs';
 import { NotificationDialog } from '../../core/models/dialog.interface';
 import { NotificationsStatusEnum } from '../../core/models/enum/messages.enum';
-import { StateService } from '../services/state.service';
+import { DataService } from '../services/data.service';
 import { RoutingService } from './../services/routing.service';
 
 @Directive({
@@ -17,7 +17,7 @@ export class SnackBarDirective {
   private snackBarMessage: string = '';
   @Input() spinnerState!: boolean;
 
-  constructor(private stateService: StateService, private routingService: RoutingService) { }
+  constructor(private dataService: DataService, private routingService: RoutingService) { }
 
   public openSnackBar(data: NotificationDialog, actionLable?: string): void {
     const isRedirecting = (data.title === NotificationsStatusEnum.successlog || data.title === NotificationsStatusEnum.successreg);
@@ -36,7 +36,7 @@ export class SnackBarDirective {
         snackBarRef.afterDismissed().pipe(tap(() => this.routingService.toDashboard())).subscribe()
       }
       snackBarRef.onAction().subscribe((): void => {
-        this.stateService.spinnerState = this.spinnerState;
+        this.dataService.setSpinnerState(this.spinnerState);
       });
     }
   }

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, effect, ViewEncapsulation } from '@angula
 import { ChartType, NgApexchartsModule } from 'ng-apexcharts';
 import { IChartOptions } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
-import { StateService } from '../../../services/state.service';
+import { DataService } from '../../../services/data.service';
 import { ChartsService } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
 
@@ -15,8 +15,8 @@ import { UIService } from './../../../services/ui.service';
   encapsulation: ViewEncapsulation.None
 })
 export class StatusChartComponent extends ChartsBaseComponent {
-  constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, stateService: StateService) {
-    super(cd, uiService, chartsService, stateService);
+  constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {
+    super(cd, uiService, chartsService, dataService);
     effect(() => {
       this.chartsService.statusChartBuilder();
       this.statusChartOptions.set(this.statusChart());
@@ -28,7 +28,7 @@ export class StatusChartComponent extends ChartsBaseComponent {
       series: [
         {
           name: 'Sent',
-          data: this.stateService.statusChart()
+          data: this.dataService.statusChart()
         }
       ] as ApexAxisChartSeries,
       chart: {
@@ -80,7 +80,7 @@ export class StatusChartComponent extends ChartsBaseComponent {
       } as ApexChart,
       xaxis: {
         type: 'category',
-        categories: this.stateService.statusChart().map(row => row.x),
+        categories: this.dataService.statusChart().map(row => row.x),
         labels: {
           style: {
             // fontSize: '10px'

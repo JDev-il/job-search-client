@@ -17,9 +17,9 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HoverDirective } from '../../directives/hover.directive';
 import { MaterialDirective } from '../../directives/material.directive';
 import { SnackBarDirective } from '../../directives/snackbar.directive';
+import { DataService } from '../../services/data.service';
 import { FormsService } from '../../services/forms.service';
 import { RoutingService } from '../../services/routing.service';
-import { StateService } from '../../services/state.service';
 
 @Component({
   selector: 'app-registration',
@@ -43,18 +43,18 @@ export class RegistrationComponent extends BaseDialogComponent {
   public registerationForm!: FormGroup<RegisterFormModel>;
   constructor(
     dialog: MatDialog,
-    private stateService: StateService,
+    private dataService: DataService,
     private authService: AuthService,
     private routingService: RoutingService,
     private formService: FormsService
   ) {
     super(dialog)
     this.registerationForm = this.formService.initializeRegistrationForm();
-    this.stateService.spinnerState = false;
+    this.dataService.setSpinnerState(false);
   }
 
   public get spinnerState(): boolean {
-    return this.stateService.spinnerState;
+    return this.dataService.spinnerState();
   }
 
   public toLogin(): void {
@@ -63,18 +63,18 @@ export class RegistrationComponent extends BaseDialogComponent {
   }
 
   public get loginbuttonText() {
-    return this.stateService.buttonText()
+    return this.dataService.buttonText()
   }
 
   public submitRegistrationForm(): void {
     if (this.registerationForm.valid) {
-      const notificationType = this.stateService.notificationsType;
+      const notificationType = this.dataService.notificationsType;
       const { confirm_password, ...userData } = this.registerationForm.value;
-      this.stateService.spinnerState = true;
-      this.stateService.addNewUser(<UserRequest>userData)
+      this.dataService.setSpinnerState(true);
+      this.dataService.addNewUser(<UserRequest>userData)
         .pipe(
           catchError((err: HttpErrorResponse) => {
-            this.stateService.spinnerState = false;
+            this.dataService.setSpinnerState(false);
             this.resetEmailPassword();
             this.snackBar.openSnackBar({ message: notificationType.fail.userExists.message, title: NotificationsStatusEnum.error }, ActionLables.tryagain);
             return throwError(() => err);

@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsBaseComponent } from '../../../base/forms-base.component';
 import { StringSanitizerPipe } from '../../../pipes/string-sanitizer.pipe';
-import { StateService } from '../../../services/state.service';
+import { DataService } from '../../../services/data.service';
 
 @Component({
   selector: 'app-add-row',
@@ -33,8 +33,8 @@ import { StateService } from '../../../services/state.service';
 })
 export class AddRowComponent extends FormsBaseComponent {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
-  constructor(private destroyRef: DestroyRef, stateService: StateService) {
-    super(stateService);
+  constructor(private destroyRef: DestroyRef, dataService: DataService) {
+    super(dataService);
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
       this.destroy$.complete();

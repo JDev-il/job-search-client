@@ -3,7 +3,7 @@ import { ChartType, NgApexchartsModule } from 'ng-apexcharts';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
 
 import { ChartDataType1, IChartOptions } from '../../../../core/models/chart.interface';
-import { StateService } from '../../../services/state.service';
+import { DataService } from '../../../services/data.service';
 import { UIService } from '../../../services/ui.service';
 import { ChartsService } from './../../../services/charts.service';
 
@@ -17,8 +17,8 @@ import { ChartsService } from './../../../services/charts.service';
   encapsulation: ViewEncapsulation.None
 })
 export class ProgressChartComponent extends ChartsBaseComponent {
-  constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, stateService: StateService) {
-    super(cd, uiService, chartsService, stateService);
+  constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {
+    super(cd, uiService, chartsService, dataService);
     effect(() => {
       this.chartsService.progressChartBuilder();
       this.progressChartOptions.set(this.progressChart());
@@ -31,7 +31,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
       series: [
         {
           name: 'Sent',
-          data: this.stateService.progressChart() as ChartDataType1[]
+          data: this.dataService.progressChart() as ChartDataType1[]
         }
       ] as ApexAxisChartSeries,
       chart: {

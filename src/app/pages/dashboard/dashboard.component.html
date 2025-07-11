@@ -3,7 +3,7 @@
     <ng-container>
       <app-filter
         (filterValue)="filterDataByDays($event)"
-        [currentDayFilter]="filteredDays"
+        [currentDayFilter]="filteredDays()"
         [isDataLength]="isData"
       ></app-filter>
     </ng-container>

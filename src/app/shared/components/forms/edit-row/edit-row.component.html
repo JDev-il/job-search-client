@@ -55,7 +55,7 @@
     <a (click)="changeCountryRequest($event)">Change country?</a>
 
     <mat-autocomplete #locationEditAutoComplete="matAutocomplete">
-      @if (stateService.isFetchingCities()) { @for (country of
+      @if (dataService.isFetchingCities()) { @for (country of
       filteredCountries(); track $index) {
       <mat-option
         (onSelectionChange)="onSelectCountry(country.name.common)"
