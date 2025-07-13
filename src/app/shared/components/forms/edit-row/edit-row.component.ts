@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { takeUntil, tap } from 'rxjs';
 import { FormsBaseComponent } from '../../../base/forms-base.component';
 import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
 import { DataService } from './../../../services/data.service';
@@ -41,6 +42,15 @@ export class EditRowComponent extends FormsBaseComponent {
       this.destroy$.next();
       this.destroy$.complete();
     })
+  }
+
+  ngOnInit(): void {
+    this.incomingEditForm.get('positionStack')?.valueChanges.pipe(
+      tap((value) => {
+        this.selectedStacks.set(value ?? []);
+      }),
+      takeUntil(this.destroy$))
+      .subscribe();
   }
 
   public formSubmit(): void {

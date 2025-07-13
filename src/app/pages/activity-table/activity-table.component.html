@@ -17,8 +17,8 @@
       <div class="search-input">
         <mat-form-field appearance="outline">
           <mat-label>
-            @if (!isDataExistsComputed()) { Add Application To Enable Search.. } @else {
-            Search in table }
+            @if (!isDataExistsComputed()) { Add Application To Enable Search.. }
+            @else { Search in table }
           </mat-label>
           <input
             matInput
@@ -213,7 +213,7 @@
           <td mat-cell *matCellDef="let row">
             @if(row.notes){
             <div class="cell-control overflow-cell">
-              <td>
+              <td [ngClass]="{ 'td-adjust': row.notes.length >= 110 }">
                 {{ row.notes }}
               </td>
             </div>

@@ -101,11 +101,14 @@
     @media screen and (max-width: 992px) {
       margin: 6vh auto;
       overflow-y: auto;
+      scrollbar-width: thin;
+      scroll-behavior: smooth;
     }
     .table-container {
       box-shadow: none;
       max-height: 75vh;
       overflow-y: auto;
+      scrollbar-width: thin;
       border-radius: 1.2rem;
       @media screen and (max-width: 1880px) {
         max-height: 75vh;
@@ -309,46 +312,63 @@
                 .type {
                   font-weight: 600;
                   display: inline-flex;
-                  width: 100%;
+                  border-radius: 0;
                 }
                 .stacks {
                   border: 2px solid;
                   border-radius: 0.3em;
-                  flex-flow: column;
-                  height: 65px;
-                  align-items: center;
-                  min-width: 20%;
-                  padding: 0 15px;
+                  height: 6vh;
+                  flex-flow: wrap;
+                  align-items: baseline;
+                  min-width: 50%;
+                  width: 100%;
                   overflow-y: auto;
                   overflow-x: hidden;
                   position: relative;
-                  scrollbar-width: thin;
-                  margin-left: 5px;
-                  box-shadow: inset 0px 0px 5px -2px;
+                  scrollbar-width: none;
+                  padding: 0;
+                  margin: 0;
+                  margin-left: 15px;
                   p {
-                    margin: auto 0;
-                    padding: 5px 0;
+                    position: relative;
+                    top: 5px;
+                    padding: 0 5px;
+                    margin: 0;
                   }
                 }
                 @media screen and (max-width: 1280px) {
                   width: 85%;
+                  p {
+                    padding: 0;
+                  }
                 }
               }
             }
             .text-cell {
-              text-align: center !important;
+              overflow: auto !important;
+              display: flex !important;
+              align-items: flex-start !important;
+              font-size: inherit !important;
+              margin: auto;
+              scrollbar-width: thin;
+              max-width: 75%;
+              min-width: unset !important;
+              td {
+                padding: 6px 0 0 !important;
+              }
+              @media screen and (max-width: 1280px) {
+                text-align: left !important;
+                margin: auto;
+              }
             }
             .overflow-cell {
-              height: 65px;
+              max-height: 75px;
               overflow-y: auto;
-              margin: auto;
-              padding: 0 10px;
-              border: 2px solid;
-              border-radius: 0.3em;
-              box-shadow: inset 0px 0px 5px -2px;
-              font-size: small;
+              position: absolute;
+              top: 5px;
+              min-width: unset !important;
+              max-width: 85% !important;
               @media screen and (max-width: 1280px) {
-                min-width: 220px;
               }
             }
             .overflow-cell-unflex {

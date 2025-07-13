@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, Input, Output, signal, ViewChild, WritableSignal } from "@angular/core";
+import { Component, computed, effect, EventEmitter, Input, Output, signal, ViewChild, WritableSignal } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup } from "@angular/forms";
 import { MatSelect } from "@angular/material/select";
 import { Subject, throwError } from "rxjs";
@@ -23,6 +23,7 @@ export class FormsBaseComponent {
   @ViewChild('typeSelect') typeSelect!: MatSelect;
   @ViewChild('stackSelect') stackSelect!: MatSelect;
   @ViewChild('platformSelect') platformSelect!: MatSelect;
+  protected readonly selectedStacks: WritableSignal<string[]> = signal([]);
   protected filteredCountries: WritableSignal<Country[]> = signal([] as Country[]);
   protected filteredCities: WritableSignal<string[]> = signal([] as string[]);
   protected filteredCompanies: WritableSignal<string[]> = signal([] as string[]);
@@ -38,6 +39,7 @@ export class FormsBaseComponent {
   protected countryNameField = signal('');
   protected companyCityField = signal('');
   protected companyNameField = signal('');
+
 
   constructor(public dataService: DataService) {
     effect(() => {
@@ -186,5 +188,20 @@ export class FormsBaseComponent {
   private get isCurrentCitiesList(): boolean {
     return !!this.dataService.citiesOfCurrentCountry.data;
   }
+
+  public readonly isDisabled = (stack: string) => computed(() => {
+    const value = ['Angular', 'React.js', 'Vue.js'];
+    if (stack !== 'Angular, React.js, Vue.js') return false;
+    const selected = this.selectedStacks();
+    return value.some(single => selected.includes(single));
+  });
+
+  public readonly isSingleDisabled = (stack: string) => computed(() => {
+    const selected = this.selectedStacks();
+    if (['Angular', 'React.js', 'Vue.js'].includes(stack)) {
+      return selected.includes('Angular, React.js, Vue.js');
+    }
+    return false;
+  });
 
 }

@@ -64,7 +64,13 @@
     <mat-label>Stacks</mat-label>
     <mat-select multiple formControlName="positionStack">
       @for (positionStack of positionStacks(); track positionStack) {
-      <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
+      <mat-option
+        [value]="positionStack"
+        [disabled]="
+          isDisabled(positionStack)() || isSingleDisabled(positionStack)()
+        "
+        >{{ positionStack }}</mat-option
+      >
       }
     </mat-select>
   </mat-form-field>

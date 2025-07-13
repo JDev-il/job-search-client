@@ -107,7 +107,13 @@
     !incomingEditForm.get('positionStack')?.value) {
     <mat-select multiple formControlName="positionStack" #stackSelect>
       @for (positionStack of positionStacks(); track positionStack) {
-      <mat-option [value]="positionStack">{{ positionStack }}</mat-option>
+      <mat-option
+        [value]="positionStack"
+        [disabled]="
+          isDisabled(positionStack)() || isSingleDisabled(positionStack)()
+        "
+        >{{ positionStack }}</mat-option
+      >
       }
     </mat-select>
     } @placeholder {
