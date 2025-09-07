@@ -1,7 +1,9 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ChartDataType1, ChartDataType2 } from '../../core/models/chart.interface';
+import { AgentSuggestion } from './../../core/models/agent.interface';
 import { ChartTimeLine, City, Country } from './../../core/models/data.interface';
+import { JobSearchCriteria } from './../../core/models/job-search.interface';
 import { ITableDataRow } from './../../core/models/table.interface';
 import { AuthUserResponse, UserResponse } from './../../core/models/users.interface';
 
@@ -35,4 +37,8 @@ export class StateService {
   // Charts Data
   public _progressChart = signal<ChartDataType1[]>([]);
   public _statusChart = signal<ChartDataType2[]>([]);
+
+  // AI Agent & MCP
+  public _agentSuggestions = signal([] as AgentSuggestion[]);
+  public _jobSearchCriterias = signal([] as JobSearchCriteria[]);
 }

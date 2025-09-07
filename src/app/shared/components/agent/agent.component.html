@@ -1,0 +1,14 @@
+<ng-container>
+  @if (isAgent()) {
+  <div class="agent-container">
+    <mat-icon (click)="closeAgent()">close</mat-icon>
+    <img src="assets/images/ai-agent.svg" alt="AI Agent" />
+    <div class="agent-flex-wrapper">
+      <p style="font-weight: 600">
+        {{ userInputTitle() || "~ Dummy Agent Prompt ~" }}
+      </p>
+      <input type="search" />
+    </div>
+  </div>
+  }
+</ng-container>

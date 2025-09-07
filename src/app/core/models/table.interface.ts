@@ -35,4 +35,3 @@ export interface ITableSaveRequest {
 }
 
 export type TColNames = 'select' | 'status' | 'company' | 'position' | 'application' | 'hunch' | 'note';
-

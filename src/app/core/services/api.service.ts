@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ChartTimeLine, City, Country } from '../models/data.interface';
 import { ParamsOrder, ParamsOrderBy } from '../models/enum/params.enum';
 import { CountriesEnum, FormEnum } from '../models/enum/utils.enum';
+import { IMCPRequest } from '../models/mcp.inrerface';
 import { CityReqParams } from '../models/requests.intefrace';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { ITableDataRow, ITableSaveRequest } from './../models/table.interface';
@@ -135,6 +136,15 @@ export class ApiService {
     return this.http.post<ITableDataRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeRows}`, payload);
   }
 
+  // MCP Endpoint //
+  public mcpRequest(req: IMCPRequest) {
+    const request: IMCPRequest = {
+      input: req.input = "checking everything works....",
+      model: 'gpt-4'
+    }
+    console.log(request)
+  }
+
   private userPayload(formRow: ITableDataRow | ITableDataRow[]): ITableDataRow {
     const payload = {
       ...formRow,
@@ -143,4 +153,3 @@ export class ApiService {
     return payload;
   }
 }
-

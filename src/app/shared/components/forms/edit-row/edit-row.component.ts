@@ -15,6 +15,7 @@ import { DataService } from './../../../services/data.service';
 
 @Component({
   selector: 'app-edit-row',
+  host: { 'data-component-id': 'edit-row' },
   standalone: true,
   imports: [
     FormsModule,

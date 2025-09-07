@@ -15,6 +15,7 @@ import { DataService } from '../../../services/data.service';
 
 @Component({
   selector: 'app-add-row',
+  host: { 'data-component-id': 'add-row' },
   standalone: true,
   imports: [
     FormsModule,
@@ -30,7 +31,7 @@ import { DataService } from '../../../services/data.service';
   ],
   templateUrl: './add-row.component.html',
   styleUrl: '../styles/form-style.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddRowComponent extends FormsBaseComponent {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;

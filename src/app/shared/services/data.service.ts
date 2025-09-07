@@ -27,6 +27,8 @@ export class DataService {
   public readonly progressChart = computed(() => this.stateService._progressChart());
   public readonly statusChart = computed(() => this.stateService._statusChart());
   public readonly daysFilter = computed(() => this.stateService._daysFilter());
+  public readonly suggestions = computed(() => this.stateService._agentSuggestions());;
+  public readonly criteria = computed(() => this.stateService._jobSearchCriterias());
 
   constructor(private apiService: ApiService, private authService: AuthService, private stateService: StateService) {
     this.getAllCountries().subscribe();

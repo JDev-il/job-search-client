@@ -1,0 +1,50 @@
+.agent-container {
+  position: fixed;
+  height: 150px;
+  min-width: 26rem;
+  bottom: 3rem;
+  right: 3rem;
+  z-index: 555;
+  overflow: hidden;
+  box-shadow: 0 0 15px -2px;
+  background-color: #36294fce;
+  backdrop-filter: blur(3px);
+  border-radius: 0.6em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    position: absolute;
+    width: 85px;
+    height: auto;
+    left: 1rem;
+  }
+}
+
+.agent-flex-wrapper {
+  position: relative;
+  line-height: 0;
+  width: 65%;
+  display: flex;
+  flex-flow: column;
+  right: 0;
+  left: 3rem;
+  p {
+    padding-bottom: 15px;
+    color: #fff;
+  }
+  input {
+    line-height: 1.5;
+    outline: 0;
+    padding: 8px;
+    text-decoration-thickness: 43px !important;
+  }
+}
+.mat-icon {
+  z-index: 111;
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+}

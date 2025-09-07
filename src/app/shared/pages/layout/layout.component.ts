@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { HelperBaseComponent } from '../../base/helper-base.component';
+import { AgentComponent } from '../../components/agent/agent.component';
 import { NavigationComponent } from '../../components/navigation/navigation.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { DataService } from '../../services/data.service';
@@ -10,7 +11,7 @@ import { RoutingService } from '../../services/routing.service';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, NavigationComponent, SpinnerComponent],
+  imports: [RouterOutlet, NavigationComponent, SpinnerComponent, AgentComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
