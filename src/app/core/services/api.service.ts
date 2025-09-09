@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { ChartTimeLine, City, Country } from '../models/data.interface';
 import { ParamsOrder, ParamsOrderBy } from '../models/enum/params.enum';
 import { CountriesEnum, FormEnum } from '../models/enum/utils.enum';
@@ -10,29 +9,27 @@ import { CityReqParams } from '../models/requests.intefrace';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { ITableDataRow, ITableSaveRequest } from './../models/table.interface';
 import { UserRequest } from './../models/users.interface';
+import { ApiConfigService } from './configuration.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-
-  private env = environment.apiUrls;
-  private authParams = this.env.params.auth;
-  private usersParams = this.env.params.users;
-  private jobSearchParams = this.env.params.job_search;
-  private companiesParams = this.env.params.companies;
-  private geoParams = this.env.geo;
-  private timelineParams = this.env.timeline;
   public currentUserData$ = signal<UserResponse>({} as UserResponse);
   public currentUserRequest$ = signal<UserLogin>({} as UserLogin);
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService // Inject the new config service
+  ) { }
 
   public getChartDataReq(): Observable<ChartTimeLine[]> {
-    const url = `${this.timelineParams.baseUrl_mockApi}/${this.timelineParams.params.data}`;
+    // Use the new config service method
+    const url = this.apiConfig.getTimelineUrl();
     return this.http.get<ChartTimeLine[]>(url);
   }
 
   public getCountriesListReq(): Observable<Country[]> {
-    const url = this.geoParams.countries.baseUrl_mockApi;
+    // Use mock API URL from config - you might want to make this configurable
+    const url = this.apiConfig.external.geo.countries.mockUrl || this.apiConfig.getCountriesUrl();
     return this.http.get<Country[]>(url)
       .pipe(map(data => data
         .sort((a, b) =>
@@ -42,19 +39,25 @@ export class ApiService {
 
   public getCitiesReq(country: string): Observable<City> {
     if (country === CountriesEnum.primary) {
+      // Use Israeli cities endpoint
+      const url = this.apiConfig.external.geo.cities.israeli;
       return this.http
-        .get<City[]>(this.geoParams.cities.israeli)
+        .get<City[]>(url)
         .pipe(
           map((res) => res[0])
         );
     }
+
     const citiesData: CityReqParams = {
       order: ParamsOrder.ASC,
       orderBy: ParamsOrderBy.NAME,
       country: country.toLowerCase()
     };
+
+    // Use the cities filter endpoint
+    const url = this.apiConfig.getCitiesUrl(this.apiConfig.external.geo.cities.filter);
     return this.http
-      .post<City>(`${this.geoParams.cities.baseUrl}${this.geoParams.cities.filter}`, citiesData)
+      .post<City>(url, citiesData)
       .pipe(
         map((res): City => (
           {
@@ -65,21 +68,24 @@ export class ApiService {
       );
   }
 
+
   public getCompaniesReq(): Observable<string[]> {
-    const url = this.companiesParams.base_url;
+    // Use the companies config
+    const baseUrl = this.apiConfig.external.companies.baseUrl;
     return forkJoin([
-      this.http.get<string[]>(`${url}/companies`),
-      this.http.get<string[]>(`${url}/companies_1`),
-      this.http.get<string[]>(`${url}/companies_2`),
-      this.http.get<string[]>(`${url}/companies_3`)
+      this.http.get<string[]>(`${baseUrl}companies`),
+      this.http.get<string[]>(`${baseUrl}companies_1`),
+      this.http.get<string[]>(`${baseUrl}companies_2`),
+      this.http.get<string[]>(`${baseUrl}companies_3`)
     ]).pipe(
       map(companies => companies.flat())
     );
   }
 
-
   public addNewUserReq(userData: UserRequest): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${this.env.local}${this.usersParams.path}${this.usersParams.add}`, userData);
+    // Use the new config service for internal API
+    const url = this.apiConfig.getUsersUrl(this.apiConfig.internal.users.add);
+    return this.http.post<UserResponse>(url, userData);
   }
 
   public loginUserReq(userLoginForm: UserLogin): Observable<UserLogin> {
@@ -87,8 +93,12 @@ export class ApiService {
       switchMap(form => {
         const loginData = form.auth_token ? { ...form } : { email: form.email, password: form.password };
         const headers = form.auth_token ? { Authorization: `Bearer ${form.auth_token}` } : null;
+
+        // Use the new config service for auth endpoint
+        const url = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.login);
+
         return this.http.post<UserLogin>(
-          `${this.env.local}${this.authParams.path}${this.authParams.login}`,
+          url,
           loginData,
           headers ? { headers } : {}
         );
@@ -97,20 +107,28 @@ export class ApiService {
   }
 
   public verifyTokenReq(token: string): Observable<UserLogin> {
-    return this.http.get<UserLogin>(`${this.env.local}${this.authParams.path}${this.authParams.verify}`, { headers: { 'authorization': `Bearer ${token}` } });
+    // Use the new config service for auth verify endpoint
+    const url = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.verify);
+    return this.http.get<UserLogin>(url, {
+      headers: { 'authorization': `Bearer ${token}` }
+    });
   }
 
   public generateTokenReq(user: UserLogin): Observable<UserToken> {
-    return this.http.post<UserToken>(`${this.env.local}${this.env.params.auth.path}${this.env.params.auth.sign}`, user, { responseType: 'json' });
+    // Use the new config service for token generation
+    const url = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.sign);
+    return this.http.post<UserToken>(url, user, { responseType: 'json' });
   }
 
   public getUserDataReq(user_id: string): Observable<UserResponse> {
     return of(user_id).pipe(
       switchMap((id: string) => {
         if (id) {
+          // Use the new config service for users endpoint
+          const url = this.apiConfig.getUsersUrl(this.apiConfig.internal.users.user);
           return this.http
             .get<UserResponse>(
-              `${this.env.local}${this.usersParams.path}${this.usersParams.user}`,
+              url,
               { params: new HttpParams().append('user_id', id) }
             )
         } else {
@@ -121,19 +139,29 @@ export class ApiService {
 
   public authUserDataReq(): Observable<ITableDataRow[]> { // After user is authenticated
     const user_id = this.currentUserData$()?.userId;
-    return this.http.get<ITableDataRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.getApplications}`, { params: { user_id } }
-    )
+    // Use the new config service for job search endpoint
+    const url = this.apiConfig.getJobSearchUrl(this.apiConfig.internal.jobSearch.getApplications);
+    return this.http.get<ITableDataRow[]>(url, { params: { user_id } });
   }
+
 
   public addOrUpdateApplicationReq(row: ITableDataRow, formAction: FormEnum): Observable<ITableSaveRequest> {
     const payload = this.userPayload(row) as ITableDataRow;
-    const addOrEdit = formAction === FormEnum.add ? this.jobSearchParams.addApplication : this.jobSearchParams.updateApplication;
-    return this.http.post<ITableSaveRequest>(`${this.env.local}${this.jobSearchParams.path}${addOrEdit}`, { ...payload });
+
+    // Use the new config service to determine the endpoint
+    const endpoint = formAction === FormEnum.add
+      ? this.apiConfig.internal.jobSearch.addApplication
+      : this.apiConfig.internal.jobSearch.updateApplication;
+
+    const url = this.apiConfig.getJobSearchUrl(endpoint);
+    return this.http.post<ITableSaveRequest>(url, { ...payload });
   }
 
   public removeRowsReq(rows: ITableDataRow[], formAction: string): Observable<ITableDataRow[]> {
     const payload = this.userPayload(rows);
-    return this.http.post<ITableDataRow[]>(`${this.env.local}${this.jobSearchParams.path}${this.jobSearchParams.removeRows}`, payload);
+    // Use the new config service for remove endpoint
+    const url = this.apiConfig.getJobSearchUrl(this.apiConfig.internal.jobSearch.removeRows);
+    return this.http.post<ITableDataRow[]>(url, payload);
   }
 
   // MCP Endpoint //
@@ -142,7 +170,9 @@ export class ApiService {
       input: req.input = "checking everything works....",
       model: 'gpt-4'
     }
-    console.log(request)
+    // To make an actual HTTP request for MCP:
+    // const url = this.apiConfig.buildInternalUrl('mcp', '/request');
+    // return this.http.post(url, request);
   }
 
   private userPayload(formRow: ITableDataRow | ITableDataRow[]): ITableDataRow {
