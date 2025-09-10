@@ -12,37 +12,42 @@ export class ApiConfigService {
     this.endpoints = this.buildEndpoints();
   }
 
-  // Specific URL builders for common use cases
-  getUsersUrl(endpoint?: string): string {
+  get internal() {
+    return this.endpoints.internal;
+  }
+
+  get external() {
+    return this.endpoints.external;
+  }
+
+  public getUsersUrl(endpoint?: string): string {
     return this.buildInternalUrl(this.internal.users.path, endpoint);
   }
 
-  getAuthUrl(endpoint?: string): string {
+  public getAuthUrl(endpoint?: string): string {
     return this.buildInternalUrl(this.internal.auth.path, endpoint);
   }
 
-  getJobSearchUrl(endpoint?: string): string {
+  public getJobSearchUrl(endpoint?: string): string {
     return this.buildInternalUrl(this.internal.jobSearch.path, endpoint);
   }
 
-  getCountriesUrl(useFilter?: keyof typeof this.external.geo.countries.filter): string {
+  public getCountriesUrl(useFilter?: keyof typeof this.external.geo.countries.filter): string {
     const config = this.external.geo.countries;
     const baseUrl = config.mockUrl && !environment.production ? config.mockUrl : config.baseUrl;
     const filter = useFilter ? config.filter[useFilter] : '';
     return `${baseUrl}${filter}`;
   }
 
-  getCitiesUrl(endpoint?: string): string {
+  public getCitiesUrl(endpoint?: string): string {
     const config = this.external.geo.cities;
     const path = endpoint || config.citiesList;
     return this.buildExternalUrl(config.baseUrl, path);
   }
 
-  getCompaniesUrl(endpoint?: string, params?: { q?: number; from?: number; to?: number }): string {
+  public getCompaniesUrl(endpoint?: string, params?: { q?: number; from?: number; to?: number }): string {
     const config = this.external.companies;
     let path = endpoint || config.all;
-
-    // Handle parameterized endpoints
     if (params) {
       if (params.q && path === config.filters.quantity) {
         path = path.replace(':q', params.q.toString());
@@ -51,18 +56,17 @@ export class ApiConfigService {
         path = path.replace(':from', params.from.toString()).replace(':to', params.to.toString());
       }
     }
-
     return this.buildExternalUrl(config.baseUrl, path);
   }
 
-  getTimelineUrl(params?: Record<string, any>): string {
+  public getTimelineUrl(params?: Record<string, any>): string {
     const config = this.external.timeline;
     const mergedParams = { ...config.params, ...params };
     return this.buildExternalUrl(config.baseUrl, undefined, mergedParams);
   }
 
   // Helper methods for building full URLs
-  buildInternalUrl(path: string, endpoint?: string): string {
+  public buildInternalUrl(path: string, endpoint?: string): string {
     const base = this.internal.base.endsWith('/')
       ? this.internal.base.slice(0, -1)
       : this.internal.base;
@@ -71,7 +75,7 @@ export class ApiConfigService {
     return `${base}/${fullPath}`;
   }
 
-  buildExternalUrl(baseUrl: string, path?: string, params?: Record<string, any>): string {
+  public buildExternalUrl(baseUrl: string, path?: string, params?: Record<string, any>): string {
     let url = baseUrl;
 
     if (path) {
@@ -98,10 +102,7 @@ export class ApiConfigService {
   private buildEndpoints(): ApiEndpoints {
     const isProduction = environment.production;
     const isDevelopment = !isProduction;
-
-    // Determine base URL for internal APIs
     const internalBase = this.getInternalApiBase();
-
     return {
       internal: {
         base: internalBase,
@@ -136,13 +137,7 @@ export class ApiConfigService {
         },
         geo: {
           countries: {
-            // Use mock API in development, real API in production (or vice versa based on your needs)
-            baseUrl: isProduction
-              ? "https://restcountries.com/v3.1/all"
-              : "https://restcountries.com/v3.1/all",
-            mockUrl: isDevelopment
-              ? "https://67ea3d9d34bcedd95f62aea6.mockapi.io/api/countries"
-              : undefined,
+            baseUrl: "https://67ea3d9d34bcedd95f62aea6.mockapi.io/api/countries",
             filter: {
               name: "?fields=name",
               maps: "?fields=maps",
@@ -151,7 +146,7 @@ export class ApiConfigService {
           },
           cities: {
             baseUrl: "https://countriesnow.space/api/v0.1/",
-            citiesList: 'countries/cities',
+            citiesList: "countries/cities",
             filter: "countries/population/cities/filter",
             israeli: "https://67e8e189bdcaa2b7f5b80458.mockapi.io/api/cities"
           }
@@ -169,26 +164,14 @@ export class ApiConfigService {
   }
 
   private getInternalApiBase(): string {
-    // In production (EC2), use relative path with nginx proxy
     if (environment.production) {
       return '/api';
     }
 
-    // In development, use the proxy or direct URL
     if (environment.apiUrls?.local) {
       return environment.apiUrls.local;
     }
 
-    // Fallback
     return '/api';
-  }
-
-  // Getter methods for easy access
-  get internal() {
-    return this.endpoints.internal;
-  }
-
-  get external() {
-    return this.endpoints.external;
   }
 }
