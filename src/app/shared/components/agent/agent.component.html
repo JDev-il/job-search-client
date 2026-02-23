@@ -1,14 +1,23 @@
 <ng-container>
-  @if (isAgent()) {
   <div class="agent-container">
-    <mat-icon (click)="closeAgent()">close</mat-icon>
+    <!-- <mat-icon (click)="closeAgent()">close</mat-icon> -->
     <img src="assets/images/ai-agent.svg" alt="AI Agent" />
+
     <div class="agent-flex-wrapper">
       <p style="font-weight: 600">
-        {{ userInputTitle() || "~ Dummy Agent Prompt ~" }}
+        {{ userInputTitle() }}
       </p>
-      <input type="search" />
+      @if (loading()) {
+      <mat-spinner></mat-spinner>
+      }
+      <mat-form-field class="example-full-width">
+        <mat-label>How may I assist you?</mat-label>
+        <textarea
+          matInput
+          placeholder="Tell me what you need..."
+          (input)="onUserInput($event)"
+        ></textarea>
+      </mat-form-field>
     </div>
   </div>
-  }
 </ng-container>

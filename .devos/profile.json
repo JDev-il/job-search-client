@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "repoRoot": "/Volumes/Media Drive/Development/Projects/job-search/job-search-app/job-search-client",
+  "detected": {
+    "framework": "angular",
+    "angularVersion": "18.2.0"
+  },
+  "tooling": {
+    "packageManager": "npm",
+    "commands": {
+      "build": "npm run build",
+      "test": "npm test"
+    }
+  },
+  "architecture": {
+    "angularStyle": "unknown"
+  },
+  "generatedAtIso": "2026-02-23T11:41:55.755Z"
+}

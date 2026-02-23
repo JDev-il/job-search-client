@@ -1,3 +1,4 @@
+
 export interface ApiEndpoints {
   internal: {
     base: string;
@@ -12,6 +13,7 @@ export interface ApiEndpoints {
       login: string;
       sign: string;
       verify: string;
+      openAiCredentials: string;
     };
     jobSearch: {
       path: string;
@@ -22,6 +24,10 @@ export interface ApiEndpoints {
       removeRow: string;
       removeRows: string;
     };
+    mcp: {
+      path: string;
+      request: string
+    },
   };
 
   external: {

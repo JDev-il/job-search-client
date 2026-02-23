@@ -2,6 +2,7 @@ export interface IMCPRequest {
   model: "gpt-3" | "gpt-4" | "gpt-4.1" | "gpt-5",
   input: string | undefined
 }
+
 export interface IMCPResponse {
   id: string,
   object: "response",
