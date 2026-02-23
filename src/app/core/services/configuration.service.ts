@@ -32,6 +32,10 @@ export class ApiConfigService {
     return this.buildInternalUrl(this.internal.jobSearch.path, endpoint);
   }
 
+  public getMcpUrl(endpoint: string): string {
+    return this.buildInternalUrl(this.internal.mcp.path, endpoint)
+  }
+
   public getCountriesUrl(useFilter?: keyof typeof this.external.geo.countries.filter): string {
     const config = this.external.geo.countries;
     const baseUrl = config.mockUrl && !environment.production ? config.mockUrl : config.baseUrl;
@@ -116,7 +120,8 @@ export class ApiConfigService {
           path: 'auth',
           login: '/login',
           sign: '/signtoken',
-          verify: '/verify'
+          verify: '/verify',
+          openAiCredentials: '/openai'
         },
         jobSearch: {
           path: 'jobsearch',
@@ -126,6 +131,10 @@ export class ApiConfigService {
           updateApplication: '/update',
           removeRow: '/removesingle',
           removeRows: '/removemultiple'
+        },
+        mcp: {
+          path: 'mcp',
+          request: '/request'
         }
       },
       external: {

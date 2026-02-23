@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap, take, throwError } from 'rxjs';
 import { ChartTimeLine, City, Country } from '../models/data.interface';
 import { ParamsOrder, ParamsOrderBy } from '../models/enum/params.enum';
 import { CountriesEnum, FormEnum } from '../models/enum/utils.enum';
-import { IMCPRequest } from '../models/mcp.inrerface';
+import { IMCPRequest, IMCPResponse } from '../models/mcp.inrerface';
 import { CityReqParams } from '../models/requests.intefrace';
 import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { ITableDataRow, ITableSaveRequest } from './../models/table.interface';
@@ -92,7 +92,7 @@ export class ApiService {
     return of(userLoginForm).pipe(
       switchMap(form => {
         const loginData = form.auth_token ? { ...form } : { email: form.email, password: form.password };
-        const headers = form.auth_token ? { Authorization: `Bearer ${form.auth_token}` } : null;
+        const headers = form.auth_token ? { authorization: `Bearer ${form.auth_token}` } : null;
 
         // Use the new config service for auth endpoint
         const url = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.login);
@@ -165,14 +165,22 @@ export class ApiService {
   }
 
   // MCP Endpoint //
-  public mcpRequest(req: IMCPRequest) {
-    const request: IMCPRequest = {
-      input: req.input = "checking everything works....",
-      model: 'gpt-4'
-    }
-    // To make an actual HTTP request for MCP:
-    // const url = this.apiConfig.buildInternalUrl('mcp', '/request');
-    // return this.http.post(url, request);
+  public mcpRequest(promptData: IMCPRequest, token: string | null): Observable<IMCPResponse> {
+    const credentialsUrl = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.openAiCredentials);
+    const authToken = { authorization: `Bearer ${token}` };
+    return this.http.post<{ credential: string }>(credentialsUrl, {}, { headers: authToken }).pipe(
+      take(1),
+      switchMap((res) => {
+        const credential = res.credential;
+        const headers = { 'x-api-key': credential };
+        const url = this.apiConfig.getMcpUrl(this.apiConfig.internal.mcp.request);
+        return this.http.post<IMCPResponse>(url, promptData, { headers });
+      }),
+      catchError((err) => {
+        console.error('MCP request failed', err);
+        return throwError(() => err);
+      })
+    );
   }
 
   private userPayload(formRow: ITableDataRow | ITableDataRow[]): ITableDataRow {
