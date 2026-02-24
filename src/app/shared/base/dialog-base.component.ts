@@ -11,6 +11,7 @@ import { GenericDialogComponent } from '../dialogs/generic-dialog/generic-dialog
 export class BaseDialogComponent {
   constructor(private dialog: MatDialog) { }
   public openDialog(dialogData: GenericDialogType): void {
+    (document.activeElement as HTMLElement)?.blur();
     this.dialog.open(GenericDialogComponent, <MatDialogConfig>{
       disableClose: true,
       backdropClass: 'generic-dialog-backdrop',

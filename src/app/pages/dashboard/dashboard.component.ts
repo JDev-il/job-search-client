@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, effect, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { throwError } from 'rxjs';
 import { NavBarLink } from '../../core/models/data.interface';
@@ -29,6 +30,7 @@ import { MarketChartComponent } from './../../shared/components/charts/market-ch
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent extends BaseDialogComponent {
+  private destroyRef = inject(DestroyRef);
   private localSortedTableDataResponse = signal<ITableDataRow[]>([]);
   private isDataExists = signal(false);
   public centralHubCvCounter = signal<number>(0);
@@ -85,7 +87,9 @@ export class DashboardComponent extends BaseDialogComponent {
   }
 
   private fetchUserData(): void {
-    this.dataService.authorizedUserDataRequest().subscribe({
+    this.dataService.authorizedUserDataRequest()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (data: ITableDataRow[]) => {
         this.isDataExists.set(this.dataService.isDataExists());
         const sortedData = data.slice().sort((a, b) =>
