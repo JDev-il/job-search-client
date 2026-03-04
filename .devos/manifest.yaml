@@ -1,0 +1,56 @@
+# DevOS Manifest
+# Generated: 2026-02-24T12:11:05.470Z
+# Stale after: 24h
+# Tip: review and correct sensitive / doNotTouch sections to add team knowledge.
+
+schemaVersion: 2
+repo: client
+repoRoot: /Volumes/Media Drive/Development/Projects/job-search/job-search-app/job-search-client
+scannedAt: 2026-02-24T12:11:05.470Z
+staleAfterHours: 24
+
+orientation:
+  description: This project was generated with Angular CLI version 18.2.10.
+  framework: angular@18.2.0
+  entryPoints:
+    - src/main.ts
+    - src/main.server.ts
+
+tooling:
+  packageManager: npm
+  commands:
+    build: npm run build
+    test: npm test
+
+currentFocus:
+  branch: main
+  recentlyChanged:
+    - src/app/pages/dashboard/dashboard.component.ts
+    - src/app/shared/base/dialog-base.component.ts
+    - .devos/profile.json
+    - src/app/core/models/api.interface.ts
+    - src/app/core/models/mcp.inrerface.ts
+    - src/app/core/services/api.service.ts
+    - src/app/core/services/configuration.service.ts
+    - src/app/core/services/mcp.service.ts
+    - src/app/shared/components/agent/agent.component.html
+    - src/app/shared/components/agent/agent.component.scss
+    - src/app/shared/components/agent/agent.component.ts
+    - src/environments/environment.prod.ts
+    - src/environments/environment.ts
+
+health:
+  missing:
+    - area: testing
+      reason: "No test runner config found (jest, vitest, mocha, karma)"
+    - area: linting
+      reason: No ESLint config found
+
+sensitive:
+  - path: src/app/core/guards/
+    reason: Route guard — may enforce access control
+    confidence: low
+
+doNotTouch:
+  - path: dist/
+    reason: Build output — do not edit manually
