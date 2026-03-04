@@ -29,11 +29,18 @@ export interface UserLogin {
   auth_token?: string | null;
 }
 
+export interface AuthorizedUser {
+  userId: number;
+  email: string;
+  iat?: number;
+  exp?: number;
+}
+
 export interface UserDataRequest {
   userId: number;
   email: string;
 }
 
 export type UserToken = { auth_token: string }
-export type AuthUserResponse = Pick<UserResponse, 'email' | 'password'>
+export type AuthUserResponse = Pick<UserResponse, 'email'>
 export type UserPayload = Pick<UserDataRequest, 'email' | 'userId'>;

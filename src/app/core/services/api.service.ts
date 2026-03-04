@@ -6,7 +6,7 @@ import { ParamsOrder, ParamsOrderBy } from '../models/enum/params.enum';
 import { CountriesEnum, FormEnum } from '../models/enum/utils.enum';
 import { IMCPRequest, IMCPResponse } from '../models/mcp.inrerface';
 import { CityReqParams } from '../models/requests.intefrace';
-import { UserLogin, UserResponse, UserToken } from '../models/users.interface';
+import { AuthorizedUser, UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { ITableDataRow, ITableSaveRequest } from './../models/table.interface';
 import { UserRequest } from './../models/users.interface';
 import { ApiConfigService } from './configuration.service';
@@ -106,10 +106,10 @@ export class ApiService {
     );
   }
 
-  public verifyTokenReq(token: string): Observable<UserLogin> {
+  public verifyTokenReq(token: string): Observable<AuthorizedUser> {
     // Use the new config service for auth verify endpoint
     const url = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.verify);
-    return this.http.get<UserLogin>(url, {
+    return this.http.get<AuthorizedUser>(url, {
       headers: { 'authorization': `Bearer ${token}` }
     });
   }

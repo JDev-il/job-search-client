@@ -5,7 +5,7 @@ import { ChartTimeLine, City, Country } from "../../core/models/data.interface";
 import { ErrorMessages, NotificationsStatusEnum, UserMessages } from "../../core/models/enum/messages.enum";
 import { CountriesEnum, FormEnum } from "../../core/models/enum/utils.enum";
 import { ITableDataRow, ITableSaveRequest } from "../../core/models/table.interface";
-import { AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from "../../core/models/users.interface";
+import { AuthorizedUser, AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from "../../core/models/users.interface";
 import { ApiService } from "../../core/services/api.service";
 import { AuthService } from './../../core/services/auth.service';
 import { StateService } from "./state.service";
@@ -56,7 +56,7 @@ export class DataService {
     );
   }
 
-  public verifyUserToken(): Observable<UserLogin> {
+  public verifyUserToken(): Observable<AuthorizedUser> {
     const token = this.authService.getToken();
     if (!token) {
       return throwError(() => new Error('Authentication token is required'));
