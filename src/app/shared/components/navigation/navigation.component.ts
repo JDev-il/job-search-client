@@ -32,7 +32,6 @@ import { AuthService } from './../../../core/services/auth.service';
   styleUrls: ['./navigation.component.scss', '../../style/custom-material.scss'],
 })
 export class NavigationComponent {
-  private navigationHistory: WritableSignal<{}> = signal({});
   public isWindowMobile: WritableSignal<boolean> = signal(false);
   public isDrawerOpened: WritableSignal<boolean> = signal(true);
   public icons: Record<string, SafeResourceUrl> = {};
@@ -43,7 +42,7 @@ export class NavigationComponent {
     }, { allowSignalWrites: true })
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     this.updateViewportWidth();
   }
