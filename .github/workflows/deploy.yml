@@ -1,0 +1,33 @@
+name: Deploy Client
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+
+            echo "Deploying client..."
+
+            cd /var/www/cv-tracker/client
+
+            git pull origin main
+
+            npm install
+
+            NODE_OPTIONS="--max-old-space-size=2048" npm run build
+
+            sudo systemctl reload nginx
+
+            echo "Deployment finished"
