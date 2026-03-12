@@ -47,8 +47,8 @@ export class DataService {
       tap((userData: UserResponse) => {
         this.stateService._dataUserResponse.set(userData);
       }),
-      switchMap((userResponse: UserResponse) => {
-        return this.generateUserToken(userResponse)
+      switchMap(() => {
+        return this.generateUserToken({ email: user.email, password: user.password })
           .pipe(
             take(1)
           );
@@ -64,7 +64,7 @@ export class DataService {
     return this.apiService.verifyTokenReq(token);
   }
 
-  public generateUserToken(user: UserResponse): Observable<UserToken> {
+  public generateUserToken(user: UserLogin): Observable<UserToken> {
     return this.apiService.generateTokenReq(user).pipe(
       take(1),
       catchError((err => {
