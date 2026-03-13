@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, effect, ViewEncapsulation } from '@angular/core';
-import { ChartType, NgApexchartsModule } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexFill, ApexMarkers, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartType, NgApexchartsModule } from 'ng-apexcharts';
 import { IChartOptions } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
 import { DataService } from '../../../services/data.service';

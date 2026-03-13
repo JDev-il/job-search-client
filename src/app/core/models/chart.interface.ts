@@ -11,7 +11,7 @@ import {
 } from 'ng-apexcharts';
 
 export type IChartOptions = {
-  series: ApexAxisChartSeries | ApexNonAxisChartSeries;
+  series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;

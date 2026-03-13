@@ -1,5 +1,5 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, DestroyRef, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -17,17 +17,16 @@ import { DataService } from '../../../services/data.service';
     selector: 'app-add-row',
     host: { 'data-component-id': 'add-row' },
     imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatAutocompleteModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        MatDatepickerModule,
-        StringSanitizerPipe,
-        CommonModule
-    ],
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatAutocompleteModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    StringSanitizerPipe
+],
     templateUrl: './add-row.component.html',
     styleUrl: '../styles/form-style.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,13 +10,12 @@ import { StringSanitizerPipe } from '../../../shared/pipes/string-sanitizer.pipe
 @Component({
     selector: 'app-cv-counter',
     imports: [
-        MatButtonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatDatepickerModule,
-        MatFormFieldModule,
-        CommonModule
-    ],
+    MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatFormFieldModule
+],
     providers: [StringSanitizerPipe],
     templateUrl: './cv-counter.component.html',
     styleUrl: './cv-counter.component.scss',

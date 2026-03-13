@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -17,18 +17,17 @@ import { DataService } from './../../../services/data.service';
     selector: 'app-edit-row',
     host: { 'data-component-id': 'edit-row' },
     imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatAutocompleteModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        MatDatepickerModule,
-        StringSanitizerPipe,
-        MatIcon,
-        CommonModule,
-    ],
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatAutocompleteModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    StringSanitizerPipe,
+    MatIcon
+],
     templateUrl: './edit-row.component.html',
     styleUrls: ['../styles/form-style.scss', './edit-row.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
