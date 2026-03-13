@@ -15,21 +15,20 @@ import { UIService } from '../../services/ui.service';
 import { AuthService } from './../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-navigation',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    RouterLink,
-    MatListModule,
-    MatIconModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatSidenavModule,
-    MatTooltipModule,
-    CommonModule
-  ],
-  templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.scss', '../../style/custom-material.scss'],
+    selector: 'app-navigation',
+    imports: [
+        MatButtonModule,
+        RouterLink,
+        MatListModule,
+        MatIconModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatSidenavModule,
+        MatTooltipModule,
+        CommonModule
+    ],
+    templateUrl: './navigation.component.html',
+    styleUrls: ['./navigation.component.scss', '../../style/custom-material.scss']
 })
 export class NavigationComponent {
   public isWindowMobile: WritableSignal<boolean> = signal(false);

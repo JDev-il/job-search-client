@@ -16,18 +16,17 @@ import { UIService } from '../../shared/services/ui.service';
 import { MarketChartComponent } from './../../shared/components/charts/market-chart/market-chart.component';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
-  imports: [
-    ProgressChartComponent,
-    StatusChartComponent,
-    MarketChartComponent,
-    FaderDirective,
-    FilterComponent,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrl: './dashboard.component.scss',
+    imports: [
+        ProgressChartComponent,
+        StatusChartComponent,
+        MarketChartComponent,
+        FaderDirective,
+        FilterComponent,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent extends BaseDialogComponent {
   private destroyRef = inject(DestroyRef);

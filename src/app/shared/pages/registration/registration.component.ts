@@ -22,21 +22,20 @@ import { FormsService } from '../../services/forms.service';
 import { RoutingService } from '../../services/routing.service';
 
 @Component({
-  selector: 'app-registration',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MaterialDirective,
-    HoverDirective,
-    SpinnerComponent,
-    SnackBarDirective
-  ],
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss', '../../style/form-layout.style.scss']
+    selector: 'app-registration',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MaterialDirective,
+        HoverDirective,
+        SpinnerComponent,
+        SnackBarDirective
+    ],
+    templateUrl: './registration.component.html',
+    styleUrls: ['./registration.component.scss', '../../style/form-layout.style.scss']
 })
 export class RegistrationComponent extends BaseDialogComponent {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;

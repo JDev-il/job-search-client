@@ -14,25 +14,24 @@ import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
 import { DataService } from './../../../services/data.service';
 
 @Component({
-  selector: 'app-edit-row',
-  host: { 'data-component-id': 'edit-row' },
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatAutocompleteModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-    StringSanitizerPipe,
-    MatIcon,
-    CommonModule,
-  ],
-  templateUrl: './edit-row.component.html',
-  styleUrls: ['../styles/form-style.scss', './edit-row.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-edit-row',
+    host: { 'data-component-id': 'edit-row' },
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatAutocompleteModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        StringSanitizerPipe,
+        MatIcon,
+        CommonModule,
+    ],
+    templateUrl: './edit-row.component.html',
+    styleUrls: ['../styles/form-style.scss', './edit-row.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditRowComponent extends FormsBaseComponent {
 

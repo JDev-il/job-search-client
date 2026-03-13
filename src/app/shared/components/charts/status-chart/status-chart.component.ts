@@ -7,12 +7,11 @@ import { ChartsService } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
 
 @Component({
-  selector: 'app-status-chart',
-  standalone: true,
-  imports: [NgApexchartsModule],
-  templateUrl: './status-chart.component.html',
-  styleUrls: ['./status-chart.component.scss', '../../../style/charts.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-status-chart',
+    imports: [NgApexchartsModule],
+    templateUrl: './status-chart.component.html',
+    styleUrls: ['./status-chart.component.scss', '../../../style/charts.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class StatusChartComponent extends ChartsBaseComponent {
   constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {

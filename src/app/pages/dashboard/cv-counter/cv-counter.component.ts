@@ -8,19 +8,19 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 import { StringSanitizerPipe } from '../../../shared/pipes/string-sanitizer.pipe';
 
 @Component({
-  selector: 'app-cv-counter',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    CommonModule],
-  providers: [StringSanitizerPipe],
-  templateUrl: './cv-counter.component.html',
-  styleUrl: './cv-counter.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-cv-counter',
+    imports: [
+        MatButtonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatDatepickerModule,
+        MatFormFieldModule,
+        CommonModule
+    ],
+    providers: [StringSanitizerPipe],
+    templateUrl: './cv-counter.component.html',
+    styleUrl: './cv-counter.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvCounterComponent {
   @Input() counter = signal<number>(0);

@@ -9,12 +9,11 @@ import { DataService } from '../../services/data.service';
 import { RoutingService } from '../../services/routing.service';
 
 @Component({
-  selector: 'app-layout',
-  standalone: true,
-  imports: [RouterOutlet, NavigationComponent, SpinnerComponent, AgentComponent],
-  templateUrl: './layout.component.html',
-  styleUrl: './layout.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-layout',
+    imports: [RouterOutlet, NavigationComponent, SpinnerComponent, AgentComponent],
+    templateUrl: './layout.component.html',
+    styleUrl: './layout.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutComponent extends HelperBaseComponent {
   constructor(dataService: DataService, authService: AuthService, routingService: RoutingService) {

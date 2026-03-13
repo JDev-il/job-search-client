@@ -14,24 +14,23 @@ import { StringSanitizerPipe } from '../../../pipes/string-sanitizer.pipe';
 import { DataService } from '../../../services/data.service';
 
 @Component({
-  selector: 'app-add-row',
-  host: { 'data-component-id': 'add-row' },
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatAutocompleteModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-    StringSanitizerPipe,
-    CommonModule
-  ],
-  templateUrl: './add-row.component.html',
-  styleUrl: '../styles/form-style.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-add-row',
+    host: { 'data-component-id': 'add-row' },
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatAutocompleteModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        StringSanitizerPipe,
+        CommonModule
+    ],
+    templateUrl: './add-row.component.html',
+    styleUrl: '../styles/form-style.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddRowComponent extends FormsBaseComponent {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;

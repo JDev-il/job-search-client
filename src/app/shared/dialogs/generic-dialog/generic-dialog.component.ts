@@ -16,12 +16,11 @@ import { RoutingService } from '../../services/routing.service';
 import { TableDataFormRow } from './../../../core/models/forms.interface';
 
 @Component({
-  selector: 'app-generic-dialog',
-  standalone: true,
-  imports: [CommonModule, MatButtonModule, AddRowComponent, EditRowComponent, FirstToUpperCasePipe],
-  templateUrl: './generic-dialog.component.html',
-  styleUrl: './generic-dialog.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-generic-dialog',
+    imports: [CommonModule, MatButtonModule, AddRowComponent, EditRowComponent, FirstToUpperCasePipe],
+    templateUrl: './generic-dialog.component.html',
+    styleUrl: './generic-dialog.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenericDialogComponent {
   public dataType: WritableSignal<GenericDialogType> = signal<GenericDialogType>({});

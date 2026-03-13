@@ -8,13 +8,12 @@ import { UIService } from '../../../services/ui.service';
 import { ChartsService } from './../../../services/charts.service';
 
 @Component({
-  selector: 'app-progress-chart',
-  standalone: true,
-  imports: [NgApexchartsModule],
-  templateUrl: './progress-chart.component.html',
-  styleUrls: ['./progress-chart.component.scss', '../../../style/charts.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-progress-chart',
+    imports: [NgApexchartsModule],
+    templateUrl: './progress-chart.component.html',
+    styleUrls: ['./progress-chart.component.scss', '../../../style/charts.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class ProgressChartComponent extends ChartsBaseComponent {
   constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {

@@ -23,26 +23,25 @@ import { ITableDataRow } from './../../core/models/table.interface';
 import { UIService } from './../../shared/services/ui.service';
 
 @Component({
-  selector: 'app-activity-table',
-  standalone: true,
-  templateUrl: './activity-table.component.html',
-  styleUrl: './activity-table.component.scss',
-  imports: [
-    SpinnerComponent,
-    FaderDirective,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatInputModule,
-    MatTooltipModule,
-    CommonModule,
-  ],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-activity-table',
+    templateUrl: './activity-table.component.html',
+    styleUrl: './activity-table.component.scss',
+    imports: [
+        SpinnerComponent,
+        FaderDirective,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatInputModule,
+        MatTooltipModule,
+        CommonModule,
+    ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityTableComponent extends BaseDialogComponent {
   private destroy$ = new Subject<void>();

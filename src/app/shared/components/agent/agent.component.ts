@@ -5,12 +5,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { IMCPRequest } from '../../../core/models/mcp.inrerface';
 import { MCPService } from '../../../core/services/mcp.service';
 @Component({
-  selector: 'app-agent',
-  standalone: true,
-  imports: [MatInputModule, MatFormFieldModule, MatInput, MatProgressSpinner],
-  templateUrl: './agent.component.html',
-  styleUrls: ['./agent.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-agent',
+    imports: [MatInputModule, MatFormFieldModule, MatInput, MatProgressSpinner],
+    templateUrl: './agent.component.html',
+    styleUrls: ['./agent.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgentComponent {
   private mcpService = inject(MCPService);

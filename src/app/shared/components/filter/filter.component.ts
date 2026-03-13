@@ -2,13 +2,11 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Writab
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 @Component({
-  selector: 'app-filter',
-  standalone: true,
-  imports: [MatButtonToggleModule, MatCheckboxModule],
-  templateUrl: './filter.component.html',
-  styleUrl: './filter.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-
+    selector: 'app-filter',
+    imports: [MatButtonToggleModule, MatCheckboxModule],
+    templateUrl: './filter.component.html',
+    styleUrl: './filter.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterComponent {
   @Output() filterValue: EventEmitter<number> = new EventEmitter();

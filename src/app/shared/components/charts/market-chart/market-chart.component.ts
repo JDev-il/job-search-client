@@ -6,12 +6,11 @@ import { ChartsService } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
 
 @Component({
-  selector: 'app-market-chart',
-  standalone: true,
-  imports: [NgApexchartsModule],
-  templateUrl: './market-chart.component.html',
-  styleUrls: ['./market-chart.component.scss', '../../../style/charts.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-market-chart',
+    imports: [NgApexchartsModule],
+    templateUrl: './market-chart.component.html',
+    styleUrls: ['./market-chart.component.scss', '../../../style/charts.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class MarketChartComponent extends ChartsBaseComponent {
   constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {

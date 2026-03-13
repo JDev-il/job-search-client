@@ -17,23 +17,21 @@ import { SnackBarDirective } from '../../directives/snackbar.directive';
 import { DataService } from '../../services/data.service';
 import { RoutingService } from '../../services/routing.service';
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports:
-    [
-      FormsModule,
-      ReactiveFormsModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatButtonModule,
-      MaterialDirective,
-      HoverDirective,
-      SpinnerComponent,
-      SnackBarDirective
+    selector: 'app-login',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MaterialDirective,
+        HoverDirective,
+        SpinnerComponent,
+        SnackBarDirective
     ],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss', '../../style/form-layout.style.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss', '../../style/form-layout.style.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent extends BaseDialogComponent {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
