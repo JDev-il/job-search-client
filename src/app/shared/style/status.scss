@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // Base Colors
 $awaiting-response: #a4c2f4;
 $hr-reached-back: #ff9375;
@@ -16,8 +18,9 @@ $archived: #434343;
 $received-contract: #93c47d;
 
 @function is-color-match($color1, $color2) {
-  @return red($color1) == red($color2) and green($color1) == green($color2) and
-    blue($color1) == blue($color2);
+  @return color.channel($color1, "red", $space: rgb) == color.channel($color2, "red", $space: rgb) and
+    color.channel($color1, "green", $space: rgb) == color.channel($color2, "green", $space: rgb) and
+    color.channel($color1, "blue", $space: rgb) == color.channel($color2, "blue", $space: rgb);
 }
 
 // Function to generate accent colors dynamically
@@ -29,14 +32,12 @@ $received-contract: #93c47d;
   @if is-color-match($color, #20124d) or is-color-match($color, #434343) {
     @return #ffffffa3;
   }
-  @if lightness($color) > 10% {
+  @if color.channel($color, "lightness", $space: hsl) > 10% {
     $lightness-adjust: -35%;
   } @else {
     $lightness-adjust: -20%; // Prevents excessive lightening
   }
-  $new-lightness: lightness($color) + $lightness-adjust;
-  $new-saturation: saturation($color) + $saturation-adjust;
-  @return hsl(hue($color), $new-saturation, $new-lightness);
+  @return color.adjust($color, $lightness: $lightness-adjust, $saturation: $saturation-adjust, $space: hsl);
 }
 
 // Generate accent colors dynamically
@@ -60,7 +61,7 @@ $received-contract-accent: generate-accent($received-contract);
 @mixin row-color($status, $bg-color, $accent-color) {
   .#{$status} {
     background-color: $bg-color !important;
-    border-color: darken($bg-color, 10%);
+    border-color: color.adjust($bg-color, $lightness: -10%);
     > * {
       color: $accent-color !important;
       .combined-cell-content {

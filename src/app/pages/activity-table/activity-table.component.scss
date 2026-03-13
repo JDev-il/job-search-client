@@ -1,4 +1,4 @@
-@import "../../shared/style/status.scss";
+@use "../../shared/style/status.scss";
 .activity-table-wrapper {
   position: relative;
   margin: auto;
@@ -42,15 +42,15 @@
         }
         button {
           transition: all 0.08s ease-in;
+          min-width: fit-content;
+          border-radius: 0.6em;
+          background-color: var(--main-element);
+          color: #ffeee7;
           &:not(:first-child) {
             @media screen and (min-width: 992px) {
               margin-left: 30px;
             }
           }
-          min-width: fit-content;
-          border-radius: 0.6em;
-          background-color: var(--main-element);
-          color: #ffeee7;
           &:disabled {
             background-color: #08122680;
             color: #d0cbd652;
@@ -167,10 +167,10 @@
             padding: 0;
             align-items: center;
             bottom: 8px;
+            margin: auto;
             @media screen and (max-width: 992px) {
               bottom: 0;
             }
-            margin: auto;
 
             .sub-header {
               position: absolute;

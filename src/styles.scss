@@ -1,5 +1,5 @@
-@import "./app/shared/style/custom-material.scss";
-@import "./app/shared/style/variables.scss";
+@use "./app/shared/style/custom-material.scss";
+@use "./app/shared/style/variables.scss";
 
 @function reduceFontSize($font) {
   @return $font * 0.85; // Reduce by 15%
