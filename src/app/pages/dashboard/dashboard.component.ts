@@ -52,7 +52,7 @@ export class DashboardComponent extends BaseDialogComponent {
       }
       this.currentTabIndex.set(this.dataService.currentTabIndex());
       this.status.set(this.dataService.statusPreviewsList);
-    }, { allowSignalWrites: true });
+    });
   }
 
   public tabIndexSetter(link: NavBarLink) {

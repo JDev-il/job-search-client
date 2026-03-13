@@ -28,7 +28,7 @@ export class AgentComponent {
       } else {
         this.loading.set(false);
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   public onUserInput(ev: Event): void {

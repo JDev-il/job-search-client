@@ -93,7 +93,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
           this.dataSource.data = this.dataService.lastSortedDataSource();
         }
       }
-    }, { allowSignalWrites: true });
+    });
     this.destroyRef.onDestroy(() => {
       this.dataService.markAsDestroyed();
       this.dataService.resetDestroyed();

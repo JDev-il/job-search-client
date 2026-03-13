@@ -20,7 +20,7 @@ export class ChartsBaseComponent {
   constructor(protected cd: ChangeDetectorRef, protected uiService: UIService, protected chartsService: ChartsService, protected dataService: DataService) {
     effect(() => {
       this.areChartsReady();
-    }, { allowSignalWrites: true })
+    })
   }
 
   private areChartsReady(): void {

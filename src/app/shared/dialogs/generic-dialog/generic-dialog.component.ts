@@ -47,7 +47,7 @@ export class GenericDialogComponent {
           this.routingService.toDashboard();
         }
       });
-    }, { allowSignalWrites: true });
+    });
     this.destroyRef.onDestroy(() => {
       if (this.shouldSkipDestroyActions) {
         return;

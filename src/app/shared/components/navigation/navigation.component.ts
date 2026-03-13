@@ -38,7 +38,7 @@ export class NavigationComponent {
     this.updateViewportWidth();
     effect(() => {
       this.isWindowMobile() ? this.isDrawerOpened.set(false) : this.isDrawerOpened.set(true);
-    }, { allowSignalWrites: true })
+    })
   }
 
   @HostListener('window:resize')

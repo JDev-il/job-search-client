@@ -58,7 +58,7 @@ export class FormsBaseComponent {
         const countries = this.filterCountries(this.countryNameField());
         this.filteredCountries.set(countries);
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   protected onSelect(data: string, type: FieldType): void {
