@@ -22,7 +22,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
       this.chartsService.progressChartBuilder();
       this.progressChartOptions.set(this.progressChart());
       this.cd.markForCheck();
-    }, { allowSignalWrites: true })
+    })
   }
 
   public progressChart(): IChartOptions {

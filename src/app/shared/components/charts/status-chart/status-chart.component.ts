@@ -19,7 +19,7 @@ export class StatusChartComponent extends ChartsBaseComponent {
     effect(() => {
       this.chartsService.statusChartBuilder();
       this.statusChartOptions.set(this.statusChart());
-    }, { allowSignalWrites: true })
+    })
   }
 
   public statusChart(): IChartOptions {
