@@ -1,6 +1,6 @@
 import { computed, Injectable, signal, WritableSignal } from "@angular/core";
 import { catchError, Observable, of, switchMap, take, tap, throwError } from "rxjs";
-import { ChartDataType1, ChartDataType2 } from "../../core/models/chart.interface";
+import { ChartDataType1 } from "../../core/models/chart.interface";
 import { ChartTimeLine, City, Country } from "../../core/models/data.interface";
 import { ErrorMessages, NotificationsStatusEnum, UserMessages } from "../../core/models/enum/messages.enum";
 import { CountriesEnum, FormEnum } from "../../core/models/enum/utils.enum";
@@ -26,6 +26,7 @@ export class DataService {
   public readonly buttonText = computed(() => this.stateService._buttonText());
   public readonly progressChart = computed(() => this.stateService._progressChart());
   public readonly statusChart = computed(() => this.stateService._statusChart());
+  public readonly marketChart = computed(() => this.stateService._marketChart());
   public readonly daysFilter = computed(() => this.stateService._daysFilter());
   public readonly suggestions = computed(() => this.stateService._agentSuggestions());;
   public readonly criteria = computed(() => this.stateService._jobSearchCriterias());
@@ -180,10 +181,13 @@ export class DataService {
   }
 
   public setProgressChart(chartData: ChartDataType1[]) {
-    this.stateService._progressChart.set(chartData)
+    this.stateService._progressChart.set(chartData);
   }
-  public setStatusChart(chartData: ChartDataType2[]) {
-    this.stateService._statusChart.set(chartData)
+  public setStatusChart(chartData: ChartDataType1[]) {
+    this.stateService._statusChart.set(chartData);
+  }
+  public setMarketChart(chartData: ChartDataType1[]) {
+    this.stateService._marketChart.set(chartData);
   }
 
 

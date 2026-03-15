@@ -1,12 +1,14 @@
+<ng-container>
+  <div class="dashboard-filters">
+    <app-filter
+      (filterValue)="filterDataByDays($event)"
+      [currentDayFilter]="filteredDays()"
+      [isDataLength]="isData"
+    ></app-filter>
+  </div>
+</ng-container>
 <div class="dashboard-container" fader>
   <div class="dashboard-components-wrapper">
-    <ng-container>
-      <app-filter
-        (filterValue)="filterDataByDays($event)"
-        [currentDayFilter]="filteredDays()"
-        [isDataLength]="isData"
-      ></app-filter>
-    </ng-container>
     <div class="charts">
       <div class="top-area-charts">
         <ng-container>

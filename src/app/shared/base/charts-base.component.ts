@@ -11,6 +11,7 @@ import { UIService } from "../services/ui.service";
 export class ChartsBaseComponent {
   public progressChartOptions = signal<IChartOptions>({} as IChartOptions);
   public statusChartOptions = signal<IChartOptions>({} as IChartOptions);
+  public marketChartOptions = signal<IChartOptions>({} as IChartOptions);
   public isChartsReady = {
     isProgressChart: signal<boolean>(false),
     isStatusChart: signal<boolean>(false),
@@ -24,8 +25,8 @@ export class ChartsBaseComponent {
   }
 
   private areChartsReady(): void {
-    this.dataService.progressChart().length > 0 ? this.isChartsReady.isProgressChart.set(true) : this.isChartsReady.isProgressChart.set(false);
-    this.dataService.statusChart().length > 0 ? this.isChartsReady.isStatusChart.set(true) : this.isChartsReady.isStatusChart.set(false);
-    // this.stateService.progressChart().length ? this.isChartsReady.isProgressChart.set(true);
+    this.isChartsReady.isProgressChart.set(this.dataService.progressChart().length > 0);
+    this.isChartsReady.isStatusChart.set(this.dataService.statusChart().length > 0);
+    this.isChartsReady.isMarketChart.set(this.dataService.marketChart().length > 0);
   }
 }

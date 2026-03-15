@@ -14,7 +14,7 @@ import { MCPService } from '../../../core/services/mcp.service';
 export class AgentComponent {
   private mcpService = inject(MCPService);
   private debounceTimeout = signal<number | null>(null);
-  public isAgent = signal(true);
+  public isAgent = signal(false);
   public userInputTitle = signal('');
   public userInput = signal('');
   public loading = signal(false);
