@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChartDataType1, ChartDataType2 } from '../../core/models/chart.interface';
+import { ChartDataType1 } from '../../core/models/chart.interface';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { DataService } from './data.service';
 
@@ -16,30 +16,39 @@ export class ChartsService {
     }
     const chartData = Array.from(dateCountMap.entries())
       .map(([x, y]) => ({ x, y }))
-      .sort((a, b) => new Date(a.x).getTime() - new Date(b.x).getTime()) as ChartDataType1[];
-    this.dataService.setProgressChart(chartData);// Ensure progressChart is public/protected as WritableSignal
+      .sort((a, b) => b.y - a.y) as ChartDataType1[];
+    this.dataService.setProgressChart(chartData);
   }
 
   public statusChartBuilder(): void {
-    const statusChartData = this.chartDataSlicer() as ITableDataRow[];
-    const quantityMap = new Map<string, Set<string>>();
-    const chartData: ChartDataType2[] = [];
+    const statusChartData = this.chartDataSlicer();
+    const statusCountMap = new Map<string, number>();
     for (const row of statusChartData) {
-      const company = row.companyName;
-      const status = row.status;
-      if (!quantityMap.has(company)) {
-        quantityMap.set(company, new Set());
-      }
-      quantityMap.get(company)!.add(status);
+      const status = row.status.toString();
+      statusCountMap.set(status, (statusCountMap.get(status) || 0) + 1);
     }
-    quantityMap.forEach((statusSet, company) => {
-      const statusesArray = Array.from(statusSet);
-      chartData.push({
-        x: company,
-        y: statusesArray,
-      });
-    });
-    this.dataService.setStatusChart(chartData); // Ensure statusChart is public/protected as WritableSignal
+    const chartData = Array.from(statusCountMap.entries())
+      .map(([x, y]) => ({ x, y }))
+      .sort((a, b) => b.y - a.y) as ChartDataType1[];
+    this.dataService.setStatusChart(chartData);
+  }
+
+  public marketChartBuilder(): void {
+    const data = this.chartDataSlicer();
+    const dateCountMap = new Map<string, number>();
+    for (const row of data) {
+      if (!row.applicationDate) continue;
+      const date = new Date(row.applicationDate.toString()).toLocaleDateString('en-GB');
+      dateCountMap.set(date, (dateCountMap.get(date) || 0) + 1);
+    }
+    const chartData = Array.from(dateCountMap.entries())
+      .map(([x, y]) => ({ x, y }))
+      .sort((a, b) => {
+        const [da, ma, ya] = a.x.split('/').map(Number);
+        const [db, mb, yb] = b.x.split('/').map(Number);
+        return new Date(ya, ma - 1, da).getTime() - new Date(yb, mb - 1, db).getTime();
+      }) as ChartDataType1[];
+    this.dataService.setMarketChart(chartData);
   }
 
   private chartDataSlicer(): ITableDataRow[] {

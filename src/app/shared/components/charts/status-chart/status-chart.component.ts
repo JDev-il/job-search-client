@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, effect, ViewEncapsulation } from '@angular/core';
 import { ApexAxisChartSeries, ApexChart, ApexFill, ApexMarkers, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartType, NgApexchartsModule } from 'ng-apexcharts';
-import { IChartOptions } from '../../../../core/models/chart.interface';
+import { ChartDataType1, IChartOptions } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
 import { DataService } from '../../../services/data.service';
 import { ChartsService } from './../../../services/charts.service';
@@ -23,22 +23,25 @@ export class StatusChartComponent extends ChartsBaseComponent {
   }
 
   public statusChart(): IChartOptions {
+    const data = this.dataService.statusChart() as ChartDataType1[];
+    const maxY = data.length ? Math.max(...data.map(d => d.y)) + 1 : 10;
     return {
       series: [
         {
-          name: 'Sent',
-          data: this.dataService.statusChart()
+          name: 'Applications',
+          data
         }
       ] as ApexAxisChartSeries,
       chart: {
-        type: 'donut' as ChartType,
+        width: '100%',
+        height: 340,
+        type: 'bar' as ChartType,
         selection: {
           enabled: false
         },
-        parentHeightOffset: 100,
         zoom: {
           enabled: true,
-          type: 'xy' as const,
+          type: 'x' as const,
           autoScaleYaxis: true,
           allowMouseWheelZoom: false,
         },
@@ -73,19 +76,15 @@ export class StatusChartComponent extends ChartsBaseComponent {
         dropShadow: {
           enabled: true,
           opacity: .3,
-          color: "#081226",
+          color: "#006B54",
           top: 5,
         }
       } as ApexChart,
       xaxis: {
         type: 'category',
-        categories: this.dataService.statusChart().map(row => row.x),
         labels: {
-          style: {
-            // fontSize: '10px'
-          }
+          style: {}
         },
-        min: 2,
         tooltip: {
           enabled: true
         },
@@ -95,39 +94,33 @@ export class StatusChartComponent extends ChartsBaseComponent {
           position: 'bottom',
         },
         title: {
-          text: "Curent Status"
+          text: "Applications"
         },
-        max: 10,
+        max: maxY,
       } as ApexYAxis,
       title: {
-        text: 'Statuses',
+        text: 'Status Distribution',
         align: 'center',
-        style: {
-          // fontWeight: 300,
-          // fontSize: '18px',
-          // color: '#081226'
-        }
+        style: {}
       } as ApexTitleSubtitle,
       fill: {
-        type: '',
-        // gradient: {
-        //   shade: 'dark',
-        //   type: '',
-        //   colorStops: [
-        //     [
-        //       // { offset: 15, color: '#FF6C80', opacity: 1 },
-        //       // { offset: 0, color: '#533E83', opacity: 1 }
-        //     ]
-        //   ]
-        // }
+        type: 'gradient',
+        gradient: {
+          shade: 'dark',
+          type: 'vertical',
+          colorStops: [
+            [
+              { offset: 0, color: '#00C49A', opacity: 1 },
+              { offset: 100, color: '#006B54', opacity: 1 }
+            ]
+          ]
+        }
       } as ApexFill,
       markers: {
         size: 6,
-        colors: ["#077AFF"],
+        colors: ["#00C49A"],
         strokeWidth: 0,
-        hover: {
-          size: 8,
-        },
+        hover: { size: 8 },
         shape: 'sparkle'
       } as ApexMarkers,
     } as IChartOptions

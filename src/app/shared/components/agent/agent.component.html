@@ -1,23 +1,25 @@
-<ng-container>
-  <div class="agent-container">
-    <!-- <mat-icon (click)="closeAgent()">close</mat-icon> -->
-    <img src="assets/images/ai-agent.svg" alt="AI Agent" />
+@if (isAgent()) {
+  <ng-container>
+    <div class="agent-container">
+      <!-- <mat-icon (click)="closeAgent()">close</mat-icon> -->
+      <img src="assets/images/ai-agent.svg" alt="AI Agent" />
 
-    <div class="agent-flex-wrapper">
-      <p style="font-weight: 600">
-        {{ userInputTitle() }}
-      </p>
-      @if (loading()) {
-      <mat-spinner></mat-spinner>
-      }
-      <mat-form-field class="example-full-width">
-        <mat-label>How may I assist you?</mat-label>
-        <textarea
-          matInput
-          placeholder="Tell me what you need..."
-          (input)="onUserInput($event)"
-        ></textarea>
-      </mat-form-field>
+      <div class="agent-flex-wrapper">
+        <p style="font-weight: 600">
+          {{ userInputTitle() }}
+        </p>
+        @if (loading()) {
+        <mat-spinner></mat-spinner>
+        }
+        <mat-form-field class="example-full-width">
+          <mat-label>How may I assist you?</mat-label>
+          <textarea
+            matInput
+            placeholder="Tell me what you need..."
+            (input)="onUserInput($event)"
+          ></textarea>
+        </mat-form-field>
+      </div>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
+}

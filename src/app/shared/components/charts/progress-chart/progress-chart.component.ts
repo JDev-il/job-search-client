@@ -26,20 +26,22 @@ export class ProgressChartComponent extends ChartsBaseComponent {
   }
 
   public progressChart(): IChartOptions {
+    const data = this.dataService.progressChart() as ChartDataType1[];
+    const maxY = data.length ? Math.max(...data.map(d => d.y)) + 1 : 10;
     return {
       series: [
         {
           name: 'Sent',
-          data: this.dataService.progressChart() as ChartDataType1[]
+          data
         }
       ] as ApexAxisChartSeries,
       chart: {
-        width: 640,
+        width: '100%',
+        height: 340,
         type: "bar" as ChartType,
         selection: {
           enabled: false
         },
-        parentHeightOffset: 100,
         zoom: {
           enabled: true,
           type: 'x' as const,
@@ -78,7 +80,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
         dropShadow: {
           enabled: true,
           opacity: .3,
-          color: "#081226",
+          color: "#0A3D8F",
           top: 5,
         }
       } as ApexChart,
@@ -101,7 +103,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
         title: {
           text: "CV Sent"
         },
-        max: 10,
+        max: maxY,
       } as ApexYAxis,
       title: {
         text: 'CV Sending Rate',
@@ -119,9 +121,8 @@ export class ProgressChartComponent extends ChartsBaseComponent {
           type: 'vertical',
           colorStops: [
             [
-              // { offset: 15, color: '#FF6C80', opacity: 1 },
-              // { offset: 0, color: '#533E83', opacity: 1 }
-              { offset: 0, color: '#2C2043', opacity: 1 }
+              { offset: 0, color: '#077AFF', opacity: 1 },
+              { offset: 100, color: '#0A3D8F', opacity: 1 }
             ]
           ]
         }
@@ -130,9 +131,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
         size: 6,
         colors: ["#077AFF"],
         strokeWidth: 0,
-        hover: {
-          size: 8,
-        },
+        hover: { size: 8 },
         shape: 'sparkle'
       } as ApexMarkers,
     } as IChartOptions
