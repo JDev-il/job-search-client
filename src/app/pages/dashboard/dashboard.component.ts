@@ -1,3 +1,4 @@
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,6 +26,8 @@ import { MarketChartComponent } from './../../shared/components/charts/market-ch
         MarketChartComponent,
         FaderDirective,
         FilterComponent,
+      CdkDropList,
+      CdkDrag,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -32,6 +35,26 @@ export class DashboardComponent extends BaseDialogComponent {
   private destroyRef = inject(DestroyRef);
   private localSortedTableDataResponse = signal<ITableDataRow[]>([]);
   private isDataExists = signal(false);
+
+  private readonly CHART_ORDER_KEY = 'chart-order';
+  private readonly DEFAULT_ORDER = ['progress', 'status', 'market'];
+  public chartOrder = signal<string[]>(this.loadChartOrder());
+
+  private loadChartOrder(): string[] {
+    const saved = localStorage.getItem(this.CHART_ORDER_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved) as string[];
+      if (parsed.length === this.DEFAULT_ORDER.length) return parsed;
+    }
+    return [...this.DEFAULT_ORDER];
+  }
+
+  public onChartDrop(event: CdkDragDrop<string[]>): void {
+    const order = this.chartOrder().slice();
+    moveItemInArray(order, event.previousIndex, event.currentIndex);
+    this.chartOrder.set(order);
+    localStorage.setItem(this.CHART_ORDER_KEY, JSON.stringify(order));
+  }
   public centralHubCvCounter = signal<number>(0);
   public tabIndex = signal<number>(0);
   public currentTabIndex = signal<number>(0);

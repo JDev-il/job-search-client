@@ -34,7 +34,7 @@
               "@angular/material/prebuilt-themes/cyan-orange.css",
               "src/styles.scss"
             ],
-            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
+            "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
@@ -106,7 +106,7 @@
               "@angular/material/prebuilt-themes/cyan-orange.css",
               "src/styles.scss"
             ],
-            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
+            "scripts": []
           }
         }
       }

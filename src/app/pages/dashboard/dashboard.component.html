@@ -7,22 +7,26 @@
     ></app-filter>
   </div>
 </ng-container>
-<div class="dashboard-container" fader>
+<ng-container>
+  <div class="dashboard-container" fader>
   <div class="dashboard-components-wrapper">
-    <div class="charts">
-      <div class="top-area-charts">
-        <ng-container>
-          <app-progress-chart></app-progress-chart>
-        </ng-container>
-        <ng-container>
-          <app-status-chart></app-status-chart>
-        </ng-container>
-      </div>
-      <div class="bottom-area-charts">
-        <ng-container>
-          <app-market-chart></app-market-chart>
-        </ng-container>
-      </div>
+    <div
+      class="charts"
+      cdkDropList
+      (cdkDropListDropped)="onChartDrop($event)"
+    >
+      @for (chart of chartOrder(); track chart) {
+        <div class="chart-drag-item" cdkDrag>
+          @switch (chart) {
+            @case ('progress') { <app-progress-chart></app-progress-chart> }
+            @case ('status') { <app-status-chart></app-status-chart> }
+            @case ('market') { <app-market-chart></app-market-chart> }
+          }
+        </div>
+      }
     </div>
   </div>
 </div>
+
+</ng-container>
+
