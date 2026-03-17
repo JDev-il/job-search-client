@@ -11,21 +11,21 @@ const PIPELINE_REJECTED = new Set<StatusEnum>([StatusEnum.REJECTED, StatusEnum.D
 const PIPELINE_CLOSED = new Set<StatusEnum>([StatusEnum.DECIDED_TO_PASS, StatusEnum.LOW_SALARY, StatusEnum.ARCHIVED]);
 
 export const STATUS_BUCKET_COLORS: Record<string, string> = {
-  [StatusEnum.AWAITING_RESPONSE]: '#6B7280',
-  [StatusEnum.REAPPLIED]: '#6B7280',
-  [StatusEnum.HR_REACHED_BACK]: '#077AFF',
-  [StatusEnum.AWAITING_INTERVIEW]: '#3B82F6',
-  [StatusEnum.INTERVIEW_SCHEDULED]: '#2563EB',
-  [StatusEnum.AWAITING_RESULTS]: '#1D4ED8',
-  [StatusEnum.AWAITING_DECISION]: '#4B9FFF',
-  [StatusEnum.PASSED]: '#00C49A',
-  [StatusEnum.RECEIVED_CONTRACT]: '#059669',
-  [StatusEnum.REJECTED]: '#EF4444',
-  [StatusEnum.DID_NOT_PASS_HR]: '#DC2626',
-  [StatusEnum.PROBABLY_NOT]: '#F87171',
-  [StatusEnum.DECIDED_TO_PASS]: '#FF8C42',
-  [StatusEnum.LOW_SALARY]: '#F97316',
-  [StatusEnum.ARCHIVED]: '#94A3B8',
+  [StatusEnum.AWAITING_RESPONSE]: '#a4c2f4',
+  [StatusEnum.REAPPLIED]: '#20124d',
+  [StatusEnum.HR_REACHED_BACK]: '#ff9375',
+  [StatusEnum.AWAITING_INTERVIEW]: '#a2c4c9',
+  [StatusEnum.INTERVIEW_SCHEDULED]: '#3d78d8',
+  [StatusEnum.AWAITING_RESULTS]: '#ffcb31',
+  [StatusEnum.AWAITING_DECISION]: '#2193de',
+  [StatusEnum.PASSED]: '#91f3cc',
+  [StatusEnum.RECEIVED_CONTRACT]: '#93c47d',
+  [StatusEnum.REJECTED]: '#e06666',
+  [StatusEnum.DID_NOT_PASS_HR]: '#ff0100',
+  [StatusEnum.PROBABLY_NOT]: '#f6b26b',
+  [StatusEnum.DECIDED_TO_PASS]: '#dd7e6b',
+  [StatusEnum.LOW_SALARY]: '#a64d79',
+  [StatusEnum.ARCHIVED]: '#434343',
 };
 
 export const BUCKET_COLORS: Record<string, string> = {
@@ -66,34 +66,49 @@ export class ChartsService {
   public statusChartBuilder(): void {
     const statusChartData = this.chartDataSlicer();
     const statusCountMap = new Map<string, number>();
+    const statusCompaniesMap = new Map<string, string[]>();
     for (const row of statusChartData) {
       const status = row.status.toString();
       statusCountMap.set(status, (statusCountMap.get(status) || 0) + 1);
+      if (!statusCompaniesMap.has(status)) statusCompaniesMap.set(status, []);
+      statusCompaniesMap.get(status)!.push(row.companyName);
     }
     const chartData = Array.from(statusCountMap.entries())
       .map(([x, y]) => ({ x, y }))
       .sort((a, b) => b.y - a.y) as ChartDataType1[];
     this.dataService.setStatusChart(chartData);
+    this.dataService.setStatusChartCompanies(Object.fromEntries(statusCompaniesMap));
   }
 
   public marketChartBuilder(): void {
     const data = this.chartDataSlicer();
-    const weekCountMap = new Map<string, number>();
+    const BUCKET_NAMES = ['Pending', 'Active', 'Passed', 'Rejected', 'Decided to pass'];
+    const weekMap = new Map<string, Record<string, number>>();
     for (const row of data) {
       if (!row.applicationDate) continue;
       const d = new Date(row.applicationDate.toString());
       const weekStart = new Date(d);
       weekStart.setDate(d.getDate() - d.getDay() + 1);
       const key = weekStart.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
-      weekCountMap.set(key, (weekCountMap.get(key) || 0) + 1);
+      if (!weekMap.has(key)) {
+        weekMap.set(key, { 'Pending': 0, 'Active': 0, 'Passed': 0, 'Rejected': 0, 'Decided to pass': 0 });
+      }
+      const week = weekMap.get(key)!;
+      if (PIPELINE_PENDING.has(row.status)) week['Pending']++;
+      else if (PIPELINE_ACTIVE.has(row.status)) week['Active']++;
+      else if (PIPELINE_PASSED.has(row.status)) week['Passed']++;
+      else if (PIPELINE_REJECTED.has(row.status)) week['Rejected']++;
+      else if (PIPELINE_CLOSED.has(row.status)) week['Decided to pass']++;
     }
-    const chartData = Array.from(weekCountMap.entries())
-      .map(([x, y]) => ({ x, y }))
-      .sort((a, b) => {
-        const parse = (s: string) => new Date(s.split(' ').reverse().join(' '));
-        return parse(a.x).getTime() - parse(b.x).getTime();
-      }) as ChartDataType1[];
-    this.dataService.setMarketChart(chartData);
+    const labels = Array.from(weekMap.keys()).sort((a, b) => {
+      const parse = (s: string) => new Date(s.split(' ').reverse().join(' '));
+      return parse(a).getTime() - parse(b).getTime();
+    });
+    const buckets: Record<string, number[]> = {};
+    for (const b of BUCKET_NAMES) {
+      buckets[b] = labels.map(w => weekMap.get(w)![b]);
+    }
+    this.dataService.setMarketChart({ labels, buckets });
   }
 
   private chartDataSlicer(): ITableDataRow[] {

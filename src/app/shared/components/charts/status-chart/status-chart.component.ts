@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, signal, ViewEncapsulation } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartDataType1 } from '../../../../core/models/chart.interface';
@@ -6,6 +6,15 @@ import { ChartsBaseComponent } from '../../../base/charts-base.component';
 import { DataService } from '../../../services/data.service';
 import { ChartsService, STATUS_BUCKET_COLORS } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
+
+interface StatusTooltipState {
+  status: string;
+  count: string;
+  color: string;
+  companies: string[];
+  x: number;
+  y: number;
+}
 
 @Component({
   selector: 'app-status-chart',
@@ -16,14 +25,33 @@ import { UIService } from './../../../services/ui.service';
   encapsulation: ViewEncapsulation.None
 })
 export class StatusChartComponent extends ChartsBaseComponent {
+  public tooltipState = signal<StatusTooltipState | null>(null);
+
   constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {
     super(cd, uiService, chartsService, dataService);
     effect(() => {
       this.chartsService.statusChartBuilder();
       this.statusChartOptions.set(this.statusChart());
       this.cd.markForCheck();
-    })
+    });
   }
+
+  private tooltipHandler = (context: { chart: any; tooltip: any }): void => {
+    const { chart, tooltip } = context;
+    if (tooltip.opacity === 0) { this.tooltipState.set(null); return; }
+
+    const status = tooltip.dataPoints?.[0]?.label as string;
+    const count = tooltip.dataPoints?.[0]?.formattedValue ?? '';
+    const companies = this.dataService.statusChartCompanies()[status] ?? [];
+    const color = STATUS_BUCKET_COLORS[status] ?? '#6B7280';
+    const rect = chart.canvas.getBoundingClientRect();
+
+    this.tooltipState.set({
+      status, count, color, companies,
+      x: rect.left + tooltip.caretX + 12,
+      y: rect.top + tooltip.caretY - 12 + window.scrollY,
+    });
+  };
 
   public statusChart(): ChartConfiguration {
     const data = this.dataService.statusChart() as ChartDataType1[];
@@ -52,6 +80,7 @@ export class StatusChartComponent extends ChartsBaseComponent {
         plugins: {
           title: { display: true, text: 'Status Breakdown', align: 'center' },
           legend: { display: false },
+          tooltip: { enabled: false, external: this.tooltipHandler },
         },
         maintainAspectRatio: false,
       }

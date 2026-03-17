@@ -12,4 +12,18 @@
     <h3>No Data</h3>
   </div>
   }
+
+  @if (tooltipState()) {
+  <div class="status-tooltip"
+    [style.left.px]="tooltipState()!.x"
+    [style.top.px]="tooltipState()!.y">
+    <div class="status-tooltip__header">
+      <span class="status-tooltip__dot" [style.background]="tooltipState()!.color"></span>
+      {{ tooltipState()!.status }} ({{ tooltipState()!.count }})
+    </div>
+    @for (company of tooltipState()!.companies; track company) {
+      <div class="status-tooltip__company">{{ company }}</div>
+    }
+  </div>
+  }
 </div>

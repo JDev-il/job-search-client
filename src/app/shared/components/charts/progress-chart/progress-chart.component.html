@@ -12,4 +12,19 @@
     <h3>No Data</h3>
   </div>
   }
+
+  @if (tooltipState()) {
+  <div class="progress-tooltip"
+    [style.left.px]="tooltipState()!.x"
+    [style.top.px]="tooltipState()!.y">
+    <div class="progress-tooltip__header">{{ tooltipState()!.bucket }} ({{ tooltipState()!.count }})</div>
+    @for (entry of tooltipState()!.entries; track entry.name) {
+      <div class="progress-tooltip__row">
+        <span class="progress-tooltip__dot" [style.background]="statusColors[entry.status]"></span>
+        <span>{{ entry.name }}</span>
+        <span class="progress-tooltip__status">{{ entry.status }}</span>
+      </div>
+    }
+  </div>
+  }
 </div>

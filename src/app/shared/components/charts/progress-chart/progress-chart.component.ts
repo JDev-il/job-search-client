@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, effect, inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, signal, ViewEncapsulation } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartDataType1 } from '../../../../core/models/chart.interface';
@@ -7,7 +7,15 @@ import { DataService } from '../../../services/data.service';
 import { UIService } from '../../../services/ui.service';
 import { BUCKET_COLORS, ChartsService, STATUS_BUCKET_COLORS } from './../../../services/charts.service';
 
-const TOOLTIP_ID = 'progress-chart-tooltip';
+interface ProgressTooltipEntry { name: string; status: string; }
+
+interface ProgressTooltipState {
+  bucket: string;
+  count: string;
+  entries: ProgressTooltipEntry[];
+  x: number;
+  y: number;
+}
 
 @Component({
   selector: 'app-progress-chart',
@@ -18,7 +26,8 @@ const TOOLTIP_ID = 'progress-chart-tooltip';
   encapsulation: ViewEncapsulation.None
 })
 export class ProgressChartComponent extends ChartsBaseComponent {
-  private destroyRef = inject(DestroyRef);
+  public tooltipState = signal<ProgressTooltipState | null>(null);
+  public statusColors = STATUS_BUCKET_COLORS;
 
   constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {
     super(cd, uiService, chartsService, dataService);
@@ -27,49 +36,22 @@ export class ProgressChartComponent extends ChartsBaseComponent {
       this.progressChartOptions.set(this.progressChart());
       this.cd.markForCheck();
     });
-    this.destroyRef.onDestroy(() => document.getElementById(TOOLTIP_ID)?.remove());
   }
 
   private tooltipHandler = (context: { chart: any; tooltip: any }): void => {
     const { chart, tooltip } = context;
-    let el = document.getElementById(TOOLTIP_ID) as HTMLDivElement | null;
-    if (!el) {
-      el = document.createElement('div');
-      el.id = TOOLTIP_ID;
-      document.body.appendChild(el);
-    }
-    if (tooltip.opacity === 0) { el.style.opacity = '0'; return; }
+    if (tooltip.opacity === 0) { this.tooltipState.set(null); return; }
 
     const bucket = tooltip.dataPoints?.[0]?.label as string;
     const count = tooltip.dataPoints?.[0]?.formattedValue ?? '';
     const entries = this.dataService.progressChartCompanies()[bucket] ?? [];
-
-    el.innerHTML = `
-      <div style="font-weight:600;margin-bottom:4px">${bucket} (${count})</div>
-      ${entries.map(e => `
-        <div style="display:flex;align-items:center;gap:6px;padding:2px 0">
-          <span style="width:8px;height:8px;border-radius:50%;background:${STATUS_BUCKET_COLORS[e.status] ?? '#6B7280'};flex-shrink:0"></span>
-          <span>${e.name}</span>
-        </div>`).join('')}
-    `;
-
     const rect = chart.canvas.getBoundingClientRect();
-    el.style.cssText = `
-      position:fixed;
-      opacity:1;
-      pointer-events:none;
-      background:#1e293b;
-      color:#f1f5f9;
-      border-radius:6px;
-      padding:10px 14px;
-      font-size:13px;
-      line-height:1.5;
-      box-shadow:0 4px 16px -2px #0008;
-      z-index:9999;
-      left:${rect.left + tooltip.caretX + 12}px;
-      top:${rect.top + tooltip.caretY - 12 + window.scrollY}px;
-      transition:opacity 0.1s;
-    `;
+
+    this.tooltipState.set({
+      bucket, count, entries,
+      x: rect.left + tooltip.caretX + 12,
+      y: rect.top + tooltip.caretY - 12 + window.scrollY,
+    });
   };
 
   public progressChart(): ChartConfiguration {
@@ -90,10 +72,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
         plugins: {
           title: { display: true, text: 'Applications by Status', align: 'center' },
           legend: { display: true, position: 'bottom' },
-          tooltip: {
-            enabled: false,
-            external: this.tooltipHandler,
-          }
+          tooltip: { enabled: false, external: this.tooltipHandler },
         },
         maintainAspectRatio: false,
       }
