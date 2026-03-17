@@ -160,6 +160,8 @@ $client-theme: mat.define-theme(
   width: 144px;
   pointer-events: none;
   left: 18px;
+  visibility: visible !important;
+  background: #e5e5ea;
   @media screen and (max-width: 1280px) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;

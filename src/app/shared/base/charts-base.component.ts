@@ -27,6 +27,6 @@ export class ChartsBaseComponent {
   private areChartsReady(): void {
     this.isChartsReady.isProgressChart.set(this.dataService.progressChart().length > 0);
     this.isChartsReady.isStatusChart.set(this.dataService.statusChart().length > 0);
-    this.isChartsReady.isMarketChart.set(this.dataService.marketChart().length > 0);
+    this.isChartsReady.isMarketChart.set(this.dataService.marketChart().labels.length > 0);
   }
 }

@@ -1,0 +1,31 @@
+.status-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  box-shadow: 0 4px 16px -2px #0008;
+  z-index: 9999;
+
+  &__header {
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  &__company {
+    padding: 2px 0 2px 16px;
+  }
+}

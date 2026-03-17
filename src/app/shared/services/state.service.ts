@@ -1,6 +1,6 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ChartDataType1 } from '../../core/models/chart.interface';
+import { ChartDataType1, MarketChartData } from '../../core/models/chart.interface';
 import { AgentSuggestion } from './../../core/models/agent.interface';
 import { ChartTimeLine, City, Country } from './../../core/models/data.interface';
 import { JobSearchCriteria } from './../../core/models/job-search.interface';
@@ -38,7 +38,8 @@ export class StateService {
   public _progressChart = signal<ChartDataType1[]>([]);
   public _progressChartCompanies = signal<Record<string, Array<{name: string; status: string}>>>({});
   public _statusChart = signal<ChartDataType1[]>([]);
-  public _marketChart = signal<ChartDataType1[]>([]);
+  public _statusChartCompanies = signal<Record<string, string[]>>({});
+  public _marketChart = signal<MarketChartData>({ labels: [], buckets: {} });
 
   // AI Agent & MCP
   public _agentSuggestions = signal([] as AgentSuggestion[]);
