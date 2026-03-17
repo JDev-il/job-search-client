@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, effect, signal } from "@angular/core";
-import { IChartOptions } from "../../core/models/chart.interface";
+import { ChartConfiguration } from "chart.js";
 import { ChartsService } from "../services/charts.service";
 import { DataService } from "../services/data.service";
 import { UIService } from "../services/ui.service";
@@ -9,9 +9,9 @@ import { UIService } from "../services/ui.service";
   template: ''
 })
 export class ChartsBaseComponent {
-  public progressChartOptions = signal<IChartOptions>({} as IChartOptions);
-  public statusChartOptions = signal<IChartOptions>({} as IChartOptions);
-  public marketChartOptions = signal<IChartOptions>({} as IChartOptions);
+  public progressChartOptions = signal<ChartConfiguration>({} as ChartConfiguration);
+  public statusChartOptions = signal<ChartConfiguration>({} as ChartConfiguration);
+  public marketChartOptions = signal<ChartConfiguration>({} as ChartConfiguration);
   public isChartsReady = {
     isProgressChart: signal<boolean>(false),
     isStatusChart: signal<boolean>(false),

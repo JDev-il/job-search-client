@@ -36,6 +36,7 @@ export class StateService {
 
   // Charts Data
   public _progressChart = signal<ChartDataType1[]>([]);
+  public _progressChartCompanies = signal<Record<string, Array<{name: string; status: string}>>>({});
   public _statusChart = signal<ChartDataType1[]>([]);
   public _marketChart = signal<ChartDataType1[]>([]);
 

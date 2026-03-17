@@ -25,6 +25,7 @@ export class DataService {
   public readonly globalFilteredData = computed(() => this.stateService._globalFilteredChartData());
   public readonly buttonText = computed(() => this.stateService._buttonText());
   public readonly progressChart = computed(() => this.stateService._progressChart());
+  public readonly progressChartCompanies = computed(() => this.stateService._progressChartCompanies());
   public readonly statusChart = computed(() => this.stateService._statusChart());
   public readonly marketChart = computed(() => this.stateService._marketChart());
   public readonly daysFilter = computed(() => this.stateService._daysFilter());
@@ -182,6 +183,9 @@ export class DataService {
 
   public setProgressChart(chartData: ChartDataType1[]) {
     this.stateService._progressChart.set(chartData);
+  }
+  public setProgressChartCompanies(companies: Record<string, Array<{name: string; status: string}>>) {
+    this.stateService._progressChartCompanies.set(companies);
   }
   public setStatusChart(chartData: ChartDataType1[]) {
     this.stateService._statusChart.set(chartData);

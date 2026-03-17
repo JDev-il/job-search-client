@@ -1,17 +1,19 @@
-import { ChangeDetectorRef, Component, effect, ViewEncapsulation } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexFill, ApexMarkers, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartType, NgApexchartsModule } from 'ng-apexcharts';
-import { ChartDataType1, IChartOptions } from '../../../../core/models/chart.interface';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ViewEncapsulation } from '@angular/core';
+import { ChartConfiguration } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartDataType1 } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
 import { DataService } from '../../../services/data.service';
-import { ChartsService } from './../../../services/charts.service';
+import { ChartsService, STATUS_BUCKET_COLORS } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
 
 @Component({
-    selector: 'app-status-chart',
-    imports: [NgApexchartsModule],
-    templateUrl: './status-chart.component.html',
-    styleUrls: ['./status-chart.component.scss', '../../../style/charts.scss'],
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-status-chart',
+  imports: [BaseChartDirective],
+  templateUrl: './status-chart.component.html',
+  styleUrls: ['./status-chart.component.scss', '../../../style/charts.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class StatusChartComponent extends ChartsBaseComponent {
   constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {
@@ -19,110 +21,40 @@ export class StatusChartComponent extends ChartsBaseComponent {
     effect(() => {
       this.chartsService.statusChartBuilder();
       this.statusChartOptions.set(this.statusChart());
+      this.cd.markForCheck();
     })
   }
 
-  public statusChart(): IChartOptions {
+  public statusChart(): ChartConfiguration {
     const data = this.dataService.statusChart() as ChartDataType1[];
-    const maxY = data.length ? Math.max(...data.map(d => d.y)) + 1 : 10;
+    const maxX = data.length ? Math.max(...data.map(d => d.y)) + 1 : 10;
     return {
-      series: [
-        {
-          name: 'Applications',
-          data
-        }
-      ] as ApexAxisChartSeries,
-      chart: {
-        width: '100%',
-        height: 340,
-        type: 'bar' as ChartType,
-        selection: {
-          enabled: false
-        },
-        zoom: {
-          enabled: true,
-          type: 'x' as const,
-          autoScaleYaxis: true,
-          allowMouseWheelZoom: false,
-        },
-        toolbar: {
-          show: true,
-          tools: {
-            download: false,
-            zoom: false,
-            zoomin: true,
-            zoomout: true,
-            pan: true,
-            reset: true,
+      type: 'bar',
+      data: {
+        labels: data.map(d => d.x),
+        datasets: [{
+          label: 'Applications',
+          data: data.map(d => d.y),
+          backgroundColor: data.map(d => STATUS_BUCKET_COLORS[d.x] ?? '#6B7280'),
+          hoverBackgroundColor: data.map(d => (STATUS_BUCKET_COLORS[d.x] ?? '#6B7280') + 'CC'),
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        scales: {
+          x: {
+            max: maxX,
+            ticks: { stepSize: 1 },
+            title: { display: true, text: 'Applications' }
           }
         },
-        tooltip: {
-          enabled: true,
-          shared: false,
-          followCursor: true,
-          intersect: false,
-          inverseOrder: false,
-          hideEmptySeries: false,
-          fillSeriesColor: false,
-        } as ApexTooltip,
-        animations: {
-          dynamicAnimation: {
-            enabled: true,
-            speed: 220
-          },
-          speed: 800,
-          enabled: true
+        plugins: {
+          title: { display: true, text: 'Status Breakdown', align: 'center' },
+          legend: { display: false },
         },
-        dropShadow: {
-          enabled: true,
-          opacity: .3,
-          color: "#006B54",
-          top: 5,
-        }
-      } as ApexChart,
-      xaxis: {
-        type: 'category',
-        labels: {
-          style: {}
-        },
-        tooltip: {
-          enabled: true
-        },
-      } as ApexXAxis,
-      yaxis: {
-        crosshairs: {
-          position: 'bottom',
-        },
-        title: {
-          text: "Applications"
-        },
-        max: maxY,
-      } as ApexYAxis,
-      title: {
-        text: 'Status Distribution',
-        align: 'center',
-        style: {}
-      } as ApexTitleSubtitle,
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shade: 'dark',
-          type: 'vertical',
-          colorStops: [
-            [
-              { offset: 0, color: '#00C49A', opacity: 1 },
-              { offset: 100, color: '#006B54', opacity: 1 }
-            ]
-          ]
-        }
-      } as ApexFill,
-      markers: {
-        size: 6,
-        colors: ["#00C49A"],
-        strokeWidth: 0,
-        hover: { size: 8 },
-        shape: 'sparkle'
-      } as ApexMarkers,
-    } as IChartOptions
+        maintainAspectRatio: false,
+      }
+    } as ChartConfiguration;
   }
 }

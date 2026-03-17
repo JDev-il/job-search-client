@@ -1,16 +1,11 @@
 <div class="chart-generic-container">
   @if (isChartsReady.isStatusChart()) {
   <div class="chart-data">
-    <apx-chart
-      [series]="statusChartOptions().series"
-      [chart]="statusChartOptions().chart"
-      [title]="statusChartOptions().title"
-      [fill]="statusChartOptions().fill"
-      [markers]="statusChartOptions().markers"
-      [yaxis]="statusChartOptions().yaxis"
-      [xaxis]="statusChartOptions().xaxis"
-      [tooltip]="statusChartOptions().tooltip"
-    ></apx-chart>
+    <canvas baseChart
+      [type]="statusChartOptions().type"
+      [data]="statusChartOptions().data"
+      [options]="statusChartOptions().options"
+    ></canvas>
   </div>
   } @else {
   <div class="chart-no-data">

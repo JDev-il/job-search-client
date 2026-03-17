@@ -2,17 +2,11 @@
   <div class="market-chart-container">
     @if (isChartsReady.isMarketChart()) {
     <div class="chart-data">
-      <apx-chart
-        [series]="marketChartOptions().series"
-        [chart]="marketChartOptions().chart"
-        [title]="marketChartOptions().title"
-        [fill]="marketChartOptions().fill"
-        [stroke]="marketChartOptions().stroke"
-        [markers]="marketChartOptions().markers"
-        [yaxis]="marketChartOptions().yaxis"
-        [xaxis]="marketChartOptions().xaxis"
-        [tooltip]="marketChartOptions().tooltip"
-      ></apx-chart>
+      <canvas baseChart
+        [type]="marketChartOptions().type"
+        [data]="marketChartOptions().data"
+        [options]="marketChartOptions().options"
+      ></canvas>
     </div>
     } @else {
     <div class="chart-no-data">

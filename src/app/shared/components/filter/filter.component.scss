@@ -6,6 +6,7 @@
   max-width: fit-content;
   display: flex;
   align-items: center;
+  backdrop-filter: blur(6px);
   .mat-button-toggle-checked {
     background-color: var(--main-element) !important;
     color: #fff;

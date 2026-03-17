@@ -1,26 +1,6 @@
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexFill,
-  ApexMarkers,
-  ApexStroke,
-  ApexTitleSubtitle,
-  ApexTooltip,
-  ApexXAxis,
-  ApexYAxis
-} from 'ng-apexcharts';
+import { ChartConfiguration } from 'chart.js';
 
-export type IChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  yaxis: ApexYAxis;
-  fill: ApexFill;
-  markers: ApexMarkers;
-  stroke: ApexStroke;
-  title: ApexTitleSubtitle;
-  tooltip: ApexTooltip;
-}
+export type IChartOptions = ChartConfiguration;
 
 export interface ChartDataType1 { // x = date string, y = cv quantity, z = data?
   x: string; y: number
