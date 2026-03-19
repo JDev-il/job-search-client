@@ -9,13 +9,13 @@
 }
 .chart-data {
   position: relative;
-  height: 280px;
+  height: 300px;
   canvas {
     border-radius: 0.6rem;
     box-shadow: 0 0 8px -2px #08122680;
   }
   @media screen and (max-width: 992px) {
-    max-height: 150px;
-    margin: 15px;
+    height: 180px;
+    margin: 12px;
   }
 }

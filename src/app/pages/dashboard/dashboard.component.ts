@@ -17,19 +17,19 @@ import { UIService } from '../../shared/services/ui.service';
 import { MarketChartComponent } from './../../shared/components/charts/market-chart/market-chart.component';
 
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrl: './dashboard.component.scss',
-    imports: [
-        ProgressChartComponent,
-        StatusChartComponent,
-        MarketChartComponent,
-        FaderDirective,
-        FilterComponent,
-      CdkDropList,
-      CdkDrag,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.scss',
+  imports: [
+    ProgressChartComponent,
+    StatusChartComponent,
+    MarketChartComponent,
+    FaderDirective,
+    FilterComponent,
+    CdkDropList,
+    CdkDrag,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent extends BaseDialogComponent {
   private destroyRef = inject(DestroyRef);
@@ -49,12 +49,6 @@ export class DashboardComponent extends BaseDialogComponent {
     return [...this.DEFAULT_ORDER];
   }
 
-  public onChartDrop(event: CdkDragDrop<string[]>): void {
-    const order = this.chartOrder().slice();
-    moveItemInArray(order, event.previousIndex, event.currentIndex);
-    this.chartOrder.set(order);
-    localStorage.setItem(this.CHART_ORDER_KEY, JSON.stringify(order));
-  }
   public centralHubCvCounter = signal<number>(0);
   public tabIndex = signal<number>(0);
   public currentTabIndex = signal<number>(0);
@@ -76,6 +70,13 @@ export class DashboardComponent extends BaseDialogComponent {
       this.currentTabIndex.set(this.dataService.currentTabIndex());
       this.status.set(this.dataService.statusPreviewsList);
     });
+  }
+
+  public onChartDrop(event: CdkDragDrop<string[]>): void {
+    const order = this.chartOrder().slice();
+    moveItemInArray(order, event.previousIndex, event.currentIndex);
+    this.chartOrder.set(order);
+    localStorage.setItem(this.CHART_ORDER_KEY, JSON.stringify(order));
   }
 
   public tabIndexSetter(link: NavBarLink) {
@@ -112,15 +113,15 @@ export class DashboardComponent extends BaseDialogComponent {
     this.dataService.authorizedUserDataRequest()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-      next: (data: ITableDataRow[]) => {
-        this.isDataExists.set(this.dataService.isDataExists());
-        const sortedData = data.slice().sort((a, b) =>
-          new Date(b.applicationDate!.toString()).getTime() -
-          new Date(a.applicationDate!.toString()).getTime()
-        );
-        this.localSortedTableDataResponse.set(sortedData);
-      },
-      error: () => throwError(() => console.error('Error with data rendering'))
-    });
+        next: (data: ITableDataRow[]) => {
+          this.isDataExists.set(this.dataService.isDataExists());
+          const sortedData = data.slice().sort((a, b) =>
+            new Date(b.applicationDate!.toString()).getTime() -
+            new Date(a.applicationDate!.toString()).getTime()
+          );
+          this.localSortedTableDataResponse.set(sortedData);
+        },
+        error: () => throwError(() => console.error('Error with data rendering'))
+      });
   }
 }

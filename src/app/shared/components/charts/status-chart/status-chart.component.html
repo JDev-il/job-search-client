@@ -21,7 +21,7 @@
       <span class="status-tooltip__dot" [style.background]="tooltipState()!.color"></span>
       {{ tooltipState()!.status }} ({{ tooltipState()!.count }})
     </div>
-    @for (company of tooltipState()!.companies; track company) {
+    @for (company of tooltipState()!.companies; track $index) {
       <div class="status-tooltip__company">{{ company }}</div>
     }
   </div>
