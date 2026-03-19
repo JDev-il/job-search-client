@@ -4,10 +4,8 @@ import { BaseChartDirective } from 'ng2-charts';
 import { MarketChartData } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
 import { DataService } from '../../../services/data.service';
-import { BUCKET_COLORS, ChartsService } from './../../../services/charts.service';
+import { BUCKET_COLORS, BUCKET_NAMES, ChartsService } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
-
-const BUCKET_NAMES = ['Pending', 'Active', 'Passed', 'Rejected', 'Decided to pass'];
 
 @Component({
   selector: 'app-market-chart',
@@ -33,14 +31,19 @@ export class MarketChartComponent extends ChartsBaseComponent {
       type: 'bar',
       data: {
         labels: data.labels,
-        datasets: BUCKET_NAMES
-          .filter(b => (data.buckets[b] ?? []).some(v => v > 0))
-          .map(b => ({
-            label: b,
-            data: data.buckets[b] ?? [],
-            backgroundColor: BUCKET_COLORS[b],
-            stack: 'outcomes',
-          }))
+        datasets: BUCKET_NAMES.reduce<unknown[]>((acc, b) => {
+          const values = data.buckets[b] ?? [];
+          const isValue = values.some(val => val > 0);
+          if (isValue) {
+            acc.push({
+              label: b,
+              data: values,
+              backgroundColor: BUCKET_COLORS[b],
+              stack: 'outcomes'
+            })
+          }
+          return acc
+        }, [])
       },
       options: {
         responsive: true,

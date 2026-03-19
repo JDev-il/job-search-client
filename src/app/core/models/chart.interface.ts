@@ -12,3 +12,25 @@ export interface MarketChartData {
   labels: string[];
   buckets: Record<string, number[]>;
 }
+
+export interface ProgressTooltipState {
+  bucket: string;
+  count: string;
+  entries: ProgressTooltipEntry[];
+  x: number;
+  y: number;
+}
+
+export interface StatusTooltipState {
+  status: string;
+  count: string;
+  color: string;
+  companies: string[];
+  x: number;
+  y: number;
+}
+
+interface ProgressTooltipEntry {
+  name: string;
+  status: string;
+}

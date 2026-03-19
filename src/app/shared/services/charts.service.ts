@@ -4,11 +4,11 @@ import { StatusEnum } from '../../core/models/enum/table-data.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { DataService } from './data.service';
 
-const PIPELINE_PENDING = new Set<StatusEnum>([StatusEnum.AWAITING_RESPONSE, StatusEnum.REAPPLIED]);
-const PIPELINE_ACTIVE = new Set<StatusEnum>([StatusEnum.HR_REACHED_BACK, StatusEnum.AWAITING_INTERVIEW, StatusEnum.INTERVIEW_SCHEDULED, StatusEnum.AWAITING_RESULTS, StatusEnum.AWAITING_DECISION]);
-const PIPELINE_PASSED = new Set<StatusEnum>([StatusEnum.PASSED, StatusEnum.RECEIVED_CONTRACT]);
-const PIPELINE_REJECTED = new Set<StatusEnum>([StatusEnum.REJECTED, StatusEnum.DID_NOT_PASS_HR, StatusEnum.PROBABLY_NOT]);
-const PIPELINE_CLOSED = new Set<StatusEnum>([StatusEnum.DECIDED_TO_PASS, StatusEnum.LOW_SALARY, StatusEnum.ARCHIVED]);
+export const PIPELINE_PENDING = new Set<StatusEnum>([StatusEnum.AWAITING_RESPONSE, StatusEnum.REAPPLIED]);
+export const PIPELINE_ACTIVE = new Set<StatusEnum>([StatusEnum.HR_REACHED_BACK, StatusEnum.AWAITING_INTERVIEW, StatusEnum.INTERVIEW_SCHEDULED, StatusEnum.AWAITING_RESULTS, StatusEnum.AWAITING_DECISION]);
+export const PIPELINE_PASSED = new Set<StatusEnum>([StatusEnum.PASSED, StatusEnum.RECEIVED_CONTRACT]);
+export const PIPELINE_REJECTED = new Set<StatusEnum>([StatusEnum.REJECTED, StatusEnum.DID_NOT_PASS_HR, StatusEnum.PROBABLY_NOT]);
+export const PIPELINE_CLOSED = new Set<StatusEnum>([StatusEnum.DECIDED_TO_PASS, StatusEnum.LOW_SALARY, StatusEnum.ARCHIVED]);
 
 export const STATUS_BUCKET_COLORS: Record<string, string> = {
   [StatusEnum.AWAITING_RESPONSE]: '#a4c2f4',
@@ -35,6 +35,8 @@ export const BUCKET_COLORS: Record<string, string> = {
   'Rejected': STATUS_BUCKET_COLORS[StatusEnum.REJECTED],
   'Decided to pass': STATUS_BUCKET_COLORS[StatusEnum.DECIDED_TO_PASS],
 };
+
+export const BUCKET_NAMES = ['Pending', 'Active', 'Passed', 'Rejected', 'Decided to pass'];
 
 @Injectable({ providedIn: 'root' })
 export class ChartsService {

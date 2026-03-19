@@ -4,18 +4,9 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartDataType1 } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
 import { DataService } from '../../../services/data.service';
+import { StatusTooltipState } from './../../../../core/models/chart.interface';
 import { ChartsService, STATUS_BUCKET_COLORS } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
-
-interface StatusTooltipState {
-  status: string;
-  count: string;
-  color: string;
-  companies: string[];
-  x: number;
-  y: number;
-}
-
 @Component({
   selector: 'app-status-chart',
   imports: [BaseChartDirective],
@@ -65,6 +56,8 @@ export class StatusChartComponent extends ChartsBaseComponent {
           data: data.map(d => d.y),
           backgroundColor: data.map(d => STATUS_BUCKET_COLORS[d.x] ?? '#6B7280'),
           hoverBackgroundColor: data.map(d => (STATUS_BUCKET_COLORS[d.x] ?? '#6B7280') + 'CC'),
+          animation: { easing: 'easeInOutExpo', duration: 800 },
+          barPercentage: 0.6
         }]
       },
       options: {
@@ -73,12 +66,12 @@ export class StatusChartComponent extends ChartsBaseComponent {
         scales: {
           x: {
             max: maxX,
-            ticks: { stepSize: 1 },
-            title: { display: true, text: 'Applications' }
-          }
+            border: { display: false },
+            ticks: { stepSize: 1, crossAlign: 'center' },
+          },
         },
         plugins: {
-          title: { display: true, text: 'Status Breakdown', align: 'center' },
+          title: { display: true, text: 'Status Breakdown', align: 'center', font: { size: 16 } },
           legend: { display: false },
           tooltip: { enabled: false, external: this.tooltipHandler },
         },

@@ -5,17 +5,8 @@ import { ChartDataType1 } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
 import { DataService } from '../../../services/data.service';
 import { UIService } from '../../../services/ui.service';
+import { ProgressTooltipState } from './../../../../core/models/chart.interface';
 import { BUCKET_COLORS, ChartsService, STATUS_BUCKET_COLORS } from './../../../services/charts.service';
-
-interface ProgressTooltipEntry { name: string; status: string; }
-
-interface ProgressTooltipState {
-  bucket: string;
-  count: string;
-  entries: ProgressTooltipEntry[];
-  x: number;
-  y: number;
-}
 
 @Component({
   selector: 'app-progress-chart',
@@ -65,12 +56,13 @@ export class ProgressChartComponent extends ChartsBaseComponent {
           backgroundColor: data.map(d => BUCKET_COLORS[d.x] ?? '#6B7280'),
           borderWidth: 2,
           hoverOffset: 15,
-        }]
+        }],
       },
       options: {
+        animation: { easing: 'easeInOutExpo', duration: 1000 },
         responsive: true,
         plugins: {
-          title: { display: true, text: 'Applications by Status', align: 'center' },
+          title: { display: true, text: 'Applications by Status', align: 'center', font: { size: 16 } },
           legend: { display: true, position: 'bottom' },
           tooltip: { enabled: false, external: this.tooltipHandler },
         },
