@@ -1,0 +1,63 @@
+.nav-container {
+  position: absolute;
+  z-index: 999;
+  margin-top: 10px;
+  @media screen and (max-width: 992px) {
+    margin-top: 0px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  .routes-wrapper {
+    display: flex;
+    width: min-content;
+    margin-left: 15px;
+    a {
+      transition: all 0.15s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px;
+      text-decoration: none;
+      color: rgba(8, 18, 38, 0.5);
+      font-size: smaller;
+      font-weight: 500;
+      span {
+        padding-left: 2px;
+      }
+      @media screen and (min-width: 992px) {
+        &:hover {
+          color: rgba(8, 18, 38, 0.8);
+        }
+      }
+      @media screen and (max-width: 992px) {
+        font-size: larger;
+      }
+      mat-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.3rem;
+        @media screen and (max-width: 1280px) {
+          padding-left: 0;
+        }
+      }
+      &.active {
+        font-weight: 900;
+        color: rgba(8, 18, 38);
+        .mat-icon,
+        .material-icons {
+          color: #ff6482;
+        }
+      }
+      @media screen and (max-width: 768px) {
+        transform: scale(0.88);
+        margin: 0;
+      }
+      @media screen and (max-width: 560px) {
+        transform: scale(0.8);
+      }
+    }
+  }
+}

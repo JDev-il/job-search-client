@@ -3,10 +3,12 @@ import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartDataType1 } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
+import { STATUS_BUCKET_COLORS } from '../../../constants/charts';
 import { DataService } from '../../../services/data.service';
 import { StatusTooltipState } from './../../../../core/models/chart.interface';
-import { ChartsService, STATUS_BUCKET_COLORS } from './../../../services/charts.service';
+import { ChartsService } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
+
 @Component({
   selector: 'app-status-chart',
   imports: [BaseChartDirective],

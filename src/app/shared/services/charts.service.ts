@@ -1,45 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ChartDataType1 } from '../../core/models/chart.interface';
-import { StatusEnum } from '../../core/models/enum/table-data.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
+import { PIPELINE_ACTIVE, PIPELINE_CLOSED, PIPELINE_PASSED, PIPELINE_PENDING, PIPELINE_REJECTED } from '../constants/charts';
 import { DataService } from './data.service';
-
-export const PIPELINE_PENDING = new Set<StatusEnum>([StatusEnum.AWAITING_RESPONSE, StatusEnum.REAPPLIED]);
-export const PIPELINE_ACTIVE = new Set<StatusEnum>([StatusEnum.HR_REACHED_BACK, StatusEnum.AWAITING_INTERVIEW, StatusEnum.INTERVIEW_SCHEDULED, StatusEnum.AWAITING_RESULTS, StatusEnum.AWAITING_DECISION]);
-export const PIPELINE_PASSED = new Set<StatusEnum>([StatusEnum.PASSED, StatusEnum.RECEIVED_CONTRACT]);
-export const PIPELINE_REJECTED = new Set<StatusEnum>([StatusEnum.REJECTED, StatusEnum.DID_NOT_PASS_HR, StatusEnum.PROBABLY_NOT]);
-export const PIPELINE_CLOSED = new Set<StatusEnum>([StatusEnum.DECIDED_TO_PASS, StatusEnum.LOW_SALARY, StatusEnum.ARCHIVED]);
-
-export const STATUS_BUCKET_COLORS: Record<string, string> = {
-  [StatusEnum.AWAITING_RESPONSE]: '#a4c2f4',
-  [StatusEnum.REAPPLIED]: '#20124d',
-  [StatusEnum.HR_REACHED_BACK]: '#ff9375',
-  [StatusEnum.AWAITING_INTERVIEW]: '#a2c4c9',
-  [StatusEnum.INTERVIEW_SCHEDULED]: '#3d78d8',
-  [StatusEnum.AWAITING_RESULTS]: '#ffcb31',
-  [StatusEnum.AWAITING_DECISION]: '#2193de',
-  [StatusEnum.PASSED]: '#91f3cc',
-  [StatusEnum.RECEIVED_CONTRACT]: '#93c47d',
-  [StatusEnum.REJECTED]: '#e06666',
-  [StatusEnum.DID_NOT_PASS_HR]: '#ff0100',
-  [StatusEnum.PROBABLY_NOT]: '#f6b26b',
-  [StatusEnum.DECIDED_TO_PASS]: '#dd7e6b',
-  [StatusEnum.LOW_SALARY]: '#a64d79',
-  [StatusEnum.ARCHIVED]: '#434343',
-};
-
-export const BUCKET_COLORS: Record<string, string> = {
-  'Pending': STATUS_BUCKET_COLORS[StatusEnum.AWAITING_RESPONSE],
-  'Active': STATUS_BUCKET_COLORS[StatusEnum.HR_REACHED_BACK],
-  'Passed': STATUS_BUCKET_COLORS[StatusEnum.PASSED],
-  'Rejected': STATUS_BUCKET_COLORS[StatusEnum.REJECTED],
-  'Decided to pass': STATUS_BUCKET_COLORS[StatusEnum.DECIDED_TO_PASS],
-};
-
-export const BUCKET_NAMES = ['Pending', 'Active', 'Passed', 'Rejected', 'Decided to pass'];
 
 @Injectable({ providedIn: 'root' })
 export class ChartsService {
+
   constructor(private dataService: DataService) { }
 
   public progressChartBuilder(): void {

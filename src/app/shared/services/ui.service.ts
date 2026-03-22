@@ -29,6 +29,13 @@ export class UIService {
     ];
   }
 
+  public get innerNavigationLinks(): NavBarLink[] {
+    return [
+      { name: 'Data', route: 'dashboard/data', icon: 'data_usage', index: 0 },
+      { name: 'Actions', route: 'dashboard/actions', icon: 'done_all', index: 1 },
+    ];
+  }
+
   public get displayColumns(): TColNames[] {
     return ['select', 'status', 'company', 'position', 'application', 'hunch', 'note'];
   }

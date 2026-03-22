@@ -1,4 +1,6 @@
 .mat-button-toggle-group {
+  position: relative;
+  margin-top: 15px;
   border: 0;
   box-shadow: 0 0 5px -2px #08122680 !important;
   border-radius: 1em;
@@ -13,5 +15,16 @@
   }
   .mat-button-toggle {
     border: 0;
+  }
+
+  @media screen and (max-width: 1280px) {
+    max-width: min-content;
+    margin-top: 5px;
+    max-height: 35px;
+  }
+  @media screen and (max-width: 992px) {
+    position: relative;
+    margin-top: 35px;
+    max-height: 28px;
   }
 }

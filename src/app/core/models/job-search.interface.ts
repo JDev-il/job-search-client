@@ -10,9 +10,9 @@ export interface JobSearchCriteria {
 }
 
 export interface JobSearchFollowUpCircles {
-  submitted: number, // Extracted day from Date
-  followup: number, // equ: Date - submitted Date = days left where target is 8
-  overdue: number, // date that will triggers any side-processes, like agents, heavy notifications system (toast/chips), etc.
+  submitted: number,
+  followup: number,
+  overdue: number,
 }
 
 export interface FollowUpEntry {

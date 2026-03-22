@@ -32,7 +32,20 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./pages/dashboard/dashboard.component').then((c) => c.DashboardComponent)
+          import('./pages/dashboard/dashboard.component').then((c) => c.DashboardComponent),
+        children: [
+          { path: '', redirectTo: 'dashboard/data', pathMatch: 'full' },
+          {
+            path: 'dashboard/data',
+            loadComponent: () =>
+              import('./pages/dashboard/data/dashboard-data.component').then((c) => c.DashboardDataComponent),
+          },
+          {
+            path: 'dashboard/actions',
+            loadComponent: () =>
+              import('./pages/dashboard/actions/dashboard-actions/dashboard-actions.component').then((c) => c.DashboardActionsComponent),
+          },
+        ]
       },
       {
         path: 'activity',

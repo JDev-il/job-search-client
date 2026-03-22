@@ -54,6 +54,11 @@ export enum ROUTES {
   ACTIVITY = "activity",
 };
 
+export enum INNER_ROUTES {
+  DATA = "dashboard/data",
+  ACTIONS = "dashboard/actions",
+}
+
 export enum FieldType {
   location = 'location',
   name = 'name',
