@@ -1,55 +1,35 @@
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
+import { RouterOutlet } from '@angular/router';
 import { throwError } from 'rxjs';
 import { NavBarLink } from '../../core/models/data.interface';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
-import { ProgressChartComponent } from '../../shared/components/charts/progress-chart/progress-chart.component';
-import { StatusChartComponent } from '../../shared/components/charts/status-chart/status-chart.component';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
+import { InnerNavigationComponent } from '../../shared/components/navigation/inner-navigation/inner-navigation.component';
 import { FaderDirective } from '../../shared/directives/fader.directive';
 import { DataService } from '../../shared/services/data.service';
 import { FormsService } from '../../shared/services/forms.service';
 import { UIService } from '../../shared/services/ui.service';
-import { MarketChartComponent } from './../../shared/components/charts/market-chart/market-chart.component';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   imports: [
-    ProgressChartComponent,
-    StatusChartComponent,
-    MarketChartComponent,
     FaderDirective,
     FilterComponent,
-    CdkDropList,
-    CdkDrag,
+    InnerNavigationComponent,
+    RouterOutlet,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DashboardComponent extends BaseDialogComponent {
   private destroyRef = inject(DestroyRef);
   private localSortedTableDataResponse = signal<ITableDataRow[]>([]);
-  private isDataExists = signal(false);
 
-  private readonly CHART_ORDER_KEY = 'chart-order';
-  private readonly DEFAULT_ORDER = ['progress', 'status', 'market'];
-  public chartOrder = signal<string[]>(this.loadChartOrder());
-
-  private loadChartOrder(): string[] {
-    const saved = localStorage.getItem(this.CHART_ORDER_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved) as string[];
-      if (parsed.length === this.DEFAULT_ORDER.length) return parsed;
-    }
-    return [...this.DEFAULT_ORDER];
-  }
-
-  public centralHubCvCounter = signal<number>(0);
   public tabIndex = signal<number>(0);
   public currentTabIndex = signal<number>(0);
   public status = signal<string[]>([]);
@@ -72,15 +52,8 @@ export class DashboardComponent extends BaseDialogComponent {
     });
   }
 
-  public onChartDrop(event: CdkDragDrop<string[]>): void {
-    const order = this.chartOrder().slice();
-    moveItemInArray(order, event.previousIndex, event.currentIndex);
-    this.chartOrder.set(order);
-    localStorage.setItem(this.CHART_ORDER_KEY, JSON.stringify(order));
-  }
-
-  public tabIndexSetter(link: NavBarLink) {
-    this.dataService.setCurrentTabIndex(link.index);
+  public get innerLinks(): NavBarLink[] {
+    return this.uiService.innerNavigationLinks;
   }
 
   public addRow() {
@@ -114,7 +87,6 @@ export class DashboardComponent extends BaseDialogComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data: ITableDataRow[]) => {
-          this.isDataExists.set(this.dataService.isDataExists());
           const sortedData = data.slice().sort((a, b) =>
             new Date(b.applicationDate!.toString()).getTime() -
             new Date(a.applicationDate!.toString()).getTime()

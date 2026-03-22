@@ -1,0 +1,14 @@
+<nav class="nav-container">
+  <div class="routes-wrapper">
+    @for (link of navBarLinks; track link.index) {
+      <a
+        [ngClass]="{ active: isActive(link.route) }"
+        [routerLink]="link.route"
+        (click)="navBarAction(link)"
+      >
+        <mat-icon matListIcon>{{ link.icon }}</mat-icon>
+        <span>{{ link.name }}</span>
+      </a>
+    }
+  </div>
+</nav>

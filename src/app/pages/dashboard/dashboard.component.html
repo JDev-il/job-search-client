@@ -1,3 +1,4 @@
+<inner-navigation [links]="innerLinks"></inner-navigation>
 <ng-container>
   <div class="dashboard-filters">
     <app-filter
@@ -10,23 +11,7 @@
 <ng-container>
   <div class="dashboard-components-container">
     <div class="dashboard-components-wrapper" fader>
-      <div class="charts" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="onChartDrop($event)">
-        @for (chart of chartOrder(); track chart) {
-          <div class="chart-drag-item" cdkDrag>
-            @switch (chart) {
-              @case ("progress") {
-                <app-progress-chart></app-progress-chart>
-              }
-              @case ("status") {
-                <app-status-chart></app-status-chart>
-              }
-              @case ("market") {
-                <app-market-chart></app-market-chart>
-              }
-            }
-          </div>
-        }
-      </div>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </ng-container>

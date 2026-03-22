@@ -1,0 +1,22 @@
+<div
+  class="charts"
+  cdkDropList
+  cdkDropListOrientation="mixed"
+  (cdkDropListDropped)="onChartDrop($event)"
+>
+  @for (chart of chartOrder(); track chart) {
+    <div class="chart-drag-item" cdkDrag>
+      @switch (chart) {
+        @case ("progress") {
+          <app-progress-chart />
+        }
+        @case ("status") {
+          <app-status-chart />
+        }
+        @case ("market") {
+          <app-market-chart />
+        }
+      }
+    </div>
+  }
+</div>

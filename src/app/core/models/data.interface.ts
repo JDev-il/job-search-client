@@ -1,3 +1,4 @@
+import { StatusEnum } from "./enum/table-data.enum"
 
 export interface Country {
   name: {
@@ -51,3 +52,21 @@ export interface NavBarLink {
   icon: string,
   index: number
 }
+
+export interface IResponseRatesData {
+  interviewsRate: number,
+  successRate: number,
+  rejsectionRate: number,
+}
+
+export interface IStatusMetaData {
+  bucket: 'active' | 'passed' | 'rejected';
+  stage: 'submitted' | 'engaged' | 'in-progress' | 'closed';
+  actionRequired: boolean;
+  sentiment: 'positive' | 'neutral' | 'negative';
+  followUpAfterDays: number;       // 0 = no follow-up needed
+  calendarRelevant: boolean;       // true = triggers calendar event (Option B)
+  allowedTransitions: StatusEnum[]; // valid next statuses (agent guardrail)
+}
+
+export type TStatusMetaData = Record<StatusEnum, IStatusMetaData>;

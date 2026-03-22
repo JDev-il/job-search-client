@@ -3,8 +3,9 @@ import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { MarketChartData } from '../../../../core/models/chart.interface';
 import { ChartsBaseComponent } from '../../../base/charts-base.component';
+import { BUCKET_COLORS, BUCKET_NAMES } from '../../../constants/charts';
 import { DataService } from '../../../services/data.service';
-import { BUCKET_COLORS, BUCKET_NAMES, ChartsService } from './../../../services/charts.service';
+import { ChartsService } from './../../../services/charts.service';
 import { UIService } from './../../../services/ui.service';
 
 @Component({
@@ -57,7 +58,7 @@ export class MarketChartComponent extends ChartsBaseComponent {
           }
         },
         plugins: {
-          title: { display: true, text: 'Application Timeline', align: 'center' },
+          title: { display: true, text: 'Application Timeline', align: 'center', font: { size: 16 } },
           legend: { display: true, position: 'bottom' },
         }
       }

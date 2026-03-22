@@ -61,8 +61,6 @@ export class NavigationComponent {
     }
     if (route === 'account') {
       this.routingService.toAccount();
-    } else {
-
     }
   }
 
