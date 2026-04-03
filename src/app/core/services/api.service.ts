@@ -69,6 +69,27 @@ export class ApiService {
   }
 
 
+  public getGmailStatusReq(token: string): Observable<{ gmailEmail: string | null }> {
+    const url = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.gmailStatus);
+    return this.http.get<{ gmailEmail: string | null }>(url, {
+      headers: { authorization: `Bearer ${token}` }
+    });
+  }
+
+  public getGmailUrlReq(token: string): Observable<{ url: string }> {
+    const url = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.gmailUrl);
+    return this.http.get<{ url: string }>(url, {
+      headers: { authorization: `Bearer ${token}` }
+    });
+  }
+
+  public disconnectGmailReq(token: string): Observable<void> {
+    const url = this.apiConfig.getAuthUrl(this.apiConfig.internal.auth.gmailDisconnect);
+    return this.http.delete<void>(url, {
+      headers: { authorization: `Bearer ${token}` }
+    });
+  }
+
   public getCompaniesReq(): Observable<string[]> {
     // Use the companies config
     const baseUrl = this.apiConfig.external.companies.baseUrl;

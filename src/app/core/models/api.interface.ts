@@ -14,6 +14,10 @@ export interface ApiEndpoints {
       sign: string;
       verify: string;
       openAiCredentials: string;
+      google: string;
+      gmailStatus: string;
+      gmailUrl: string;
+      gmailDisconnect: string;
     };
     jobSearch: {
       path: string;

@@ -104,8 +104,6 @@ export class ApiConfigService {
   }
 
   private buildEndpoints(): ApiEndpoints {
-    const isProduction = environment.production;
-    const isDevelopment = !isProduction;
     const internalBase = this.getInternalApiBase();
     return {
       internal: {
@@ -121,7 +119,11 @@ export class ApiConfigService {
           login: '/login',
           sign: '/signtoken',
           verify: '/verify',
-          openAiCredentials: '/openai'
+          openAiCredentials: '/openai',
+          google: '/google',
+          gmailStatus: '/gmail/status',
+          gmailUrl: '/gmail/url',
+          gmailDisconnect: '/gmail/disconnect'
         },
         jobSearch: {
           path: 'jobsearch',
