@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,6 +13,7 @@ import { NotificationsStatusEnum } from '../../../core/models/enum/messages.enum
 import { ActionLables } from '../../../core/models/enum/utils.enum';
 import { UserRequest, UserToken } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
+import { ApiConfigService } from '../../../core/services/configuration.service';
 import { BaseDialogComponent } from '../../base/dialog-base.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HoverDirective } from '../../directives/hover.directive';
@@ -22,32 +24,35 @@ import { FormsService } from '../../services/forms.service';
 import { RoutingService } from '../../services/routing.service';
 
 @Component({
-    selector: 'app-registration',
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MaterialDirective,
-        HoverDirective,
-        SpinnerComponent,
-        SnackBarDirective
-    ],
-    templateUrl: './registration.component.html',
-    styleUrls: ['./registration.component.scss', '../../style/form-layout.style.scss']
+  selector: 'app-registration',
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MaterialDirective,
+    HoverDirective,
+    SpinnerComponent,
+    SnackBarDirective
+  ],
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.scss', '../../style/form-layout.style.scss']
 })
 export class RegistrationComponent extends BaseDialogComponent {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
   public registerationForm!: FormGroup<RegisterFormModel>;
+  private platformId = inject(PLATFORM_ID);
+
   constructor(
     dialog: MatDialog,
     private dataService: DataService,
     private authService: AuthService,
     private routingService: RoutingService,
-    private formService: FormsService
+    private formService: FormsService,
+    private apiConfig: ApiConfigService
   ) {
-    super(dialog)
+    super(dialog);
     this.registerationForm = this.formService.initializeRegistrationForm();
     this.dataService.setSpinnerState(false);
   }
@@ -56,13 +61,22 @@ export class RegistrationComponent extends BaseDialogComponent {
     return this.dataService.spinnerState();
   }
 
+  public get loginbuttonText() {
+    return this.dataService.buttonText();
+  }
+
+  public signInWithGoogle(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.location.href = this.apiConfig.buildInternalUrl(
+        this.apiConfig.internal.auth.path,
+        this.apiConfig.internal.auth.google
+      );
+    }
+  }
+
   public toLogin(): void {
     this.registerationForm.reset();
     this.routingService.toLogin();
-  }
-
-  public get loginbuttonText() {
-    return this.dataService.buttonText()
   }
 
   public submitRegistrationForm(): void {
@@ -86,7 +100,7 @@ export class RegistrationComponent extends BaseDialogComponent {
           error: (err) => {
             throwError(() => console.error(`There was a problem generating a token`, err));
           }
-        })
+        });
     }
   }
 

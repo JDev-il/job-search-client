@@ -44,4 +44,7 @@ export class StateService {
   // AI Agent & MCP
   public _agentSuggestions = signal([] as AgentSuggestion[]);
   public _jobSearchCriterias = signal([] as JobSearchCriteria[]);
+
+  // Gmail
+  public _gmailEmail = signal<string | null>(null);
 }

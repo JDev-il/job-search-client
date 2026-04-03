@@ -55,7 +55,7 @@ export const routes: Routes = [
       {
         path: 'account',
         loadComponent: () =>
-          import('./shared/pages/my-account/my-account.component').then((c) => c.MyAccountComponent),
+          import('./shared/pages/my-account/my-account.component').then((c) => c.AccountComponent),
         canActivate: [authGuard]
       },
     ],

@@ -185,3 +185,12 @@ $client-theme: mat.define-theme(
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
   padding: 5px !important;
 }
+
+.google-btn {
+  .mdc-button__label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+  }
+}

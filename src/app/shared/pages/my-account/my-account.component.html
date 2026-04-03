@@ -1,3 +1,35 @@
 <div class="account-container" fader>
-  <p>Account</p>
+  <h2 class="page-title">My Account</h2>
+
+  <section class="settings-card">
+    <h3 class="card-title">Connected Accounts</h3>
+    <hr class="card-divider" />
+    <div class="account-row">
+      <div class="account-icon">
+        <img src="assets/icons/google.svg" alt="Google" />
+      </div>
+      <div class="account-info">
+        <span class="account-name">Gmail</span>
+        @if (gmailEmail) {
+          <span class="account-status connected">Connected as {{ gmailEmail }}</span>
+        } @else {
+          <span class="account-status">Not connected</span>
+        }
+      </div>
+      <div class="account-action">
+        @if (gmailEmail) {
+          <button mat-stroked-button class="connect-btn" [disabled]="true">
+            Connected
+          </button>
+          <button mat-button class="disconnect-btn" (click)="disconnectGmail()">
+            Disconnect
+          </button>
+        } @else {
+          <button mat-stroked-button (click)="connectGmail()" class="connect-btn">
+            Connect Gmail
+          </button>
+        }
+      </div>
+    </div>
+  </section>
 </div>

@@ -86,6 +86,13 @@
         </button>
       </div>
     </form>
+    <div class="google-section">
+      <div class="divider"><span>or</span></div>
+      <button type="button" mat-stroked-button (click)="signInWithGoogle()" class="google-btn">
+        <img src="assets/icons/google.svg" alt="" width="18" height="18" />
+        Continue with Google
+      </button>
+    </div>
   </section>
 </div>
 <div SnackBar #snackBarRef="SnackBar"></div>
