@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ActivatedRoute } from '@angular/router';
 import { NotificationsStatusEnum } from '../../../core/models/enum/messages.enum';
 import { ActionLables } from '../../../core/models/enum/utils.enum';
 import { LoginModel } from '../../../core/models/forms.interface';
@@ -13,6 +12,7 @@ import { UserLogin } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiConfigService } from '../../../core/services/configuration.service';
 import { BaseDialogComponent } from '../../base/dialog-base.component';
+import { GoogleComponent } from '../../components/google/google.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HoverDirective } from '../../directives/hover.directive';
 import { MaterialDirective } from '../../directives/material.directive';
@@ -31,6 +31,7 @@ import { RoutingService } from '../../services/routing.service';
     MaterialDirective,
     HoverDirective,
     SpinnerComponent,
+    GoogleComponent,
     SnackBarDirective
   ],
   templateUrl: './login.component.html',
@@ -39,7 +40,6 @@ import { RoutingService } from '../../services/routing.service';
 })
 export class LoginComponent extends BaseDialogComponent implements OnInit {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
-  private activateRoute = inject(ActivatedRoute);
   private apiConfig = inject(ApiConfigService);
   private platformId = inject(PLATFORM_ID);
   public loginForm!: FormGroup<LoginModel>;
