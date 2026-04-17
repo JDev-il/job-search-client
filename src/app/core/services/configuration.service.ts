@@ -175,10 +175,6 @@ export class ApiConfigService {
   }
 
   private getInternalApiBase(): string {
-    if (environment.production) {
-      return '/api';
-    }
-
     if (environment.apiUrls?.local) {
       return environment.apiUrls.local;
     }

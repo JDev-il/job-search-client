@@ -1,11 +1,11 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { catchError, of } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { FaderDirective } from '../../directives/fader.directive';
 import { StateService } from '../../services/state.service';
+import { WindowService } from '../../services/window.service';
 
 @Component({
   selector: 'app-my-account',
@@ -14,12 +14,12 @@ import { StateService } from '../../services/state.service';
   styleUrl: './my-account.component.scss'
 })
 export class AccountComponent implements OnInit {
-  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
-    private stateService: StateService
+    private stateService: StateService,
+    private windowService: WindowService
   ) { }
 
   public get gmailEmail(): string | null {
@@ -27,7 +27,7 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!this.authService.isBrowser) return;
     const token = this.authService.getToken();
     if (token) {
       this.apiService.getGmailStatusReq(token).pipe(
@@ -42,11 +42,11 @@ export class AccountComponent implements OnInit {
   }
 
   public connectGmail(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!this.authService.isBrowser) return;
     const token = this.authService.getToken();
     if (token) {
       this.apiService.getGmailUrlReq(token).subscribe(res => {
-        window.location.href = res.url;
+        this.windowService.openGmailConnect(res.url);
       });
     }
   }
