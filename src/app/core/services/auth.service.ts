@@ -1,7 +1,9 @@
-import { Injectable, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private platformId = inject(PLATFORM_ID);
   private isAuthenticated$ = signal<boolean>(false);
 
   constructor() {
@@ -38,6 +40,11 @@ export class AuthService {
       this.isAuthenticated$.set(true);
     }
     return tokenExists || signalState;
+  }
+
+
+  public get isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
   }
 
   private get isLocalStorage(): boolean {

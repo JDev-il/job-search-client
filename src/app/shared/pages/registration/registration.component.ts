@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, inject, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -44,7 +43,6 @@ import { RoutingService } from '../../services/routing.service';
 export class RegistrationComponent extends BaseDialogComponent {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
   public registerationForm!: FormGroup<RegisterFormModel>;
-  private platformId = inject(PLATFORM_ID);
 
   constructor(
     dialog: MatDialog,
@@ -68,7 +66,7 @@ export class RegistrationComponent extends BaseDialogComponent {
   }
 
   public signInWithGoogle(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.authService.isBrowser) {
       window.location.href = this.apiConfig.buildInternalUrl(
         this.apiConfig.internal.auth.path,
         this.apiConfig.internal.auth.google

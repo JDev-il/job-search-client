@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,7 +40,6 @@ import { RoutingService } from '../../services/routing.service';
 export class LoginComponent extends BaseDialogComponent implements OnInit {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
   private apiConfig = inject(ApiConfigService);
-  private platformId = inject(PLATFORM_ID);
   public loginForm!: FormGroup<LoginModel>;
 
   constructor(
@@ -61,7 +59,7 @@ export class LoginComponent extends BaseDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.authService.isBrowser) {
       const params = new URLSearchParams(window.location.search);
       const token = params.get('google_token');
       if (token) {
@@ -72,7 +70,7 @@ export class LoginComponent extends BaseDialogComponent implements OnInit {
   }
 
   public signInWithGoogle(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.authService.isBrowser) {
       window.location.href = this.apiConfig.buildInternalUrl(
         this.apiConfig.internal.auth.path,
         this.apiConfig.internal.auth.google
