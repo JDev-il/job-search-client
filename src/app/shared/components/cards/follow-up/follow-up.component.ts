@@ -2,11 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, ViewEncap
 import { IResponseRatesData } from '../../../../core/models/data.interface';
 import { FollowUpEntry, JobSearchFollowUpCircles } from '../../../../core/models/job-search.interface';
 import { ITableDataRow } from '../../../../core/models/table.interface';
-import { PIPELINE_ACTIVE, PIPELINE_PENDING } from '../../../constants/charts';
+import { FOLLOWUP_MAX, SUBMITTED_MAX } from '../../../constants/additional-data';
+import { PIPELINE_ACTIVE, PIPELINE_PASSED, PIPELINE_PENDING, PIPELINE_REJECTED } from '../../../constants/charts';
 import { DataService } from '../../../services/data.service';
-
-const SUBMITTED_MAX = 7;
-const FOLLOWUP_MAX = 14;
 
 @Component({
   selector: 'app-follow-up',
@@ -60,12 +58,12 @@ export class FollowUpComponent {
   private calcResponseRate(tableData: ITableDataRow[]): IResponseRatesData | null {
     if (!tableData.length) return null;
     const interviewRate = tableData.filter((row) => PIPELINE_ACTIVE.has(row.status));
+    const responded = tableData.filter(row =>
+      PIPELINE_ACTIVE.has(row.status) ||
+      PIPELINE_PASSED.has(row.status) ||
+      PIPELINE_REJECTED.has(row.status)
+    ).length;
     return null
-    // const responded = tableData.filter(row =>
-    //   PIPELINE_ACTIVE.has(row.status) ||
-    //   PIPELINE_PASSED.has(row.status) ||
-    //   PIPELINE_REJECTED.has(row.status)
-    // ).length;
     // return Math.round(responded / tableData.length * 100);
   }
 }

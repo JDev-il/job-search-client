@@ -13,7 +13,9 @@ export enum StatusEnum {
   PROBABLY_NOT = "Probably didn't pass",
   REAPPLIED = "Reapplied",
   ARCHIVED = "Archived",
-  RECEIVED_CONTRACT = "Received a contract"
+  RECEIVED_CONTRACT = "Received a contract",
+  CONTRACT_ACCEPTED = "Accepted offer",
+  CONTRACT_DECLINED = "Declined offer"
 }
 
 export enum PositionTypeEnum {

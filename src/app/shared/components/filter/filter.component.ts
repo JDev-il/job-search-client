@@ -13,8 +13,7 @@ export class FilterComponent {
   @Input({ required: true }) currentDayFilter!: WritableSignal<number>;
   @Input() isDataLength: boolean = false;
 
-  constructor() {
-  }
+  constructor() { }
 
   public onChangeFilter(e: MatButtonToggleChange) {
     const value = +e.value;

@@ -12,3 +12,11 @@ export interface IGmailResponse {
   gmailTokenExpiry: Date
   gmailRefreshToken: string,
 }
+export interface GmailMessage {
+  id: string;
+  threadId: string;
+  subject: string;
+  from: string;
+  receivedAt: string;
+  unread: boolean;
+}

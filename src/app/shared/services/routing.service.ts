@@ -30,4 +30,7 @@ export class RoutingService {
     if (route === '') return url === '/' || url.startsWith('/dashboard');
     return url === `/${route}` || url.startsWith(`/${route}`);
   }
+  public checkCurrentPath(): string {
+    return this.router.url;
+  }
 }
