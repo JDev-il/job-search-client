@@ -82,6 +82,10 @@ export class UIService {
         return "archived";
       case StatusEnum.RECEIVED_CONTRACT:
         return "received-contract";
+      case StatusEnum.CONTRACT_ACCEPTED:
+        return "contract-accepted";
+      case StatusEnum.CONTRACT_DECLINED:
+        return "contract-declined";
       default:
         return '';
     }

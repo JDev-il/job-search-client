@@ -1,7 +1,11 @@
-<inner-navigation [links]="innerLinks"></inner-navigation>
+<inner-navigation
+  [links]="innerLinks"
+  (emitPath)="currentPath($event)"
+></inner-navigation>
 <ng-container>
   <div class="dashboard-filters">
     <app-filter
+      [hidden]="isFilter()"
       (filterValue)="filterDataByDays($event)"
       [currentDayFilter]="filteredDays()"
       [isDataLength]="isData"

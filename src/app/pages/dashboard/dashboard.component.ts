@@ -34,6 +34,7 @@ export class DashboardComponent extends BaseDialogComponent {
   public currentTabIndex = signal<number>(0);
   public status = signal<string[]>([]);
   public progressDates = signal<string[]>([]);
+  public isFilter = signal<boolean>(false);
 
   constructor(
     private dataService: DataService,
@@ -54,6 +55,14 @@ export class DashboardComponent extends BaseDialogComponent {
 
   public get innerLinks(): NavBarLink[] {
     return this.uiService.innerNavigationLinks;
+  }
+
+  public currentPath(path: string) {
+    if (path === 'actions') {
+      this.isFilter.set(true);
+    } else {
+      this.isFilter.set(false);
+    }
   }
 
   public addRow() {

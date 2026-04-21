@@ -125,13 +125,14 @@
 }
 
 .drawer-content {
+  position: relative;
   padding: 0;
   margin: 0;
+  top: 40px;
 }
 
 .toggle-button {
   cursor: pointer;
-  padding-top: 20px;
   margin-left: 25px;
 }
 .drawer-button-expand {

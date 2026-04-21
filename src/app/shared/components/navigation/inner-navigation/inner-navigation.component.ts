@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { NavBarLink } from '../../../../core/models/data.interface';
@@ -12,6 +12,7 @@ import { RoutingService } from '../../../services/routing.service';
   styleUrl: './inner-navigation.component.scss',
 })
 export class InnerNavigationComponent {
+  @Output() emitPath: EventEmitter<string> = new EventEmitter()
   private routingService = inject(RoutingService);
   private router = inject(Router);
   public links = input<NavBarLink[]>([]);
@@ -25,10 +26,11 @@ export class InnerNavigationComponent {
   }
 
   public navBarAction(route: NavBarLink): void {
-    if (route.name === 'data') {
+    this.emitPath.emit(route.name.toLowerCase());
+    if (route.name.toLowerCase() === 'data') {
       this.routingService.toInnerData();
     }
-    if (route.name === 'actions') {
+    if (route.name.toLowerCase() === 'actions') {
       this.routingService.toInnerActions();
     }
   }

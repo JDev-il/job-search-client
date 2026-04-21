@@ -1,7 +1,8 @@
 .nav-container {
   position: absolute;
   z-index: 999;
-  margin-top: 10px;
+  margin-top: 30px;
+  // background-color: red;
   @media screen and (max-width: 992px) {
     margin-top: 0px;
     display: inline-flex;

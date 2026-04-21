@@ -16,6 +16,8 @@ $probably-not: #f6b26b;
 $reapplied: #20124d;
 $archived: #434343;
 $received-contract: #93c47d;
+$contract-accepted: #6aa84f;
+$contract-declined: #d9a441;
 
 @function is-color-match($color1, $color2) {
   @return color.channel($color1, "red", $space: rgb) == color.channel($color2, "red", $space: rgb) and
@@ -56,6 +58,8 @@ $probably-not-accent: generate-accent($probably-not);
 $reapplied-accent: generate-accent($reapplied);
 $archived-accent: generate-accent($archived);
 $received-contract-accent: generate-accent($received-contract);
+$contract-accepted-accent: generate-accent($contract-accepted);
+$contract-declined-accent: generate-accent($contract-declined);
 
 // Mixin for row styling
 @mixin row-color($status, $bg-color, $accent-color) {
@@ -128,5 +132,15 @@ $received-contract-accent: generate-accent($received-contract);
   "received-contract",
   $received-contract,
   $received-contract-accent
+);
+@include row-color(
+  "contract-accepted",
+  $contract-accepted,
+  $contract-accepted-accent
+);
+@include row-color(
+  "contract-declined",
+  $contract-declined,
+  $contract-declined-accent
 );
 @include row-color("default-row", transparent, white);
