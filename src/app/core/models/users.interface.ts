@@ -42,6 +42,13 @@ export interface UserDataRequest {
   email: string;
 }
 
+export interface IUserData {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 export type UserToken = { auth_token: string }
 export type AuthUserResponse = Pick<UserResponse, 'email'>
 export type UserPayload = Pick<UserDataRequest, 'email' | 'userId'>;

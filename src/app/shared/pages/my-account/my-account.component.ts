@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { catchError, of } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { FaderDirective } from '../../directives/fader.directive';
+import { DataService } from '../../services/data.service';
 import { StateService } from '../../services/state.service';
 import { WindowService } from '../../services/window.service';
 
@@ -14,11 +15,12 @@ import { WindowService } from '../../services/window.service';
   styleUrl: './my-account.component.scss'
 })
 export class AccountComponent implements OnInit {
-
+  public accountName = signal<string>('Account');
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
     private stateService: StateService,
+    private dataService: DataService,
     private windowService: WindowService
   ) { }
 
@@ -39,6 +41,7 @@ export class AccountComponent implements OnInit {
         this.stateService._gmailEmail.set(res.gmailEmail);
       });
     }
+    this.accountName.set(this.dataService.userData().firstName);
   }
 
   public connectGmail(): void {

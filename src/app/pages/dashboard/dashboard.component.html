@@ -13,9 +13,19 @@
   </div>
 </ng-container>
 <ng-container>
-  <div class="dashboard-components-container">
-    <div class="dashboard-components-wrapper" fader>
-      <router-outlet></router-outlet>
+  @if (!isUserData()) {
+    <div class="dashboard-no-data">
+      <div class="no-data-text">
+        <h1>{{ noDataText.noDataTitleDashboard }}</h1>
+        <p [innerText]="noDataText.noDataDashboard"></p>
+        <button mat-button (click)="toActivity()">Add now</button>
+      </div>
     </div>
-  </div>
+  } @else {
+    <div class="dashboard-components-container">
+      <div class="dashboard-components-wrapper" fader>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  }
 </ng-container>

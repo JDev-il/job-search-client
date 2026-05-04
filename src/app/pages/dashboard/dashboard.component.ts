@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatAnchor } from "@angular/material/button";
 import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
 import { throwError } from 'rxjs';
 import { NavBarLink } from '../../core/models/data.interface';
+import { NoDataText } from '../../core/models/enum/messages.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
@@ -12,8 +14,8 @@ import { InnerNavigationComponent } from '../../shared/components/navigation/inn
 import { FaderDirective } from '../../shared/directives/fader.directive';
 import { DataService } from '../../shared/services/data.service';
 import { FormsService } from '../../shared/services/forms.service';
+import { RoutingService } from '../../shared/services/routing.service';
 import { UIService } from '../../shared/services/ui.service';
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -23,11 +25,13 @@ import { UIService } from '../../shared/services/ui.service';
     FilterComponent,
     InnerNavigationComponent,
     RouterOutlet,
+    MatAnchor
   ],
   changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DashboardComponent extends BaseDialogComponent {
   private destroyRef = inject(DestroyRef);
+  private routingService = inject(RoutingService);
   private localSortedTableDataResponse = signal<ITableDataRow[]>([]);
 
   public tabIndex = signal<number>(0);
@@ -35,6 +39,7 @@ export class DashboardComponent extends BaseDialogComponent {
   public status = signal<string[]>([]);
   public progressDates = signal<string[]>([]);
   public isFilter = signal<boolean>(false);
+  public noDataText = NoDataText;
 
   constructor(
     private dataService: DataService,
@@ -55,6 +60,14 @@ export class DashboardComponent extends BaseDialogComponent {
 
   public get innerLinks(): NavBarLink[] {
     return this.uiService.innerNavigationLinks;
+  }
+
+  public toActivity(): void {
+    this.routingService.toActivity();
+  }
+
+  public isUserData(): boolean {
+    return this.localSortedTableDataResponse().length > 0;
   }
 
   public currentPath(path: string) {
@@ -96,10 +109,8 @@ export class DashboardComponent extends BaseDialogComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data: ITableDataRow[]) => {
-          const sortedData = data.slice().sort((a, b) =>
-            new Date(b.applicationDate!.toString()).getTime() -
-            new Date(a.applicationDate!.toString()).getTime()
-          );
+          const toTime = (d: Date | string | null) => d ? new Date(d.toString()).getTime() : 0;
+          const sortedData = data.slice().sort((a, b) => toTime(b.applicationDate) - toTime(a.applicationDate));
           this.localSortedTableDataResponse.set(sortedData);
         },
         error: () => throwError(() => console.error('Error with data rendering'))

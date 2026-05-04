@@ -5,7 +5,7 @@ import { ChartTimeLine, City, Country, IFollowUpData } from "../../core/models/d
 import { ErrorMessages, NotificationsStatusEnum, UserMessages } from "../../core/models/enum/messages.enum";
 import { CountriesEnum, FormEnum } from "../../core/models/enum/utils.enum";
 import { ITableDataRow, ITableSaveRequest } from "../../core/models/table.interface";
-import { AuthorizedUser, AuthUserResponse, UserLogin, UserRequest, UserResponse, UserToken } from "../../core/models/users.interface";
+import { AuthorizedUser, AuthUserResponse, IUserData, UserLogin, UserRequest, UserResponse, UserToken } from "../../core/models/users.interface";
 import { ApiService } from "../../core/services/api.service";
 import { AuthService } from './../../core/services/auth.service';
 import { StateService } from "./state.service";
@@ -34,6 +34,7 @@ export class DataService {
   public readonly suggestions = computed(() => this.stateService._agentSuggestions());;
   public readonly criteria = computed(() => this.stateService._jobSearchCriterias());
   public readonly followUpData = computed(() => this.stateService._followUpData());
+  public readonly userData = computed(() => this.stateService._dataUserResponse());
 
   constructor(private apiService: ApiService, private authService: AuthService, private stateService: StateService) {
     this.getAllCountries().subscribe();
@@ -84,6 +85,7 @@ export class DataService {
       take(1),
       tap((userData) => {
         if (userData && userData.email) {
+          this.stateService._dataUserResponse.set(userData);
           this.apiService.currentUserData$.set(userData);
         }
       }),
@@ -155,7 +157,7 @@ export class DataService {
         take(1),
         tap((cities: City) => {
           this.stateService._currentCitiesByCountry.set(cities);
-          cities.data = cities.data.sort((a: string, b: string) => a.localeCompare(b.toLowerCase()));
+          cities.data = cities.data.sort((a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase()));
           this.citiesOfCurrentCountry = cities;
         }),
       )
@@ -249,6 +251,10 @@ export class DataService {
   }
 
   public setSpinnerState(val: boolean): void { this._spinner.set(val); }
+
+  public userDetails(): IUserData {
+    return { userId: this.userData().userId, email: this.userData().email, firstName: this.userData().firstName, lastName: this.userData().lastName };
+  }
 
   public get usersResponseState(): AuthUserResponse {
     return this.stateService._usersResponse();

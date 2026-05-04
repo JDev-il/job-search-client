@@ -7,12 +7,7 @@
       [options]="statusChartOptions().options"
     ></canvas>
   </div>
-  } @else {
-  <div class="chart-no-data">
-    <h3>No Data</h3>
-  </div>
   }
-
   @if (tooltipState()) {
   <div class="status-tooltip"
     [style.left.px]="tooltipState()!.x"
