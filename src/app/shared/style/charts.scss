@@ -2,21 +2,19 @@
   width: 100%;
   min-width: 0;
 }
-
-.chart-data,
-.chart-no-data {
+.chart-data {
   margin: 30px;
 }
 .chart-data {
   position: relative;
   height: 300px;
   canvas {
-    border-radius: 0.6rem;
-    box-shadow: 0 0 8px -2px #08122680;
+    border-radius: 1.2rem;
+    box-shadow: 0 0 8px -2px #3c404980;
     padding: 0 12px;
   }
   @media screen and (max-width: 992px) {
-    height: 180px;
+    height: auto;
     margin: 12px;
   }
 }

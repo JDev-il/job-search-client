@@ -10,34 +10,37 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { NavBarLink } from '../../../core/models/data.interface';
+import { DataService } from '../../services/data.service';
 import { RoutingService } from '../../services/routing.service';
 import { UIService } from '../../services/ui.service';
 import { AuthService } from './../../../core/services/auth.service';
 
 @Component({
-    selector: 'app-navigation',
-    imports: [
-        MatButtonModule,
-        RouterLink,
-        MatListModule,
-        MatIconModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        MatSidenavModule,
-        MatTooltipModule,
-        CommonModule
-    ],
-    templateUrl: './navigation.component.html',
-    styleUrls: ['./navigation.component.scss', '../../style/custom-material.scss']
+  selector: 'app-navigation',
+  imports: [
+    MatButtonModule,
+    RouterLink,
+    MatListModule,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatSidenavModule,
+    MatTooltipModule,
+    CommonModule
+  ],
+  templateUrl: './navigation.component.html',
+  styleUrls: ['./navigation.component.scss', '../../style/custom-material.scss']
 })
 export class NavigationComponent {
   public isWindowMobile: WritableSignal<boolean> = signal(false);
   public isDrawerOpened: WritableSignal<boolean> = signal(true);
   public icons: Record<string, SafeResourceUrl> = {};
-  constructor(private routingService: RoutingService, private authService: AuthService, private uiService: UIService) {
+  public accountName = signal<string>('');
+  constructor(private routingService: RoutingService, private authService: AuthService, private uiService: UIService, private dataService: DataService) {
     this.updateViewportWidth();
     effect(() => {
       this.isWindowMobile() ? this.isDrawerOpened.set(false) : this.isDrawerOpened.set(true);
+      this.accountName.set(this.dataService.userDetails().firstName);
     })
   }
 

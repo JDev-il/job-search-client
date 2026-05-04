@@ -41,7 +41,7 @@ export class FormsService {
       positionType: this.fb.control('', Validators.required),
       positionStack: this.fb.control([''], Validators.required),
       applicationPlatform: this.fb.control('', Validators.required),
-      applicationDate: this.fb.control('', [this.futureDateValidator]),
+      applicationDate: this.fb.control('', [this.futureDateValidator, Validators.required]),
       notes: this.fb.control(''),
       hunch: this.fb.control('')
     })
@@ -58,7 +58,7 @@ export class FormsService {
       positionType: this.fb.control(row?.positionType ?? '', Validators.required),
       positionStack: this.fb.control(row?.positionStack ?? [''], Validators.required),
       applicationPlatform: this.fb.control(row?.applicationPlatform ?? '', Validators.required),
-      applicationDate: this.fb.control(row?.applicationDate ?? null, [this.futureDateValidator]),
+      applicationDate: this.fb.control(row?.applicationDate ?? null, [this.futureDateValidator, Validators.required]),
       notes: this.fb.control(row?.notes ?? ''),
       hunch: this.fb.control(row?.hunch ?? '')
     })
@@ -71,12 +71,13 @@ export class FormsService {
   }
 
   futureDateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null;
     const inputDate = new Date(control.value);
+    if (isNaN(inputDate.getTime())) return null;
     const today = new Date();
     inputDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
 
     return inputDate > today ? { futureDateNotAllowed: true } : null;
   }
-
 }

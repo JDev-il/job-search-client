@@ -21,6 +21,7 @@
       }
     </mat-autocomplete>
   </mat-form-field>
+
   <mat-form-field appearance="outline" class="company-location-input">
     <input
       (keyup)="onTypeValue($event, FieldTypes.location)"
@@ -52,6 +53,7 @@
       } }
     </mat-autocomplete>
   </mat-form-field>
+
   <mat-form-field appearance="outline">
     <mat-label>Role</mat-label>
     <mat-select formControlName="positionType">
@@ -60,6 +62,7 @@
       }
     </mat-select>
   </mat-form-field>
+
   <mat-form-field appearance="outline">
     <mat-label>Stacks</mat-label>
     <mat-select multiple formControlName="positionStack">
@@ -74,6 +77,7 @@
       }
     </mat-select>
   </mat-form-field>
+
   <mat-form-field appearance="outline">
     <mat-label>Applied On</mat-label>
     <mat-select formControlName="applicationPlatform">
@@ -94,6 +98,7 @@
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
+
   <mat-form-field appearance="outline">
     <mat-label>Status</mat-label>
     <mat-select formControlName="status">
@@ -103,10 +108,12 @@
       }
     </mat-select>
   </mat-form-field>
+
   <mat-form-field appearance="outline">
     <mat-label>My Hunch</mat-label>
     <input matInput formControlName="hunch" />
   </mat-form-field>
+
   <mat-form-field appearance="outline">
     <mat-label>Any Notes?</mat-label>
     <textarea

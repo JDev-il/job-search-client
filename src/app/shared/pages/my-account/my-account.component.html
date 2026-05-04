@@ -1,5 +1,5 @@
 <div class="account-container" fader>
-  <h2 class="page-title">My Account</h2>
+  <h2 class="page-title">{{ `${accountName()}'s Account` }}</h2>
 
   <section class="settings-card">
     <h3 class="card-title">Connected Accounts</h3>
@@ -11,7 +11,9 @@
       <div class="account-info">
         <span class="account-name">Gmail</span>
         @if (gmailEmail) {
-          <span class="account-status connected">Connected as {{ gmailEmail }}</span>
+          <span class="account-status connected"
+            >Connected as {{ gmailEmail }}</span
+          >
         } @else {
           <span class="account-status">Not connected</span>
         }
@@ -25,7 +27,11 @@
             Disconnect
           </button>
         } @else {
-          <button mat-stroked-button (click)="connectGmail()" class="connect-btn">
+          <button
+            mat-stroked-button
+            (click)="connectGmail()"
+            class="connect-btn"
+          >
             Connect Gmail
           </button>
         }

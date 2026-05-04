@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, DestroyRef, effect, Renderer2, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, DestroyRef, effect, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,7 +11,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { debounceTime, fromEvent, map, Subject, takeUntil, tap, throwError } from 'rxjs';
+import { debounceTime, Subject, switchMap, tap, throwError } from 'rxjs';
+import { NoDataText } from '../../core/models/enum/messages.enum';
 import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
@@ -21,30 +22,30 @@ import { DataService } from '../../shared/services/data.service';
 import { FormsService } from '../../shared/services/forms.service';
 import { ITableDataRow } from './../../core/models/table.interface';
 import { UIService } from './../../shared/services/ui.service';
-
 @Component({
-    selector: 'app-activity-table',
-    templateUrl: './activity-table.component.html',
-    styleUrl: './activity-table.component.scss',
-    imports: [
-        SpinnerComponent,
-        FaderDirective,
-        MatTableModule,
-        MatSortModule,
-        MatPaginatorModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatCheckboxModule,
-        MatIconModule,
-        MatInputModule,
-        MatTooltipModule,
-        CommonModule,
-    ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-activity-table',
+  templateUrl: './activity-table.component.html',
+  styleUrl: './activity-table.component.scss',
+  imports: [
+    SpinnerComponent,
+    FaderDirective,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatInputModule,
+    MatTooltipModule,
+    CommonModule,
+  ],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityTableComponent extends BaseDialogComponent {
   private destroy$ = new Subject<void>();
+  private filter$ = new Subject<string>();
   public positionStack: WritableSignal<PositionStackEnum[]> = signal<PositionStackEnum[]>([]);
   public selectedRows: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
   public displayedColumns: string[] = [];
@@ -52,6 +53,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
   public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
   public testingData = signal([] as ITableDataRow[]);
+  public noDataText = NoDataText;
 
   public readonly isDataExistsComputed = computed(() => this.dataService.isDataExists());
   public readonly selectedCount = computed(() => this.selectedRows().length);
@@ -68,7 +70,6 @@ export class ActivityTableComponent extends BaseDialogComponent {
     private dataService: DataService,
     private uiService: UIService,
     private destroyRef: DestroyRef,
-    private renderer: Renderer2,
     dialog: MatDialog) {
     super(dialog);
     this.displayedColumns = this.uiService.displayColumns;
@@ -94,6 +95,15 @@ export class ActivityTableComponent extends BaseDialogComponent {
         }
       }
     });
+    this.filter$.pipe(
+      tap(() => this.localSpinner.set(true)),
+      debounceTime(800),
+      switchMap(value => [value])
+    ).subscribe(value => {
+      this.dataSource.filter = value;
+      this.localSpinner.set(false);
+    });
+
     this.destroyRef.onDestroy(() => {
       this.dataService.markAsDestroyed();
       this.dataService.resetDestroyed();
@@ -106,20 +116,8 @@ export class ActivityTableComponent extends BaseDialogComponent {
     return this.uiService.colorSwitch(row);
   };
 
-  public applyFilter(event: KeyboardEvent) {
-    fromEvent(event.target as HTMLInputElement, 'input')
-      .pipe(
-        tap(() => this.localSpinner.set(true)),
-        debounceTime(800),
-        map((e: Event) => (e.target as HTMLInputElement).value.trim().toLowerCase()),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (value) => {
-          this.dataSource.filter = value;
-          this.localSpinner.set(false);
-        }
-      });
+  public applyFilter(event: KeyboardEvent): void {
+    this.filter$.next((event.target as HTMLInputElement).value.trim().toLowerCase());
   }
 
   public toggleAllRows(): void {

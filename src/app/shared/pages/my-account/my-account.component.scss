@@ -1,5 +1,5 @@
 .account-container {
-  padding: 32px;
+  padding: 40px 15px;
   max-width: 800px;
 
   .page-title {
@@ -16,7 +16,7 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 
     .card-title {
-      font-size: 12px;
+      font-size: 16px !important;
       font-weight: 600;
       color: #777;
       text-transform: uppercase;
@@ -47,16 +47,18 @@
         flex: 1;
         display: flex;
         flex-flow: column;
+        align-items: flex-start;
         gap: 4px;
-
+        @media screen and (max-width: 1280px) {
+          gap: 8px;
+        }
         .account-name {
           font-size: 15px;
           font-weight: 500;
           color: #333;
         }
-
         .account-status {
-          font-size: 13px;
+          font-size: 12px;
           color: #999;
 
           &.connected {
@@ -68,6 +70,10 @@
       .account-action {
         display: flex;
         gap: 8px;
+        align-items: center;
+        @media screen and (max-width: 1280px) {
+          flex-flow: column;
+        }
 
         .connect-btn {
           font-size: smaller;

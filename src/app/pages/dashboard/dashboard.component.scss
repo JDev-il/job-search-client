@@ -5,6 +5,43 @@
   justify-content: center;
   z-index: 1;
 }
+.dashboard-no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  .no-data-text {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    h1,
+    p,
+    button {
+      margin: 10px 0;
+      text-align: center;
+      color: var(--gray-400);
+    }
+    p {
+      font-size: large;
+      font-weight: 400;
+    }
+    button {
+      display: flex;
+      align-self: center;
+      min-width: 6rem;
+      color: var(--gray-700);
+      background-color: var(--gray-blue);
+      &:hover {
+        color: var(--gray-blue);
+        background-color: var(--gray-400);
+      }
+    }
+  }
+  @media screen and (max-width: 1280px) {
+    height: 100vh;
+  }
+}
 .dashboard-components-container {
   position: relative;
   height: 100%;

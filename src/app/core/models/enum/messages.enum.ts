@@ -1,7 +1,7 @@
 export enum AccountMessages {
   redirectMessage = "Redirecting you to your dashboard...",
   accountNotFoundMessage = "We couldn’t find an account with that information. Please check your input and try again.",
-  failedMessage = "Http failure response for http://localhost:3000/users/add: 400 Bad Request"
+  failedMessage = `Http failure response for /users/add: 400 Bad Request`
 }
 
 export enum NotificationsStatusEnum {
@@ -33,4 +33,10 @@ export enum SessionMessages {
 
 export enum DataMessages {
   datamissing = "We did't find any applictaions.."
+}
+
+export enum NoDataText {
+  noDataTitle = "No data",
+  noDataTitleDashboard = "You have no applications",
+  noDataDashboard = "Add new applications in the activity table\nto view more insights",
 }
