@@ -1,0 +1,8 @@
+@if (followUps(); as data) {
+  <div>{{ data.counts.submitted }}</div>
+  <div>{{ data.counts.followup }}</div>
+  <div>{{ data.counts.overdue }}</div>
+  @for (entry of data.entries; track entry.companyName) {
+    <p>{{ entry.companyName }} — {{ entry.urgency }}</p>
+  }
+}

@@ -1,4 +1,5 @@
-import { StatusEnum } from "./enum/table-data.enum"
+import { StatusEnum } from "./enum/table-data.enum";
+import { FollowUpEntry, JobSearchFollowUpCircles } from "./job-search.interface";
 
 export interface Country {
   name: {
@@ -53,10 +54,15 @@ export interface NavBarLink {
   index: number
 }
 
-export interface IResponseRatesData {
-  interviewsRate: number,
-  successRate: number,
-  rejsectionRate: number,
+export interface IFollowUpStatRate {
+  value: number;
+  numerator: number;
+  denominator: number;
+}
+
+export interface IFollowUpStats {
+  responseRate: IFollowUpStatRate | null;
+  passRate: IFollowUpStatRate | null;
 }
 
 export interface IStatusMetaData {
@@ -69,4 +75,17 @@ export interface IStatusMetaData {
   allowedTransitions: StatusEnum[]; // valid next statuses (agent guardrail)
 }
 
+export interface IBucketGroup {
+  name: string;
+  statuses: StatusEnum[];
+}
+
+export interface IFollowUpData {
+  entries: FollowUpEntry[],
+  counts: JobSearchFollowUpCircles,
+  responseRate: IFollowUpStats | null
+}
+
 export type TStatusMetaData = Record<StatusEnum, IStatusMetaData>;
+export type TBUCKET_NAMES = 'Pending' | 'Active' | 'Passed' | 'Rejected' | 'Uncertain';
+export type TUrgency = 'submitted' | 'followup' | 'overdue';

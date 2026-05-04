@@ -1,7 +1,7 @@
 import { computed, Injectable, signal, WritableSignal } from "@angular/core";
 import { catchError, Observable, of, switchMap, take, tap, throwError } from "rxjs";
 import { ChartDataType1, MarketChartData } from "../../core/models/chart.interface";
-import { ChartTimeLine, City, Country } from "../../core/models/data.interface";
+import { ChartTimeLine, City, Country, IFollowUpData } from "../../core/models/data.interface";
 import { ErrorMessages, NotificationsStatusEnum, UserMessages } from "../../core/models/enum/messages.enum";
 import { CountriesEnum, FormEnum } from "../../core/models/enum/utils.enum";
 import { ITableDataRow, ITableSaveRequest } from "../../core/models/table.interface";
@@ -25,6 +25,7 @@ export class DataService {
   public readonly globalFilteredData = computed(() => this.stateService._globalFilteredChartData());
   public readonly buttonText = computed(() => this.stateService._buttonText());
   public readonly progressChart = computed(() => this.stateService._progressChart());
+  public readonly progressChartStatuses = computed(() => this.stateService._progressChartStatuses());
   public readonly progressChartCompanies = computed(() => this.stateService._progressChartCompanies());
   public readonly statusChart = computed(() => this.stateService._statusChart());
   public readonly statusChartCompanies = computed(() => this.stateService._statusChartCompanies());
@@ -32,6 +33,7 @@ export class DataService {
   public readonly daysFilter = computed(() => this.stateService._daysFilter());
   public readonly suggestions = computed(() => this.stateService._agentSuggestions());;
   public readonly criteria = computed(() => this.stateService._jobSearchCriterias());
+  public readonly followUpData = computed(() => this.stateService._followUpData());
 
   constructor(private apiService: ApiService, private authService: AuthService, private stateService: StateService) {
     this.getAllCountries().subscribe();
@@ -185,7 +187,10 @@ export class DataService {
   public setProgressChart(chartData: ChartDataType1[]) {
     this.stateService._progressChart.set(chartData);
   }
-  public setProgressChartCompanies(companies: Record<string, Array<{name: string; status: string}>>) {
+  public setProgressChartStatuses(chartData: ChartDataType1[]) {
+    this.stateService._progressChartStatuses.set(chartData);
+  }
+  public setProgressChartCompanies(companies: Record<string, Array<{ name: string; status: string }>>) {
     this.stateService._progressChartCompanies.set(companies);
   }
   public setStatusChart(chartData: ChartDataType1[]) {
@@ -197,7 +202,9 @@ export class DataService {
   public setMarketChart(chartData: MarketChartData) {
     this.stateService._marketChart.set(chartData);
   }
-
+  public setFollowUpData(data: IFollowUpData): void {
+    this.stateService._followUpData.set(data);
+  }
 
   public markAsDestroyed(): void {
     this.stateService.destroyed$.set(true);
@@ -212,7 +219,6 @@ export class DataService {
   public setCurrentTabIndex(val: number): void {
     this.stateService._currentTabIndex.set(val);
   }
-
 
   public setFetchingCities(value: boolean): void {
     this.stateService._isFetchingCities.set(value);
@@ -317,5 +323,4 @@ export class DataService {
   public compareAndSortData(a: number | string, b: number | string, isAsc?: boolean): number {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
-
 }
