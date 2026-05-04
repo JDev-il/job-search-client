@@ -42,7 +42,7 @@ export class StatusChartComponent extends ChartsBaseComponent {
     this.tooltipState.set({
       status, count, color, companies,
       x: rect.left + tooltip.caretX + 12,
-      y: rect.top + tooltip.caretY - 12 + window.scrollY,
+      y: rect.top + tooltip.caretY - 8,
     });
   };
 
@@ -57,9 +57,9 @@ export class StatusChartComponent extends ChartsBaseComponent {
           label: 'Applications',
           data: data.map(d => d.y),
           backgroundColor: data.map(d => STATUS_BUCKET_COLORS[d.x] ?? '#6B7280'),
-          hoverBackgroundColor: data.map(d => (STATUS_BUCKET_COLORS[d.x] ?? '#6B7280') + 'CC'),
-          animation: { easing: 'easeInOutExpo', duration: 800 },
-          barPercentage: 0.6
+          hoverBackgroundColor: data.map(d => (STATUS_BUCKET_COLORS[d.x] ?? '#6B7280') + 'A1'),
+          animation: { easing: 'easeInOutExpo', duration: 500 },
+          barPercentage: 0.4,
         }]
       },
       options: {

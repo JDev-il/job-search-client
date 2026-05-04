@@ -1,3 +1,4 @@
+import { TUrgency } from './data.interface';
 export interface JobSearchCriteria {
   location: string;
   roles: string[];
@@ -10,14 +11,14 @@ export interface JobSearchCriteria {
 }
 
 export interface JobSearchFollowUpCircles {
-  submitted: number,
-  followup: number,
-  overdue: number,
+  submitted: number;
+  followup: number;
+  overdue: number;
 }
 
 export interface FollowUpEntry {
   companyName: string;
   status: string;
   daysElapsed: number;
-  urgency: 'submitted' | 'followup' | 'overdue';
+  urgency: TUrgency;
 }

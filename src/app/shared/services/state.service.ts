@@ -2,7 +2,7 @@ import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ChartDataType1, MarketChartData } from '../../core/models/chart.interface';
 import { AgentSuggestion } from './../../core/models/agent.interface';
-import { ChartTimeLine, City, Country } from './../../core/models/data.interface';
+import { ChartTimeLine, City, Country, IFollowUpData } from './../../core/models/data.interface';
 import { JobSearchCriteria } from './../../core/models/job-search.interface';
 import { ITableDataRow } from './../../core/models/table.interface';
 import { AuthUserResponse, UserResponse } from './../../core/models/users.interface';
@@ -33,13 +33,14 @@ export class StateService {
   public _chronicalDates = signal<string[]>([]);
   public _daysFilter: WritableSignal<number> = signal(0);
   public _destroy$: Subject<boolean> = new Subject();
-
   // Charts Data
   public _progressChart = signal<ChartDataType1[]>([]);
+  public _progressChartStatuses = signal<ChartDataType1[]>([]);
   public _progressChartCompanies = signal<Record<string, Array<{name: string; status: string}>>>({});
   public _statusChart = signal<ChartDataType1[]>([]);
   public _statusChartCompanies = signal<Record<string, string[]>>({});
   public _marketChart = signal<MarketChartData>({ labels: [], buckets: {} });
+  public _followUpData = signal<IFollowUpData | null>(null);
 
   // AI Agent & MCP
   public _agentSuggestions = signal([] as AgentSuggestion[]);

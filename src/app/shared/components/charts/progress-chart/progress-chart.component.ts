@@ -61,7 +61,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
         }],
       },
       options: {
-        animation: { easing: 'easeInOutExpo', duration: 1000 },
+        animation: { easing: 'easeInOutExpo', duration: 800 },
         responsive: true,
         plugins: {
           title: { display: true, text: 'Applications by Status', align: 'center', font: { size: 16 } },

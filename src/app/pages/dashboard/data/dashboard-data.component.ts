@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { MarketChartComponent } from '../../../shared/components/charts/market-chart/market-chart.component';
 import { ProgressChartComponent } from '../../../shared/components/charts/progress-chart/progress-chart.component';
 import { StatusChartComponent } from '../../../shared/components/charts/status-chart/status-chart.component';
-import { MarketChartComponent } from '../../../shared/components/charts/market-chart/market-chart.component';
 
 const CHART_ORDER_KEY = 'chart-order';
 const DEFAULT_ORDER = ['progress', 'status', 'market'];

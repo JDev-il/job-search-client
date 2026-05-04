@@ -2,22 +2,22 @@
 
 // Base Colors
 $awaiting-response: #a4c2f4;
-$hr-reached-back: #ff9375;
-$awaiting-decision: #2193de;
-$decided-to-pass: #dd7e6b;
-$below-expectation: #a64d79;
-$did-not-pass-hr: #ff0100;
-$awaiting-interview: #a2c4c9;
-$interview-scheduled: #3d78d8;
-$awaiting-results: #ffcb31;
-$rejected: #e06666;
-$passed: #91f3cc;
-$probably-not: #f6b26b;
-$reapplied: #20124d;
+$interview-scheduled: #6c9aea;
+$awaiting-interview: #4e7bc9;
+$awaiting-results: #345ca3;
+$awaiting-decision: #214482;
+$hr-reached-back: #ffdd57;
+$did-not-pass-hr: #f58787;
+$decided-to-pass: #d16b6b;
+$contract-declined: #c65353;
+$rejected: #bc3333;
 $archived: #434343;
-$received-contract: #93c47d;
-$contract-accepted: #6aa84f;
-$contract-declined: #d9a441;
+$passed: #50e5aa;
+$received-contract: #43cc95;
+$contract-accepted: #28ac77;
+$reapplied: #20124d;
+$probably-not: #e89e4f;
+$below-expectation: #a64d63;
 
 @function is-color-match($color1, $color2) {
   @return color.channel($color1, "red", $space: rgb) == color.channel($color2, "red", $space: rgb) and

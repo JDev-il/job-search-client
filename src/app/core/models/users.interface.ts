@@ -24,6 +24,7 @@ export interface UserResponseData {
 export interface UserLogin {
   email: string;
   password: string;
+  userId?: number;
   iat?: number;
   exp?: number;
   auth_token?: string | null;

@@ -1,11 +1,24 @@
-import { TStatusMetaData } from "../../core/models/data.interface";
+import { IBucketGroup, TBUCKET_NAMES, TStatusMetaData } from "../../core/models/data.interface";
+import { ColorBuckets } from "../../core/models/enum/charts.enum";
 import { StatusEnum } from "../../core/models/enum/table-data.enum";
 
-export const PIPELINE_PENDING = new Set<StatusEnum>([StatusEnum.AWAITING_RESPONSE, StatusEnum.REAPPLIED]);
-export const PIPELINE_ACTIVE = new Set<StatusEnum>([StatusEnum.HR_REACHED_BACK, StatusEnum.AWAITING_INTERVIEW, StatusEnum.INTERVIEW_SCHEDULED, StatusEnum.AWAITING_RESULTS, StatusEnum.AWAITING_DECISION]);
-export const PIPELINE_PASSED = new Set<StatusEnum>([StatusEnum.PASSED, StatusEnum.RECEIVED_CONTRACT, StatusEnum.CONTRACT_ACCEPTED]);
-export const PIPELINE_REJECTED = new Set<StatusEnum>([StatusEnum.REJECTED, StatusEnum.DID_NOT_PASS_HR, StatusEnum.PROBABLY_NOT]);
-export const PIPELINE_CLOSED = new Set<StatusEnum>([StatusEnum.DECIDED_TO_PASS, StatusEnum.LOW_SALARY, StatusEnum.ARCHIVED, StatusEnum.CONTRACT_DECLINED]);
+
+export const BUCKET_STRUCTURE: IBucketGroup[] = [
+  { name: 'Pending', statuses: [StatusEnum.AWAITING_RESPONSE, StatusEnum.REAPPLIED, StatusEnum.PROBABLY_NOT] },
+  { name: 'Active', statuses: [StatusEnum.HR_REACHED_BACK, StatusEnum.AWAITING_INTERVIEW, StatusEnum.INTERVIEW_SCHEDULED, StatusEnum.AWAITING_RESULTS, StatusEnum.AWAITING_DECISION] },
+  { name: 'Passed', statuses: [StatusEnum.PASSED, StatusEnum.RECEIVED_CONTRACT, StatusEnum.CONTRACT_ACCEPTED] },
+  { name: 'Rejected', statuses: [StatusEnum.REJECTED, StatusEnum.DID_NOT_PASS_HR] },
+  { name: 'Uncertain', statuses: [StatusEnum.DECIDED_TO_PASS, StatusEnum.LOW_SALARY, StatusEnum.ARCHIVED, StatusEnum.CONTRACT_DECLINED] },
+];
+
+const bucketSet = (name: string): Set<StatusEnum> =>
+  new Set(BUCKET_STRUCTURE.find(b => b.name === name)?.statuses ?? []);
+
+export const PIPELINE_PENDING = bucketSet('Pending');
+export const PIPELINE_ACTIVE = bucketSet('Active');
+export const PIPELINE_PASSED = bucketSet('Passed');
+export const PIPELINE_REJECTED = bucketSet('Rejected');
+export const PIPELINE_UNCERTAIN = bucketSet('Uncertain');
 export const STATUS_METADATA: TStatusMetaData = {
   [StatusEnum.AWAITING_RESPONSE]: { bucket: 'active', stage: 'submitted', actionRequired: false, sentiment: 'neutral', followUpAfterDays: 7, calendarRelevant: false, allowedTransitions: [StatusEnum.HR_REACHED_BACK, StatusEnum.REJECTED, StatusEnum.REAPPLIED, StatusEnum.DECIDED_TO_PASS, StatusEnum.ARCHIVED] },
   [StatusEnum.REAPPLIED]: { bucket: 'active', stage: 'submitted', actionRequired: false, sentiment: 'neutral', followUpAfterDays: 7, calendarRelevant: false, allowedTransitions: [StatusEnum.AWAITING_RESPONSE, StatusEnum.HR_REACHED_BACK, StatusEnum.REJECTED, StatusEnum.ARCHIVED] },
@@ -18,7 +31,7 @@ export const STATUS_METADATA: TStatusMetaData = {
   [StatusEnum.RECEIVED_CONTRACT]: { bucket: 'passed', stage: 'closed', actionRequired: true, sentiment: 'positive', followUpAfterDays: 0, calendarRelevant: true, allowedTransitions: [StatusEnum.CONTRACT_ACCEPTED, StatusEnum.CONTRACT_DECLINED, StatusEnum.DECIDED_TO_PASS, StatusEnum.ARCHIVED] },
   [StatusEnum.REJECTED]: { bucket: 'rejected', stage: 'closed', actionRequired: false, sentiment: 'negative', followUpAfterDays: 0, calendarRelevant: false, allowedTransitions: [StatusEnum.REAPPLIED, StatusEnum.ARCHIVED] },
   [StatusEnum.DID_NOT_PASS_HR]: { bucket: 'rejected', stage: 'closed', actionRequired: false, sentiment: 'negative', followUpAfterDays: 0, calendarRelevant: false, allowedTransitions: [StatusEnum.REAPPLIED, StatusEnum.ARCHIVED] },
-  [StatusEnum.PROBABLY_NOT]: { bucket: 'rejected', stage: 'closed', actionRequired: false, sentiment: 'negative', followUpAfterDays: 0, calendarRelevant: false, allowedTransitions: [StatusEnum.REAPPLIED, StatusEnum.ARCHIVED] },
+  [StatusEnum.PROBABLY_NOT]: { bucket: 'rejected', stage: 'closed', actionRequired: false, sentiment: 'neutral', followUpAfterDays: 0, calendarRelevant: false, allowedTransitions: [StatusEnum.REAPPLIED, StatusEnum.ARCHIVED] },
   [StatusEnum.DECIDED_TO_PASS]: { bucket: 'rejected', stage: 'closed', actionRequired: false, sentiment: 'negative', followUpAfterDays: 0, calendarRelevant: false, allowedTransitions: [StatusEnum.ARCHIVED] },
   [StatusEnum.LOW_SALARY]: { bucket: 'rejected', stage: 'closed', actionRequired: false, sentiment: 'negative', followUpAfterDays: 0, calendarRelevant: false, allowedTransitions: [StatusEnum.DECIDED_TO_PASS, StatusEnum.ARCHIVED] },
   [StatusEnum.ARCHIVED]: { bucket: 'rejected', stage: 'closed', actionRequired: false, sentiment: 'negative', followUpAfterDays: 0, calendarRelevant: false, allowedTransitions: [] },
@@ -27,28 +40,28 @@ export const STATUS_METADATA: TStatusMetaData = {
 };
 export const STATUS_BUCKET_COLORS: Record<string, string> = {
   [StatusEnum.AWAITING_RESPONSE]: '#a4c2f4',
-  [StatusEnum.REAPPLIED]: '#20124d',
-  [StatusEnum.HR_REACHED_BACK]: '#ff9375',
-  [StatusEnum.AWAITING_INTERVIEW]: '#a2c4c9',
-  [StatusEnum.INTERVIEW_SCHEDULED]: '#3d78d8',
-  [StatusEnum.AWAITING_RESULTS]: '#ffcb31',
-  [StatusEnum.AWAITING_DECISION]: '#2193de',
-  [StatusEnum.PASSED]: '#91f3cc',
-  [StatusEnum.RECEIVED_CONTRACT]: '#93c47d',
-  [StatusEnum.REJECTED]: '#e06666',
-  [StatusEnum.DID_NOT_PASS_HR]: '#ff0100',
-  [StatusEnum.PROBABLY_NOT]: '#f6b26b',
-  [StatusEnum.DECIDED_TO_PASS]: '#dd7e6b',
-  [StatusEnum.LOW_SALARY]: '#a64d79',
+  [StatusEnum.INTERVIEW_SCHEDULED]: '#6c9aea',
+  [StatusEnum.AWAITING_INTERVIEW]: '#4e7bc9',
+  [StatusEnum.AWAITING_RESULTS]: '#345ca3',
+  [StatusEnum.AWAITING_DECISION]: '#214482',
+  [StatusEnum.HR_REACHED_BACK]: '#ffdd57',
+  [StatusEnum.DID_NOT_PASS_HR]: '#f58787',
+  [StatusEnum.DECIDED_TO_PASS]: '#d16b6b',
+  [StatusEnum.CONTRACT_DECLINED]: '#c65353',
+  [StatusEnum.REJECTED]: '#bc3333',
   [StatusEnum.ARCHIVED]: '#434343',
-  [StatusEnum.CONTRACT_ACCEPTED]: '#6aa84f',
-  [StatusEnum.CONTRACT_DECLINED]: '#d9a441',
+  [StatusEnum.PASSED]: '#50e5aa',
+  [StatusEnum.RECEIVED_CONTRACT]: '#43cc95',
+  [StatusEnum.CONTRACT_ACCEPTED]: '#28ac77',
+  [StatusEnum.REAPPLIED]: '#20124d',
+  [StatusEnum.PROBABLY_NOT]: '#e89e4f',
+  [StatusEnum.LOW_SALARY]: '#a64d63',
 };
 export const BUCKET_COLORS: Record<string, string> = {
-  'Pending': STATUS_BUCKET_COLORS[StatusEnum.AWAITING_RESPONSE],
-  'Active': STATUS_BUCKET_COLORS[StatusEnum.HR_REACHED_BACK],
-  'Passed': STATUS_BUCKET_COLORS[StatusEnum.PASSED],
-  'Rejected': STATUS_BUCKET_COLORS[StatusEnum.REJECTED],
-  'Decided to pass': STATUS_BUCKET_COLORS[StatusEnum.DECIDED_TO_PASS],
+  'Pending': ColorBuckets.Pending,
+  'Active': ColorBuckets.Active,
+  'Passed': ColorBuckets.Passed,
+  'Rejected': ColorBuckets.Rejected,
+  'Uncertain': ColorBuckets.Uncertain,
 };
-export const BUCKET_NAMES = ['Pending', 'Active', 'Passed', 'Rejected', 'Decided to pass'];
+export const BUCKET_NAMES = <TBUCKET_NAMES[]>['Pending', 'Active', 'Passed', 'Rejected', 'Uncertain'];
