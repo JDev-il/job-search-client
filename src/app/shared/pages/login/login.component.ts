@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NotificationsStatusEnum } from '../../../core/models/enum/messages.enum';
-import { ActionLables } from '../../../core/models/enum/utils.enum';
+import { ActionLablesEnum } from '../../../core/models/enum/utils.enum';
 import { LoginModel } from '../../../core/models/forms.interface';
 import { UserLogin } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
@@ -103,14 +103,14 @@ export class LoginComponent extends BaseDialogComponent implements OnInit {
           if (user !== null && user.auth_token) {
             this.dataService.setSpinnerState(true);
             this.authService.setToken(user.auth_token);
-            this.snackBar.openSnackBar({ message: notificationType.success.login.message, title: NotificationsStatusEnum.successlog }, ActionLables.ok);
+            this.snackBar.openSnackBar({ message: notificationType.success.login.message, title: NotificationsStatusEnum.successlog }, ActionLablesEnum.ok);
           } else {
-            this.snackBar.openSnackBar({ message: notificationType.fail.invalidUser.message, title: NotificationsStatusEnum.error }, ActionLables.close);
+            this.snackBar.openSnackBar({ message: notificationType.fail.invalidUser.message, title: NotificationsStatusEnum.error }, ActionLablesEnum.close);
             this.loginForm.reset();
           }
         },
         error: () => {
-          this.snackBar.openSnackBar({ message: notificationType.fail.userLogin.message, title: NotificationsStatusEnum.error }, ActionLables.dismiss);
+          this.snackBar.openSnackBar({ message: notificationType.fail.userLogin.message, title: NotificationsStatusEnum.error }, ActionLablesEnum.dismiss);
           this.loginForm.reset();
         },
         complete: () => this.cd.detectChanges()

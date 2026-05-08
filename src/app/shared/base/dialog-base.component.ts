@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { GenericDialogType } from '../../core/models/dialog.interface';
 import { GenericDialogComponent } from '../dialogs/generic-dialog/generic-dialog.component';
 
@@ -10,15 +10,16 @@ import { GenericDialogComponent } from '../dialogs/generic-dialog/generic-dialog
 })
 export class BaseDialogComponent {
   constructor(private dialog: MatDialog) { }
-  public openDialog(dialogData: GenericDialogType): void {
+
+  public openDialog(dialogData: GenericDialogType, duration: number = 100): MatDialogRef<GenericDialogComponent> {
     (document.activeElement as HTMLElement)?.blur();
-    this.dialog.open(GenericDialogComponent, <MatDialogConfig>{
-      disableClose: true,
+    return this.dialog.open(GenericDialogComponent, <MatDialogConfig>{
       backdropClass: 'generic-dialog-backdrop',
       minWidth: 'unset',
       minHeight: 'unset',
       autoFocus: false,
-      data: dialogData
+      data: dialogData,
+      enterAnimationDuration: duration
     });
   }
 }

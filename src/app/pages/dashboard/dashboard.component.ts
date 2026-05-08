@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatAnchor } from "@angular/material/button";
 import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
-import { throwError } from 'rxjs';
+import { tap, throwError, timer } from 'rxjs';
 import { NavBarLink } from '../../core/models/data.interface';
-import { NoDataText } from '../../core/models/enum/messages.enum';
+import { ConsentDialogTitlesEnum, DialogBodyMessagesEnum, NoDataTextEnum } from '../../core/models/enum/messages.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
 import { InnerNavigationComponent } from '../../shared/components/navigation/inner-navigation/inner-navigation.component';
+import { AnimationDurations } from '../../shared/constants/limitation-values';
 import { FaderDirective } from '../../shared/directives/fader.directive';
 import { DataService } from '../../shared/services/data.service';
 import { FormsService } from '../../shared/services/forms.service';
@@ -29,7 +30,7 @@ import { UIService } from '../../shared/services/ui.service';
   ],
   changeDetection: ChangeDetectionStrategy.Eager
 })
-export class DashboardComponent extends BaseDialogComponent {
+export class DashboardComponent extends BaseDialogComponent implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
   private routingService = inject(RoutingService);
   private localSortedTableDataResponse = signal<ITableDataRow[]>([]);
@@ -39,7 +40,7 @@ export class DashboardComponent extends BaseDialogComponent {
   public status = signal<string[]>([]);
   public progressDates = signal<string[]>([]);
   public isFilter = signal<boolean>(false);
-  public noDataText = NoDataText;
+  public noDataText = NoDataTextEnum;
 
   constructor(
     private dataService: DataService,
@@ -56,6 +57,23 @@ export class DashboardComponent extends BaseDialogComponent {
       this.currentTabIndex.set(this.dataService.currentTabIndex());
       this.status.set(this.dataService.statusPreviewsList);
     });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.dataService.gmailConsentState() == null && this.dataService.isNewUser()) {
+      timer(1000).pipe(
+        takeUntilDestroyed(this.destroyRef),
+        tap(() => {
+          this.openDialog(
+            {
+              consent: {
+                title: ConsentDialogTitlesEnum.welcome,
+                body: [DialogBodyMessagesEnum.welcomeMessage, DialogBodyMessagesEnum.autoTrackerMessage]
+              }
+            }, AnimationDurations.fast);
+        })
+      ).subscribe();
+    }
   }
 
   public get innerLinks(): NavBarLink[] {
@@ -109,8 +127,10 @@ export class DashboardComponent extends BaseDialogComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data: ITableDataRow[]) => {
-          const toTime = (d: Date | string | null) => d ? new Date(d.toString()).getTime() : 0;
-          const sortedData = data.slice().sort((a, b) => toTime(b.applicationDate) - toTime(a.applicationDate));
+          const sortedData = data.slice().sort((a, b) =>
+            new Date(b.applicationDate!.toString()).getTime() -
+            new Date(a.applicationDate!.toString()).getTime()
+          );
           this.localSortedTableDataResponse.set(sortedData);
         },
         error: () => throwError(() => console.error('Error with data rendering'))

@@ -23,13 +23,13 @@
           <button mat-stroked-button class="connect-btn" [disabled]="true">
             Connected
           </button>
-          <button mat-button class="disconnect-btn" (click)="disconnectGmail()">
+          <button mat-button class="disconnect-btn" (click)="gmailDisconnect()">
             Disconnect
           </button>
         } @else {
           <button
             mat-stroked-button
-            (click)="connectGmail()"
+            (click)="gmailConnect()"
             class="connect-btn"
           >
             Connect Gmail

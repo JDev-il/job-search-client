@@ -3,8 +3,8 @@ import { ChartDataType1 } from '../../core/models/chart.interface';
 import { IFollowUpStatRate, IFollowUpStats, TBUCKET_NAMES } from '../../core/models/data.interface';
 import { FollowUpEntry, JobSearchFollowUpCircles } from '../../core/models/job-search.interface';
 import { ITableDataRow } from '../../core/models/table.interface';
-import { FOLLOWUP_MAX, SUBMITTED_MAX } from '../constants/additional-data';
 import { BUCKET_STRUCTURE, PIPELINE_ACTIVE, PIPELINE_PASSED, PIPELINE_PENDING, PIPELINE_REJECTED } from '../constants/charts';
+import { FOLLOWUP_MAX, SUBMITTED_MAX } from '../constants/limitation-values';
 import { TUrgency } from './../../core/models/data.interface';
 import { DataService } from './data.service';
 

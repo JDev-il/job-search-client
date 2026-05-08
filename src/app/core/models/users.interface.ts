@@ -28,6 +28,8 @@ export interface UserLogin {
   iat?: number;
   exp?: number;
   auth_token?: string | null;
+  gmailEmail?: string | null;
+  gmailConsent?: boolean | null;
 }
 
 export interface AuthorizedUser {

@@ -1,6 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, DestroyRef, effect, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,12 +12,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { debounceTime, Subject, switchMap, tap, throwError } from 'rxjs';
-import { NoDataText } from '../../core/models/enum/messages.enum';
+import { debounceTime, filter, Subject, switchMap, tap, throwError, timer } from 'rxjs';
+import { ConsentDialogTitlesEnum, DialogBodyMessagesEnum, NoDataTextEnum } from '../../core/models/enum/messages.enum';
 import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { AnimationDurations } from '../../shared/constants/limitation-values';
 import { FaderDirective } from '../../shared/directives/fader.directive';
 import { DataService } from '../../shared/services/data.service';
 import { FormsService } from '../../shared/services/forms.service';
@@ -53,7 +55,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
   public selection = new SelectionModel<ITableDataRow>(true, []);
   public localSpinner: WritableSignal<boolean> = signal<boolean>(false);
   public testingData = signal([] as ITableDataRow[]);
-  public noDataText = NoDataText;
+  public noDataText = NoDataTextEnum;
 
   public readonly isDataExistsComputed = computed(() => this.dataService.isDataExists());
   public readonly selectedCount = computed(() => this.selectedRows().length);
@@ -74,9 +76,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     super(dialog);
     this.displayedColumns = this.uiService.displayColumns;
     effect(() => {
-      if (this.dataService.getDestroyedState()) {
-        return;
-      }
+      if (this.dataService.getDestroyedState()) return;
       const dataUser = this.dataService.dataUserResponse$;
       if (dataUser && dataUser.userId) {
         this.dataSource.sort = this.sort;
@@ -94,6 +94,19 @@ export class ActivityTableComponent extends BaseDialogComponent {
           this.dataSource.data = this.dataService.lastSortedDataSource();
         }
       }
+      timer(1000).pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter(() => this.isInitialDataDialog),
+        tap(() => {
+          this.openDialog(
+            {
+              consent: {
+                title: ConsentDialogTitlesEnum.congrats,
+                body: [DialogBodyMessagesEnum.successMessage, DialogBodyMessagesEnum.autoTrackerMessage]
+              }
+            }, AnimationDurations.fast);
+        })
+      ).subscribe();
     });
     this.filter$.pipe(
       tap(() => this.localSpinner.set(true)),
@@ -152,7 +165,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
 
   public addNewRow(): void {
     this.selection.clear();
-    this.openDialog({ form: { formTitle: FormEnum.add, formType: this.formService.tableRowInit() } });
+    this.openDialog({ form: { formTitle: FormEnum.add, formType: this.formService.tableRowInit() } })
   }
 
   public editSelectedRow(row: ITableDataRow): void {
@@ -192,6 +205,12 @@ export class ActivityTableComponent extends BaseDialogComponent {
 
   private get verifyLastSortedData(): boolean {
     return this.dataService.lastSortedDataSource() && this.dataService.lastSortedDataSource().length > 0;
+  }
+
+  private get isInitialDataDialog(): boolean {
+    return !this.dataService.isDataExists() &&
+      !this.dataService.isInitialData() &&
+      !this.dataService.gmailConsentState()
   }
 
   private updateTable() {

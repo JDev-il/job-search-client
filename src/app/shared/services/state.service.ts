@@ -25,8 +25,10 @@ export class StateService {
   public _lastSortedDataSource: WritableSignal<ITableDataRow[]> = signal<ITableDataRow[]>([]);
   public _cvProgressTimeline: WritableSignal<ChartTimeLine[]> = signal<ChartTimeLine[]>([]);
   public _isCachedRequest: WritableSignal<boolean> = signal<boolean>(true);
+  public _isNewUser: WritableSignal<boolean> = signal<boolean>(false);
   public _currentCountryName: WritableSignal<string> = signal<string>('');
   public _isDataExists = signal<boolean>(false);
+  public _isInitialData = signal<boolean>(true);
   public _buttonText = signal<string>("Don't have an account?");
   public _isFetchingCities = signal(false);
   public _isRegistrationError = signal(false);
@@ -48,4 +50,5 @@ export class StateService {
 
   // Gmail
   public _gmailEmail = signal<string | null>(null);
+  public _gmailConsent = signal<boolean | null>(null);
 }

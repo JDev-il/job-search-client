@@ -18,6 +18,7 @@ export interface ApiEndpoints {
       gmailStatus: string;
       gmailUrl: string;
       gmailDisconnect: string;
+      gmailConsent: string;
     };
     jobSearch: {
       path: string;

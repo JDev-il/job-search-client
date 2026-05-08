@@ -9,7 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, throwError } from 'rxjs';
 import { NotificationsStatusEnum } from '../../../core/models/enum/messages.enum';
-import { ActionLables } from '../../../core/models/enum/utils.enum';
+import { ActionLablesEnum } from '../../../core/models/enum/utils.enum';
 import { UserRequest, UserToken } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiConfigService } from '../../../core/services/configuration.service';
@@ -89,13 +89,13 @@ export class RegistrationComponent extends BaseDialogComponent {
           catchError((err: HttpErrorResponse) => {
             this.dataService.setSpinnerState(false);
             this.resetEmailPassword();
-            this.snackBar.openSnackBar({ message: notificationType.fail.userExists.message, title: NotificationsStatusEnum.error }, ActionLables.tryagain);
+            this.snackBar.openSnackBar({ message: notificationType.fail.userExists.message, title: NotificationsStatusEnum.error }, ActionLablesEnum.tryagain);
             return throwError(() => err);
           })
         ).subscribe({
           next: (tokenData: UserToken) => {
             this.authService.setToken(tokenData.auth_token);
-            this.snackBar.openSnackBar({ message: notificationType.success.register.message, title: notificationType.success.register.title }, ActionLables.thanks);
+            this.snackBar.openSnackBar({ message: notificationType.success.register.message, title: notificationType.success.register.title }, ActionLablesEnum.thanks);
           },
           error: (err) => {
             throwError(() => console.error(`There was a problem generating a token`, err));
