@@ -37,6 +37,10 @@ export enum ErrorMessagesEnum {
   invalidpassword = "Password does not match our records",
 }
 
+export enum ValidationMessagesEnum {
+  duplicateTooSoon = "You've already applied to this company in the past 7 days",
+}
+
 export enum SessionMessagesEnum {
   expired = "Your session has expired. Please log in again.",
   securityreason = "For security reasons, you have been logged out. Please log in to continue."

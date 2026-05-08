@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatAnchor } from "@angular/material/button";
 import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
-import { tap, throwError, timer } from 'rxjs';
+import { filter, tap, throwError, timer } from 'rxjs';
 import { NavBarLink } from '../../core/models/data.interface';
 import { ConsentDialogTitlesEnum, DialogBodyMessagesEnum, NoDataTextEnum } from '../../core/models/enum/messages.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
@@ -60,20 +60,19 @@ export class DashboardComponent extends BaseDialogComponent implements AfterView
   }
 
   ngAfterViewInit(): void {
-    if (this.dataService.gmailConsentState() == null && this.dataService.isNewUser()) {
-      timer(1000).pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap(() => {
-          this.openDialog(
-            {
-              consent: {
-                title: ConsentDialogTitlesEnum.welcome,
-                body: [DialogBodyMessagesEnum.welcomeMessage, DialogBodyMessagesEnum.autoTrackerMessage]
-              }
-            }, AnimationDurations.fast);
-        })
-      ).subscribe();
-    }
+    timer(1000).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      filter(() => this.dataService.gmailConsentState() === null),
+      tap(() => {
+        this.openDialog(
+          {
+            consent: {
+              title: ConsentDialogTitlesEnum.welcome,
+              body: [DialogBodyMessagesEnum.welcomeMessage, DialogBodyMessagesEnum.autoTrackerMessage]
+            }
+          }, AnimationDurations.fast);
+      })
+    ).subscribe();
   }
 
   public get innerLinks(): NavBarLink[] {

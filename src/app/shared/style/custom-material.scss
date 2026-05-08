@@ -194,3 +194,11 @@ $client-theme: mat.define-theme(
     gap: 4px;
   }
 }
+
+.mat-mdc-form-field-error-wrapper {
+  .mat-mdc-form-field-error {
+    font-size: smaller;
+    position: relative;
+    bottom: 3px;
+  }
+}

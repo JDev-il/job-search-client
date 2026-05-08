@@ -20,6 +20,9 @@
       </mat-option>
       }
     </mat-autocomplete>
+    @if (newAddRowForm.get('companyName')?.hasError('duplicateTooSoon')) {
+      <mat-error class="company-name-error">{{ validationMessages.duplicateTooSoon }}</mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="company-location-input">

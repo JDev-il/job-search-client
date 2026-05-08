@@ -86,7 +86,7 @@ export class FormsBaseComponent {
   }
 
   protected enumsToArray(enums: {}): string[] {
-    return Object.values(enums)
+    return Object.values(enums);
   }
 
   protected filterCountries(query: string): Country[] {

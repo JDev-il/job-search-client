@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { takeUntil, tap } from 'rxjs';
+import { ValidationMessagesEnum } from '../../../../core/models/enum/messages.enum';
 import { FormsBaseComponent } from '../../../base/forms-base.component';
 import { StringSanitizerPipe } from '../../../pipes/string-sanitizer.pipe';
 import { DataService } from '../../../services/data.service';
@@ -33,6 +34,8 @@ import { DataService } from '../../../services/data.service';
 })
 export class AddRowComponent extends FormsBaseComponent {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
+  public validationMessages = ValidationMessagesEnum;
+
   constructor(private destroyRef: DestroyRef, dataService: DataService) {
     super(dataService);
     this.destroyRef.onDestroy(() => {
@@ -47,6 +50,14 @@ export class AddRowComponent extends FormsBaseComponent {
         this.selectedStacks.set(value ?? []);
       }), takeUntil(this.destroy$))
       .subscribe();
+
+    const companyNameControl = this.newAddRowForm.get('companyName');
+    companyNameControl?.addValidators((control) => {
+      if (!control.value) return null;
+      const result = this.dataService.checkCompanyReapply(control.value, null);
+      return result === 'blocked' ? { duplicateTooSoon: true } : null;
+    });
+    companyNameControl?.updateValueAndValidity();
   }
 
   public get formArrayKeys(): string[] {

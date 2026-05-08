@@ -5,8 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { switchMap, take, tap } from 'rxjs';
 import { Country } from '../../../core/models/data.interface';
+import { ITableDataRow } from '../../../core/models/table.interface';
 import { FormDialog, GenericDialogType } from '../../../core/models/dialog.interface';
-import { ConsentDialogTitlesEnum, DialogBodyMessagesEnum, NotificationsStatusEnum } from '../../../core/models/enum/messages.enum';
+import { ConsentDialogTitlesEnum, DialogBodyMessagesEnum, NotificationsStatusEnum, ValidationMessagesEnum } from '../../../core/models/enum/messages.enum';
+import { StatusEnum } from '../../../core/models/enum/table-data.enum';
 import { ContinentsEnum, FormEnum } from '../../../core/models/enum/utils.enum';
 import { AuthService } from '../../../core/services/auth.service';
 import { AddRowComponent } from '../../components/forms/add-row/add-row.component';
@@ -27,6 +29,7 @@ import { TableDataFormRow } from './../../../core/models/forms.interface';
 export class GenericDialogComponent {
   public dataType: WritableSignal<GenericDialogType> = signal<GenericDialogType>({});
   public countriesList: WritableSignal<Country[]> = signal([] as Country[]);
+  public duplicateError: WritableSignal<string | null> = signal(null);
   public currentContinent!: ContinentsEnum;
   public editFormSnapshot!: TableDataFormRow;
   public notifyText = NotificationsStatusEnum;
@@ -82,7 +85,18 @@ export class GenericDialogComponent {
 
   public sendForm(form: FormGroup): void {
     const formTitle = this.data.form?.formTitle as FormEnum;
-    this.dataService.addOrUpdateApplication(form.value, formTitle).subscribe();
+    if (formTitle === FormEnum.add) {
+      const check = this.dataService.checkCompanyReapply(form.value.companyName, form.value.applicationDate);
+      if (check === 'blocked') {
+        this.duplicateError.set(ValidationMessagesEnum.duplicateTooSoon);
+        return;
+      }
+      if (check === 'reapply') {
+        form.patchValue({ status: StatusEnum.REAPPLIED });
+      }
+    }
+    this.duplicateError.set(null);
+    this.dataService.addOrUpdateApplication(form.getRawValue() as ITableDataRow, formTitle).subscribe();
     this.dialogRef.close();
   }
 
@@ -104,12 +118,8 @@ export class GenericDialogComponent {
   }
 
   public onConsentDismiss(): void {
-    this.dataService.gmailConsent(false).pipe(
-      take(1),
-      tap(() => {
-        this.dialogRef.close();
-      })
-    ).subscribe();
+    this.dataService.declineConsent();
+    this.dialogRef.close();
   }
 
   private get shouldSkipDestroyActions(): boolean {

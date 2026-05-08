@@ -48,7 +48,7 @@ export class FormsService {
   }
 
   public editRowInit(row?: ITableDataRow): FormGroup<TableDataFormRow> {
-    return this.fb.group<TableDataFormRow>({
+    const form = this.fb.group<TableDataFormRow>({
       userId: this.fb.control(row?.userId ?? null),
       jobId: this.fb.control(row?.jobId ?? null),
       status: this.fb.control(row?.status ?? '', Validators.required),
@@ -61,7 +61,10 @@ export class FormsService {
       applicationDate: this.fb.control(row?.applicationDate ?? null, [this.futureDateValidator, Validators.required]),
       notes: this.fb.control(row?.notes ?? ''),
       hunch: this.fb.control(row?.hunch ?? '')
-    })
+    });
+    form.controls.companyName.disable();
+    form.controls.applicationDate.disable();
+    return form;
   }
 
   private passwordMatchValidator(form: AbstractControl): ValidationErrors | null {

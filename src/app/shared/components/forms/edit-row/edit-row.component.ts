@@ -9,6 +9,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { takeUntil, tap } from 'rxjs';
+import { StatusEnum } from '../../../../core/models/enum/table-data.enum';
 import { FormsBaseComponent } from '../../../base/forms-base.component';
 import { StringSanitizerPipe } from './../../../pipes/string-sanitizer.pipe';
 import { DataService } from './../../../services/data.service';
@@ -44,6 +45,7 @@ export class EditRowComponent extends FormsBaseComponent {
   }
 
   ngOnInit(): void {
+    this.statuses.set(this.enumsToArray(StatusEnum).filter(s => s !== StatusEnum.AWAITING_RESPONSE));
     this.incomingEditForm.get('positionStack')?.valueChanges.pipe(
       tap((value) => {
         this.selectedStacks.set(value ?? []);

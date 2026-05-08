@@ -10,6 +10,9 @@
               (formEmit)="sendForm(form.formType)"
             ></app-add-row>
           </div>
+          @if (duplicateError()) {
+            <p class="form-error">{{ duplicateError() }}</p>
+          }
         } @else if (data.form?.formTitle === formEnum.edit) {
           <h4>Edit Application</h4>
           <div class="overflow-form">

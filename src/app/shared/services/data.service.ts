@@ -8,6 +8,7 @@ import { ITableDataRow, ITableSaveRequest } from "../../core/models/table.interf
 import { AuthorizedUser, AuthUserResponse, IUserData, UserLogin, UserRequest, UserResponse, UserToken } from "../../core/models/users.interface";
 import { ApiService } from "../../core/services/api.service";
 import { GmailApiService } from "../../core/services/gmail-api.service";
+import { CONSENT_DECLINED_KEY } from '../constants/aliases';
 import { AuthService } from './../../core/services/auth.service';
 import { StateService } from "./state.service";
 
@@ -41,12 +42,90 @@ export class DataService {
   public readonly isInitialData = computed(() => this.stateService._isInitialData());
   public readonly isNewUser = computed(() => this.stateService._isNewUser());
 
+  private get isLocalStorage(): boolean {
+    return typeof localStorage !== 'undefined';
+  }
+
+  public get usersResponseState(): AuthUserResponse {
+    return this.stateService._usersResponse();
+  }
+  public set usersResponseState(user: AuthUserResponse) {
+    this.stateService._usersResponse.set(user);
+  }
+
+  public get dataUserResponse$(): UserResponse {
+    return this.apiService.currentUserData$();
+  }
+  public set dataUserResponse$(userData: UserResponse) {
+    this.apiService.currentUserData$.set(userData);
+  }
+
+  public get allCountries(): Country[] {
+    return this.stateService._countries();
+  }
+
+  public get currentSelectedCountry(): Country {
+    return this.stateService._currentCountry();
+  }
+
+  public get citiesOfCurrentCountry(): City {
+    return this.stateService._currentCitiesByCountry();
+  }
+  public set citiesOfCurrentCountry(cities: City) {
+    this.stateService._currentCitiesByCountry.set(cities);
+  }
+
+  public get listOfCompanies(): string[] {
+    return this.stateService._companiesList();
+  }
+
+  public get notificationsType() {
+    return {
+      success: {
+        login: {
+          title: NotificationsStatusEnum.successlog,
+          message: UserMessagesEnum.loginsuccess
+        },
+        register: {
+          title: NotificationsStatusEnum.successreg,
+          message: UserMessagesEnum.registrationsuccess
+        }
+      },
+      fail: {
+        invalidUser: {
+          title: NotificationsStatusEnum.error,
+          message: ErrorMessagesEnum.invalidusername
+        },
+        invalidPassword: {
+          title: NotificationsStatusEnum.error,
+          message: ErrorMessagesEnum.invalidpassword
+        },
+        userExists: {
+          title: NotificationsStatusEnum.error,
+          message: ErrorMessagesEnum.userexistserror
+        },
+        userLogin: {
+          title: NotificationsStatusEnum.error,
+          message: ErrorMessagesEnum.userloginerror
+        },
+      },
+    }
+  }
+
+  public get statusPreviewsList(): string[] {
+    return this.stateService._statusPreviewList();
+  }
+
+
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
     private stateService: StateService,
     private gmailApiService: GmailApiService,
   ) {
+    if (this.isLocalStorage && localStorage.getItem(CONSENT_DECLINED_KEY) === 'true') {
+      this.stateService._gmailConsent.set(false);
+    }
     this.getAllCountries().subscribe();
     this.getCitiesByCountry(CountriesEnum.primary).subscribe();
     this.getCompanies().subscribe();
@@ -103,9 +182,7 @@ export class DataService {
 
   public connectGmail(): Observable<{ url: string }> {
     const token = this.authService.getToken()!;
-    return this.gmailApiService.gmailConnectReq(token).pipe(
-      tap(() => this.stateService._gmailConsent.set(true))
-    );
+    return this.gmailApiService.gmailConnectReq(token);
   }
 
   public disconnectGmail(): Observable<void> {
@@ -119,14 +196,13 @@ export class DataService {
     );
   }
 
-  public declineConcent(): Observable<void> {
-    const token = this.authService.getToken()!;
-    return this.gmailApiService.disconnectGmailReq(token).pipe(
-      tap(() => {
-        this.stateService._gmailConsent.set(false);
-      })
-    )
+  public declineConsent(): void {
+    if (this.isLocalStorage) {
+      localStorage.setItem(CONSENT_DECLINED_KEY, 'true');
+    }
+    this.stateService._gmailConsent.set(false);
   }
+
 
   public gmailConsent(hasConsent: boolean): Observable<{ gmailConsent: boolean }> {
     const token = this.authService.getToken()!;
@@ -156,6 +232,9 @@ export class DataService {
       tap((res) => {
         this.stateService._gmailEmail.set(res.gmailEmail);
         if (res.gmailEmail) {
+          if (this.isLocalStorage) {
+            localStorage.removeItem(CONSENT_DECLINED_KEY);
+          }
           this.stateService._gmailConsent.set(true);
         }
       }),
@@ -197,6 +276,17 @@ export class DataService {
         );
     }
     return of(this.stateService._tableDataResponse());
+  }
+
+  public checkCompanyReapply(companyName: string, newDate: Date | string | null): 'blocked' | 'reapply' | null {
+    const normalized = companyName.trim().toLowerCase();
+    const matches = this.tableDataResponse().filter(r =>
+      r.companyName.trim().toLowerCase() === normalized && r.applicationDate
+    );
+    if (!matches.length) return null;
+    const mostRecent = this.calcMostRecent(matches);
+    const daysDiff = this.calcDaysDiff(newDate, mostRecent);
+    return daysDiff < 7 ? 'blocked' : 'reapply';
   }
 
   public addOrUpdateApplication(row: ITableDataRow, formAction: FormEnum): Observable<ITableSaveRequest> {
@@ -345,78 +435,18 @@ export class DataService {
     return { userId: this.userData().userId, email: this.userData().email, firstName: this.userData().firstName, lastName: this.userData().lastName };
   }
 
-  public get usersResponseState(): AuthUserResponse {
-    return this.stateService._usersResponse();
-  }
-  public set usersResponseState(user: AuthUserResponse) {
-    this.stateService._usersResponse.set(user);
-  }
-
-  public get dataUserResponse$(): UserResponse {
-    return this.apiService.currentUserData$();
-  }
-  public set dataUserResponse$(userData: UserResponse) {
-    this.apiService.currentUserData$.set(userData);
-  }
-
-  public get allCountries(): Country[] {
-    return this.stateService._countries();
-  }
-
-  public get currentSelectedCountry(): Country {
-    return this.stateService._currentCountry();
-  }
-
-  public get citiesOfCurrentCountry(): City {
-    return this.stateService._currentCitiesByCountry();
-  }
-  public set citiesOfCurrentCountry(cities: City) {
-    this.stateService._currentCitiesByCountry.set(cities);
-  }
-
-  public get listOfCompanies(): string[] {
-    return this.stateService._companiesList();
-  }
-
-  public get notificationsType() {
-    return {
-      success: {
-        login: {
-          title: NotificationsStatusEnum.successlog,
-          message: UserMessagesEnum.loginsuccess
-        },
-        register: {
-          title: NotificationsStatusEnum.successreg,
-          message: UserMessagesEnum.registrationsuccess
-        }
-      },
-      fail: {
-        invalidUser: {
-          title: NotificationsStatusEnum.error,
-          message: ErrorMessagesEnum.invalidusername
-        },
-        invalidPassword: {
-          title: NotificationsStatusEnum.error,
-          message: ErrorMessagesEnum.invalidpassword
-        },
-        userExists: {
-          title: NotificationsStatusEnum.error,
-          message: ErrorMessagesEnum.userexistserror
-        },
-        userLogin: {
-          title: NotificationsStatusEnum.error,
-          message: ErrorMessagesEnum.userloginerror
-        },
-      },
-    }
-  }
-
-  public get statusPreviewsList(): string[] {
-    return this.stateService._statusPreviewList();
-  }
-
   public compareAndSortData(a: number | string, b: number | string, isAsc?: boolean): number {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  private calcDaysDiff(newDate: Date | string | null, mostRecent: ITableDataRow): number {
+    return (new Date(newDate ?? Date.now()).getTime() - new Date(mostRecent.applicationDate!).getTime()) / 86_400_000;
+  }
+
+  private calcMostRecent(matches: ITableDataRow[]): ITableDataRow {
+    return matches.reduce((latest, r) =>
+      new Date(r.applicationDate!).getTime() > new Date(latest.applicationDate!).getTime() ? r : latest
+    );
   }
 
   private setInitialData(): void {
