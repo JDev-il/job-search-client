@@ -42,7 +42,6 @@ export class AuthService {
     return tokenExists || signalState;
   }
 
-
   public get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }

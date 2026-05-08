@@ -1,12 +1,13 @@
 import { computed, Injectable, signal, WritableSignal } from "@angular/core";
-import { catchError, Observable, of, switchMap, take, tap, throwError } from "rxjs";
+import { catchError, map, Observable, of, switchMap, take, tap, throwError } from "rxjs";
 import { ChartDataType1, MarketChartData } from "../../core/models/chart.interface";
 import { ChartTimeLine, City, Country, IFollowUpData } from "../../core/models/data.interface";
-import { ErrorMessages, NotificationsStatusEnum, UserMessages } from "../../core/models/enum/messages.enum";
+import { ErrorMessagesEnum, NotificationsStatusEnum, UserMessagesEnum } from "../../core/models/enum/messages.enum";
 import { CountriesEnum, FormEnum } from "../../core/models/enum/utils.enum";
 import { ITableDataRow, ITableSaveRequest } from "../../core/models/table.interface";
 import { AuthorizedUser, AuthUserResponse, IUserData, UserLogin, UserRequest, UserResponse, UserToken } from "../../core/models/users.interface";
 import { ApiService } from "../../core/services/api.service";
+import { GmailApiService } from "../../core/services/gmail-api.service";
 import { AuthService } from './../../core/services/auth.service';
 import { StateService } from "./state.service";
 
@@ -35,8 +36,17 @@ export class DataService {
   public readonly criteria = computed(() => this.stateService._jobSearchCriterias());
   public readonly followUpData = computed(() => this.stateService._followUpData());
   public readonly userData = computed(() => this.stateService._dataUserResponse());
+  public readonly isGmailState = computed(() => this.stateService._gmailEmail());
+  public readonly gmailConsentState = computed(() => this.stateService._gmailConsent());
+  public readonly isInitialData = computed(() => this.stateService._isInitialData());
+  public readonly isNewUser = computed(() => this.stateService._isNewUser());
 
-  constructor(private apiService: ApiService, private authService: AuthService, private stateService: StateService) {
+  constructor(
+    private apiService: ApiService,
+    private authService: AuthService,
+    private stateService: StateService,
+    private gmailApiService: GmailApiService,
+  ) {
     this.getAllCountries().subscribe();
     this.getCitiesByCountry(CountriesEnum.primary).subscribe();
     this.getCompanies().subscribe();
@@ -44,7 +54,17 @@ export class DataService {
 
   public loginUser(loginForm: UserLogin): Observable<UserLogin | null> {
     loginForm.auth_token = this.authService.getToken();
-    return this.apiService.loginUserReq(loginForm);
+    return this.apiService.loginUserReq(loginForm).pipe(
+      tap(user => {
+        if (user && user.gmailConsent !== undefined) {
+          this.stateService._gmailConsent.set(user.gmailConsent);
+        }
+        if (user && user.gmailEmail !== undefined) {
+          this.stateService._gmailEmail.set(user.gmailEmail ?? null);
+        }
+        this.stateService._isNewUser.set(false);
+      })
+    );
   }
 
   public addNewUser(user: UserRequest): Observable<UserToken> {
@@ -52,6 +72,7 @@ export class DataService {
       take(1),
       tap((userData: UserResponse) => {
         this.stateService._dataUserResponse.set(userData);
+        this.stateService._isNewUser.set(true);
       }),
       switchMap(() => {
         return this.generateUserToken({ email: user.email, password: user.password })
@@ -78,6 +99,71 @@ export class DataService {
         return throwError(() => err)
       })
       ))
+  }
+
+  public connectGmail(): Observable<{ url: string }> {
+    const token = this.authService.getToken()!;
+    return this.gmailApiService.gmailConnectReq(token).pipe(
+      tap(() => this.stateService._gmailConsent.set(true))
+    );
+  }
+
+  public disconnectGmail(): Observable<void> {
+    const token = this.authService.getToken()!;
+    return this.gmailApiService.disconnectGmailReq(token).pipe(
+      take(1),
+      tap(() => {
+        this.stateService._gmailEmail.set(null);
+        this.stateService._gmailConsent.set(false);
+      }),
+    );
+  }
+
+  public declineConcent(): Observable<void> {
+    const token = this.authService.getToken()!;
+    return this.gmailApiService.disconnectGmailReq(token).pipe(
+      tap(() => {
+        this.stateService._gmailConsent.set(false);
+      })
+    )
+  }
+
+  public gmailConsent(hasConsent: boolean): Observable<{ gmailConsent: boolean }> {
+    const token = this.authService.getToken()!;
+    return this.gmailApiService.postGmailConsentReq(token, hasConsent).pipe(
+      take(1),
+      tap(res => {
+        this.stateService._gmailConsent.set(res.gmailConsent);
+      }),
+      catchError(err => {
+        console.error('[gmail/consent] failed', err);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  public getGmailRedirectUrl(): Observable<string> {
+    const token = this.authService.getToken()!;
+    return this.gmailApiService.gmailConnectReq(token).pipe(
+      take(1),
+      map(res => res.url)
+    );
+  }
+
+  public gmailStatus(token: string): Observable<{ gmailEmail: string | null }> {
+    return this.gmailApiService.getGmailStatusReq(token).pipe(
+      take(1),
+      tap((res) => {
+        this.stateService._gmailEmail.set(res.gmailEmail);
+        if (res.gmailEmail) {
+          this.stateService._gmailConsent.set(true);
+        }
+      }),
+      catchError(err => {
+        console.error('[gmail/status] failed', err);
+        return of({ gmailEmail: null as string | null });
+      }),
+    )
   }
 
   public userDataRequest(): Observable<UserResponse | null> {
@@ -117,6 +203,9 @@ export class DataService {
     return this.apiService.addOrUpdateApplicationReq(row, formAction).pipe(
       take(1),
       tap(() => {
+        if (!this.isDataExists() && this.isInitialData()) {
+          this.setInitialData();
+        }
         this.stateService._isCachedRequest.set(true);
       }),
       catchError((err) => {
@@ -294,29 +383,29 @@ export class DataService {
       success: {
         login: {
           title: NotificationsStatusEnum.successlog,
-          message: UserMessages.loginsuccess
+          message: UserMessagesEnum.loginsuccess
         },
         register: {
           title: NotificationsStatusEnum.successreg,
-          message: UserMessages.registrationsuccess
+          message: UserMessagesEnum.registrationsuccess
         }
       },
       fail: {
         invalidUser: {
           title: NotificationsStatusEnum.error,
-          message: ErrorMessages.invalidusername
+          message: ErrorMessagesEnum.invalidusername
         },
         invalidPassword: {
           title: NotificationsStatusEnum.error,
-          message: ErrorMessages.invalidpassword
+          message: ErrorMessagesEnum.invalidpassword
         },
         userExists: {
           title: NotificationsStatusEnum.error,
-          message: ErrorMessages.userexistserror
+          message: ErrorMessagesEnum.userexistserror
         },
         userLogin: {
           title: NotificationsStatusEnum.error,
-          message: ErrorMessages.userloginerror
+          message: ErrorMessagesEnum.userloginerror
         },
       },
     }
@@ -328,5 +417,9 @@ export class DataService {
 
   public compareAndSortData(a: number | string, b: number | string, isAsc?: boolean): number {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  private setInitialData(): void {
+    this.stateService._isInitialData.set(false);
   }
 }

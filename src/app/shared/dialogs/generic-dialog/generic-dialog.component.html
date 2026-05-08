@@ -1,65 +1,102 @@
 <section class="dialog-wrapper">
   <div class="dialog-div">
     <div mat-dialog-header class="dialog-header">
-      @if (form) { @if (data.form?.formTitle === formEnum.add) {
-      <h4>New Application</h4>
-      <div class="overflow-form">
-        <app-add-row
-          [newAddRowForm]="form.formType"
-          (formEmit)="sendForm(form.formType)"
-        ></app-add-row>
-      </div>
-      } @else if (data.form?.formTitle === formEnum.edit) {
-      <h4>Edit Application</h4>
-      <div class="overflow-form">
-        @defer(when form && form.formType.get('status')?.value !== ''){
-        <app-edit-row
-          [incomingEditForm]="form.formType"
-          [countries]="countriesList"
-          (formEmit)="sendForm(form.formType)"
-        ></app-edit-row>
-        } @placeholder { Row is empty! }
-      </div>
-      } } @else {
-      <h4
-        mat-dialog-title
-        [ngClass]="{
-          'green-title': isSuccess,
-          'red-title': !isSuccess
-        }"
-      >
-        {{ dataType().notification?.title | firstToUpperCase }}
-      </h4>
+      @if (form) {
+        @if (data.form?.formTitle === formEnum.add) {
+          <h4>Add Application</h4>
+          <div class="overflow-form">
+            <app-add-row
+              [newAddRowForm]="form.formType"
+              (formEmit)="sendForm(form.formType)"
+            ></app-add-row>
+          </div>
+        } @else if (data.form?.formTitle === formEnum.edit) {
+          <h4>Edit Application</h4>
+          <div class="overflow-form">
+            @defer (when form && form.formType.get('status')?.value !== '') {
+              <app-edit-row
+                [incomingEditForm]="form.formType"
+                [countries]="countriesList"
+                (formEmit)="sendForm(form.formType)"
+              ></app-edit-row>
+            } @placeholder {
+              Row is empty!
+            }
+          </div>
+        }
+      } @else if (isConsent) {
+        <h4>{{ data.consent?.title }}</h4>
+      } @else {
+        <h4
+          mat-dialog-title
+          [ngClass]="{
+            'green-title': isSuccess,
+            'red-title': !isSuccess,
+          }"
+        >
+          {{ dataType().notification?.title | firstToUpperCase }}
+        </h4>
       }
     </div>
     <div mat-dialog-content class="dialog-content">
-      <p>{{ data.notification?.message }}</p>
+      @if (isConsent) {
+        <div class="consent-div">
+          @for (item of data.consent?.body; track $index) {
+            <p>{{ item }}</p>
+          }
+        </div>
+      } @else {
+        <p>{{ data.notification?.message }}</p>
+      }
     </div>
     <div mat-dialog-actions class="dialog-actions">
-      @if (form) {
-      <button
-        mat-raised-button
-        [disabled]="!form.formType.valid"
-        (click)="sendForm(form.formType)"
-        class="dialog-actions-button"
-      >
-        @if(isAdd){ Add Row } @else { Edit Row }
-      </button>
-      }
-      <button
-        mat-raised-button
-        class="dialog-actions-button"
-        (click)="closeDialog()"
-      >
-        @if(isSuccess){
-        {{ "Continue" }}
-        } @else if(data.form?.formTitle === formEnum.edit ||
-        data.form?.formTitle === formEnum.add) {
-        {{ "Cancel" }}
-        } @else {
-        {{ "Close" }}
+      @if (isConsent) {
+        <button
+          mat-raised-button
+          class="dialog-actions-button"
+          (click)="onConsentConnect()"
+        >
+          Connect
+        </button>
+        <button
+          mat-raised-button
+          class="dialog-actions-button"
+          (click)="onConsentDismiss()"
+        >
+          Maybe later
+        </button>
+      } @else {
+        @if (form) {
+          <button
+            mat-raised-button
+            [disabled]="!form.formType.valid"
+            (click)="sendForm(form.formType)"
+            class="dialog-actions-button"
+          >
+            @if (isAdd) {
+              Add Row
+            } @else {
+              Edit Row
+            }
+          </button>
         }
-      </button>
+        <button
+          mat-raised-button
+          class="dialog-actions-button"
+          (click)="closeDialog()"
+        >
+          @if (isSuccess) {
+            {{ "Continue" }}
+          } @else if (
+            data.form?.formTitle === formEnum.edit ||
+            data.form?.formTitle === formEnum.add
+          ) {
+            {{ "Cancel" }}
+          } @else {
+            {{ "Close" }}
+          }
+        </button>
+      }
     </div>
   </div>
 </section>

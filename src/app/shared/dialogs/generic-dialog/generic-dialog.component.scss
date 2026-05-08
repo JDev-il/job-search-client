@@ -36,6 +36,17 @@
     .red-title {
       color: #ec1720;
     }
+    .consnet-div {
+      max-width: 85%;
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      justify-self: center;
+      margin-bottom: 1.33em;
+      p {
+        margin: 8px;
+      }
+    }
     .dialog-actions {
       width: 100%;
       display: flex;

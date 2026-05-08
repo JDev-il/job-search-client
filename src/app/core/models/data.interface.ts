@@ -86,6 +86,12 @@ export interface IFollowUpData {
   responseRate: IFollowUpStats | null
 }
 
+export interface AnimationValues {
+  default: number,
+  fast: number,
+  slow: number,
+}
+
 export type TStatusMetaData = Record<StatusEnum, IStatusMetaData>;
 export type TBUCKET_NAMES = 'Pending' | 'Active' | 'Passed' | 'Rejected' | 'Uncertain';
 export type TUrgency = 'submitted' | 'followup' | 'overdue';

@@ -1,4 +1,4 @@
-export enum ActionLables {
+export enum ActionLablesEnum {
   dismiss = "Dismiss",
   close = "Close",
   tryagain = "Try Again",
@@ -15,8 +15,8 @@ export enum ButtonsEnum {
 
 export enum FormEnum {
   add = "addRow",
-  edit = 'editRow',
-  remove = 'removeRows',
+  edit = "editRow",
+  remove = "removeRows",
 }
 
 export enum FormDataTypes {

@@ -123,7 +123,8 @@ export class ApiConfigService {
           google: '/google',
           gmailStatus: '/gmail/status',
           gmailUrl: '/gmail/url',
-          gmailDisconnect: '/gmail/disconnect'
+          gmailDisconnect: '/gmail/disconnect',
+          gmailConsent: '/gmail/consent'
         },
         jobSearch: {
           path: 'jobsearch',
