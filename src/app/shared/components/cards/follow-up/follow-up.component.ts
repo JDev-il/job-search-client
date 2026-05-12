@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, ViewEncapsulation } from '@angular/core';
+import { MatCard, MatCardContent, MatCardFooter, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatChip, MatChipSet } from '@angular/material/chips';
 import { ChartsService } from '../../../services/charts.service';
 import { DataService } from '../../../services/data.service';
 
 @Component({
   selector: 'app-follow-up',
-  imports: [],
+  imports: [MatCard, MatCardHeader, MatCardFooter, MatCardTitle, MatCardContent, MatChipSet, MatChip],
   templateUrl: './follow-up.component.html',
   styleUrl: './follow-up.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

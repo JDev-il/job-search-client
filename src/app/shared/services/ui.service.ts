@@ -31,8 +31,8 @@ export class UIService {
 
   public get innerNavigationLinks(): NavBarLink[] {
     return [
-      { name: 'Data', route: 'dashboard/data', icon: 'data_usage', index: 0 },
-      { name: 'Actions', route: 'dashboard/actions', icon: 'done_all', index: 1 },
+      { name: 'Insights', route: 'dashboard/insights', icon: 'donut_small', index: 0 },
+      { name: 'Actions', route: 'dashboard/actions', icon: 'developer_board', index: 1 },
     ];
   }
 

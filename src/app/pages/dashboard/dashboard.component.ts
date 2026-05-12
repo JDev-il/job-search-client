@@ -10,7 +10,7 @@ import { FormEnum } from '../../core/models/enum/utils.enum';
 import { ITableDataRow } from '../../core/models/table.interface';
 import { BaseDialogComponent } from '../../shared/base/dialog-base.component';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
-import { InnerNavigationComponent } from '../../shared/components/navigation/inner-navigation/inner-navigation.component';
+import { InnerNavigationComponent } from '../../shared/components/inner-navigation/inner-navigation.component';
 import { AnimationDurations } from '../../shared/constants/limitation-values';
 import { FaderDirective } from '../../shared/directives/fader.directive';
 import { DataService } from '../../shared/services/data.service';

@@ -48,7 +48,7 @@ export class StatusChartComponent extends ChartsBaseComponent {
 
   public statusChart(): ChartConfiguration {
     const data = this.dataService.statusChart() as ChartDataType1[];
-    const maxX = data.length ? Math.max(...data.map(d => d.y)) + 1 : 10;
+    const maxX = data.length ? Math.max(...data.map(d => d.y)) : 10;
     return {
       type: 'bar',
       data: {
@@ -58,13 +58,15 @@ export class StatusChartComponent extends ChartsBaseComponent {
           data: data.map(d => d.y),
           backgroundColor: data.map(d => STATUS_BUCKET_COLORS[d.x] ?? '#6B7280'),
           hoverBackgroundColor: data.map(d => (STATUS_BUCKET_COLORS[d.x] ?? '#6B7280') + 'A1'),
-          animation: { easing: 'easeInOutExpo', duration: 500 },
-          barPercentage: 0.4,
+          animation: { easing: 'easeInOutExpo', duration: 600 },
+          barPercentage: 0.52,
         }]
       },
       options: {
+        aspectRatio: 1,
         indexAxis: 'y',
         responsive: true,
+        layout: { padding: { top: 15, bottom: 15, right: 50, left: 25 } },
         scales: {
           x: {
             max: maxX,

@@ -1,15 +1,12 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { MarketChartComponent } from '../../../shared/components/charts/market-chart/market-chart.component';
-import { ProgressChartComponent } from '../../../shared/components/charts/progress-chart/progress-chart.component';
+import { ApplicationByStatusComponent } from "../../../shared/components/charts/application-by-status/application-by-status.component";
 import { StatusChartComponent } from '../../../shared/components/charts/status-chart/status-chart.component';
-
-const CHART_ORDER_KEY = 'chart-order';
-const DEFAULT_ORDER = ['progress', 'status', 'market'];
-
+import { TimelineChartComponent } from '../../../shared/components/charts/timeline-chart/timeline-chart.component';
+import { CHART_ORDER_KEY, DEFAULT_ORDER } from '../../../shared/constants/charts';
 @Component({
   selector: 'app-dashboard-data',
-  imports: [CdkDropList, CdkDrag, ProgressChartComponent, StatusChartComponent, MarketChartComponent],
+  imports: [CdkDropList, CdkDrag, StatusChartComponent, TimelineChartComponent, ApplicationByStatusComponent],
   templateUrl: './dashboard-data.component.html',
   styleUrl: './dashboard-data.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

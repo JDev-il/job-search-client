@@ -84,9 +84,9 @@ job-search-client/
 │   │   │   ├── components/
 │   │   │   │   ├── agent/               # AI agent text input (debounced)
 │   │   │   │   ├── charts/
-│   │   │   │   │   ├── progress-chart/  # CV sending rate bar chart
+│   │   │   │   │   ├── applications-status-chart/  # CV sending rate bar chart
 │   │   │   │   │   ├── status-chart/    # Status distribution chart
-│   │   │   │   │   └── market-chart/    # Market analysis chart
+│   │   │   │   │   └── timeline-chart/    # Timleline analysis chart
 │   │   │   │   ├── forms/
 │   │   │   │   │   ├── add-row/         # Add job application form
 │   │   │   │   │   └── edit-row/        # Edit job application form

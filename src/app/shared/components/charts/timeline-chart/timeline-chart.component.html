@@ -1,0 +1,14 @@
+<div class="chart-generic-container">
+  <div class="timeline-chart-container">
+    @if (isChartsReady.isTimelineChart()) {
+      <div class="chart-data application-timeline">
+        <canvas
+          baseChart
+          [type]="timelineChartOptions().type"
+          [data]="timelineChartOptions().data"
+          [options]="timelineChartOptions().options"
+        ></canvas>
+      </div>
+    }
+  </div>
+</div>

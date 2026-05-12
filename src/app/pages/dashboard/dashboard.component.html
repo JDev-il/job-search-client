@@ -1,15 +1,19 @@
-<inner-navigation
-  [links]="innerLinks"
-  (emitPath)="currentPath($event)"
-></inner-navigation>
 <ng-container>
-  <div class="dashboard-filters">
-    <app-filter
-      [hidden]="isFilter()"
-      (filterValue)="filterDataByDays($event)"
-      [currentDayFilter]="filteredDays()"
-      [isDataLength]="isData"
-    ></app-filter>
+  <div class="dashboard-header-wrapper">
+    <div class="dashboard-navigation">
+      <app-inner-navigation
+        [links]="innerLinks"
+        (emitPath)="currentPath($event)"
+      ></app-inner-navigation>
+    </div>
+    <div class="dashboard-filters">
+      <app-filter
+        [hidden]="isFilter()"
+        (filterValue)="filterDataByDays($event)"
+        [currentDayFilter]="filteredDays()"
+        [isDataLength]="isData"
+      ></app-filter>
+    </div>
   </div>
 </ng-container>
 <ng-container>
@@ -23,7 +27,7 @@
     </div>
   } @else {
     <div class="dashboard-components-container">
-      <div class="dashboard-components-wrapper" fader>
+      <div class="dashboard-components-div" fader>
         <router-outlet></router-outlet>
       </div>
     </div>

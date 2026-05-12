@@ -1,7 +1,7 @@
 export enum ChartNames {
-  progressChart = 'progress',
+  byStatusChart = 'by-status',
   statusChart = 'status',
-  marketChart = 'market'
+  timelineChart = 'timeline'
 }
 
 export enum ColorBuckets {

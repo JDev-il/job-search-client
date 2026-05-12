@@ -7,14 +7,14 @@
   @for (chart of chartOrder(); track chart) {
     <div class="chart-drag-item" cdkDrag>
       @switch (chart) {
-        @case ("progress") {
-          <app-progress-chart />
+        @case ("by-status") {
+          <app-by-status-chart />
         }
         @case ("status") {
           <app-status-chart />
         }
-        @case ("market") {
-          <app-market-chart />
+        @case ("timeline") {
+          <app-timeline-chart />
         }
       }
     </div>

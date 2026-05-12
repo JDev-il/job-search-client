@@ -8,15 +8,15 @@ export interface ChartDataType1 { // x = date string, y = cv quantity, z = data?
 export interface ChartDataType2 { // x = date string, y = cv quantity, z = data?
   x: string; y: string[]
 }
-export interface MarketChartData {
+export interface TimelineChartData {
   labels: string[];
   buckets: Record<string, number[]>;
 }
 
-export interface ProgressTooltipState {
+export interface ByStatusTooltipState {
   bucket: string;
   count: string;
-  entries: ProgressTooltipEntry[];
+  entries: ByStatusTooltipEntry[];
   x: number;
   y: number;
 }
@@ -30,7 +30,7 @@ export interface StatusTooltipState {
   y: number;
 }
 
-interface ProgressTooltipEntry {
+interface ByStatusTooltipEntry {
   name: string;
   status: string;
 }

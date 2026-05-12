@@ -1,19 +1,17 @@
 .nav-container {
-  position: absolute;
-  z-index: 999;
-  margin-top: 30px;
-  // background-color: red;
+  display: flex;
+  align-items: center;
+  height: 100%;
   @media screen and (max-width: 992px) {
-    margin-top: 0px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
   }
   .routes-wrapper {
     display: flex;
-    width: min-content;
-    margin-left: 15px;
+    margin: 0 0 0 15px;
+    @media screen and (max-width: 992px) {
+      font-size: smaller;
+      margin: 0;
+    }
     a {
       transition: all 0.15s cubic-bezier(0.455, 0.03, 0.515, 0.955);
       display: flex;

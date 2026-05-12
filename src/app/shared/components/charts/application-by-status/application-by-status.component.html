@@ -1,0 +1,34 @@
+<div class="chart-generic-container">
+  @if (isChartsReady.isByStatusChart()) {
+    <div class="chart-data">
+      <canvas
+        baseChart
+        [type]="applicationByStatus().type"
+        [data]="applicationByStatus().data"
+        [options]="applicationByStatus().options"
+      ></canvas>
+    </div>
+  }
+
+  @if (tooltipState()) {
+    <div
+      class="timeline-tooltip"
+      [style.left.px]="tooltipState()!.x"
+      [style.top.px]="tooltipState()!.y"
+    >
+      <div class="timeline-tooltip__header">
+        {{ tooltipState()!.bucket }} ({{ tooltipState()!.count }})
+      </div>
+      @for (entry of tooltipState()!.entries; track $index) {
+        <div class="timeline-tooltip__row">
+          <span
+            class="timeline-tooltip__dot"
+            [style.background]="statusColors[entry.status]"
+          ></span>
+          <span>{{ entry.name }}</span>
+          <span class="timeline-tooltip__status">{{ entry.status }}</span>
+        </div>
+      }
+    </div>
+  }
+</div>
