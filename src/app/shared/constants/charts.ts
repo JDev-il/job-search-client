@@ -65,3 +65,6 @@ export const BUCKET_COLORS: Record<string, string> = {
   'Uncertain': ColorBuckets.Uncertain,
 };
 export const BUCKET_NAMES = <TBUCKET_NAMES[]>['Pending', 'Active', 'Passed', 'Rejected', 'Uncertain'];
+
+export const CHART_ORDER_KEY = 'chart-order';
+export const DEFAULT_ORDER = ['by-status', 'status', 'timeline'];

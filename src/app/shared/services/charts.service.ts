@@ -13,7 +13,7 @@ export class ChartsService {
 
   constructor(private dataService: DataService) { }
 
-  public progressChartBuilder(): void {
+  public byStatusChartBuilder(): void {
     const chartData = this.chartDataSlicer();
     const buckets: Record<string, number> = {};
     const statusCounts: Record<string, number> = {};
@@ -41,9 +41,9 @@ export class ChartsService {
         if (statusCounts[status] > 0) statusData.push({ x: status, y: statusCounts[status] });
       }
     }
-    this.dataService.setProgressChart(bucketData);
-    this.dataService.setProgressChartStatuses(statusData);
-    this.dataService.setProgressChartCompanies(companies);
+    this.dataService.setByStatusChart(bucketData);
+    this.dataService.setByStatusChartStatuses(statusData);
+    this.dataService.setByStatusChartCompanies(companies);
   }
 
   public statusChartBuilder(): void {
@@ -63,7 +63,7 @@ export class ChartsService {
     this.dataService.setStatusChartCompanies(Object.fromEntries(statusCompaniesMap));
   }
 
-  public marketChartBuilder(): void {
+  public timelineChartBuilder(): void {
     const rowData = this.chartDataSlicer();
     const BUCKET_NAMES: TBUCKET_NAMES[] = ['Pending', 'Active', 'Passed', 'Rejected', 'Uncertain'];
     const weekMap = new Map<string, Record<string, number>>();
@@ -90,7 +90,7 @@ export class ChartsService {
     for (const b of BUCKET_NAMES) {
       buckets[b] = labels.map(w => weekMap.get(w)![b]);
     }
-    this.dataService.setMarketChart({ labels, buckets });
+    this.dataService.setTimelineChart({ labels, buckets });
   }
 
   public followUpDataBuilder(): void {

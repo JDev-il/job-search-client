@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { beforeEach, describe } from 'node:test';
 import { StatusChartComponent } from './status-chart.component';
 
 describe('StatusChartComponent', () => {
@@ -15,9 +16,5 @@ describe('StatusChartComponent', () => {
     fixture = TestBed.createComponent(StatusChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
   });
 });

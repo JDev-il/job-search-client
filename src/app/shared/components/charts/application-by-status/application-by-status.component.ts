@@ -6,27 +6,27 @@ import { ChartsBaseComponent } from '../../../base/charts-base.component';
 import { BUCKET_COLORS, STATUS_BUCKET_COLORS } from '../../../constants/charts';
 import { DataService } from '../../../services/data.service';
 import { UIService } from '../../../services/ui.service';
-import { ProgressTooltipState } from './../../../../core/models/chart.interface';
+import { ByStatusTooltipState } from './../../../../core/models/chart.interface';
 import { ChartsService } from './../../../services/charts.service';
 
 
 @Component({
-  selector: 'app-progress-chart',
+  selector: 'app-by-status-chart',
   imports: [BaseChartDirective],
-  templateUrl: './progress-chart.component.html',
-  styleUrls: ['./progress-chart.component.scss', '../../../style/charts.scss'],
+  templateUrl: './application-by-status.component.html',
+  styleUrls: ['./application-by-status.component.scss', '../../../style/charts.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class ProgressChartComponent extends ChartsBaseComponent {
-  public tooltipState = signal<ProgressTooltipState | null>(null);
+export class ApplicationByStatusComponent extends ChartsBaseComponent {
+  public tooltipState = signal<ByStatusTooltipState | null>(null);
   public statusColors = STATUS_BUCKET_COLORS;
 
   constructor(cd: ChangeDetectorRef, uiService: UIService, chartsService: ChartsService, dataService: DataService) {
     super(cd, uiService, chartsService, dataService);
     effect(() => {
-      this.chartsService.progressChartBuilder();
-      this.progressChartOptions.set(this.progressChart());
+      this.chartsService.byStatusChartBuilder();
+      this.applicationByStatus.set(this.applicationsChart());
       this.cd.markForCheck();
     });
   }
@@ -37,7 +37,7 @@ export class ProgressChartComponent extends ChartsBaseComponent {
 
     const bucket = tooltip.dataPoints?.[0]?.label as string;
     const count = tooltip.dataPoints?.[0]?.formattedValue ?? '';
-    const entries = this.dataService.progressChartCompanies()[bucket] ?? [];
+    const entries = this.dataService.byStatusChartCompanies()[bucket] ?? [];
     const rect = chart.canvas.getBoundingClientRect();
 
     this.tooltipState.set({
@@ -47,8 +47,8 @@ export class ProgressChartComponent extends ChartsBaseComponent {
     });
   };
 
-  public progressChart(): ChartConfiguration {
-    const data = this.dataService.progressChart() as ChartDataType1[];
+  public applicationsChart(): ChartConfiguration {
+    const data = this.dataService.applicationsChart() as ChartDataType1[];
     return {
       type: 'doughnut',
       data: {
@@ -56,12 +56,15 @@ export class ProgressChartComponent extends ChartsBaseComponent {
         datasets: [{
           data: data.map(d => d.y),
           backgroundColor: data.map(d => BUCKET_COLORS[d.x] ?? '#6B7280'),
-          borderWidth: 2,
-          hoverOffset: 15,
+          borderWidth: 1,
+          hoverBorderWidth: 3,
+          hoverOffset: 3,
+          animation: { easing: 'easeInOutCirc', duration: 400 },
         }],
       },
       options: {
-        animation: { easing: 'easeInOutExpo', duration: 800 },
+        aspectRatio: 1,
+        layout: { padding: { top: 15, bottom: 15, right: 50, left: 25 } },
         responsive: true,
         plugins: {
           title: { display: true, text: 'Applications by Status', align: 'center', font: { size: 16 } },

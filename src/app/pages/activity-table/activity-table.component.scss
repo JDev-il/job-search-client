@@ -126,7 +126,6 @@
       .selected {
         transition: all 0.08s ease-in;
         background-color: #ff6c8282 !important;
-        text-decoration: line-through;
         color: #ffeee7;
         .combined-cell-content {
           button {
@@ -177,14 +176,14 @@
               display: flex;
               align-items: center;
               bottom: 0;
-              top: 40px;
+              top: 55px;
               font-size: medium;
               @media screen and (max-width: 1280px) {
                 width: 95%;
               }
               @media screen and (max-width: 992px) {
                 width: 100%;
-                top: 35px;
+                top: 45px;
               }
               h4 {
                 position: relative;
@@ -194,7 +193,7 @@
                 padding: 0 25px 0;
                 width: 100%;
                 @media screen and (max-width: 1280px) {
-                  font-size: 0.86em !important;
+                  font-size: 0.82em !important;
                 }
               }
             }

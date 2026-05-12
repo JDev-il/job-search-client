@@ -9,13 +9,13 @@ import { UIService } from "../services/ui.service";
   template: ''
 })
 export class ChartsBaseComponent {
-  public progressChartOptions = signal<ChartConfiguration>({} as ChartConfiguration);
+  public applicationByStatus = signal<ChartConfiguration>({} as ChartConfiguration);
   public statusChartOptions = signal<ChartConfiguration>({} as ChartConfiguration);
-  public marketChartOptions = signal<ChartConfiguration>({} as ChartConfiguration);
+  public timelineChartOptions = signal<ChartConfiguration>({} as ChartConfiguration);
   public isChartsReady = {
-    isProgressChart: signal<boolean>(false),
+    isByStatusChart: signal<boolean>(false),
     isStatusChart: signal<boolean>(false),
-    isMarketChart: signal<boolean>(false),
+    isTimelineChart: signal<boolean>(false),
   };
 
   constructor(protected cd: ChangeDetectorRef, protected uiService: UIService, protected chartsService: ChartsService, protected dataService: DataService) {
@@ -25,8 +25,8 @@ export class ChartsBaseComponent {
   }
 
   private areChartsReady(): void {
-    this.isChartsReady.isProgressChart.set(this.dataService.progressChart().length > 0);
+    this.isChartsReady.isByStatusChart.set(this.dataService.applicationsChart().length > 0);
     this.isChartsReady.isStatusChart.set(this.dataService.statusChart().length > 0);
-    this.isChartsReady.isMarketChart.set(this.dataService.marketChart().labels.length > 0);
+    this.isChartsReady.isTimelineChart.set(this.dataService.timelineChart().labels.length > 0);
   }
 }

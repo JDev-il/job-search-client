@@ -53,53 +53,55 @@
       }
     </div>
     <div mat-dialog-actions class="dialog-actions">
-      @if (isConsent) {
-        <button
-          mat-raised-button
-          class="dialog-actions-button"
-          (click)="onConsentConnect()"
-        >
-          Connect
-        </button>
-        <button
-          mat-raised-button
-          class="dialog-actions-button"
-          (click)="onConsentDismiss()"
-        >
-          Maybe later
-        </button>
-      } @else {
-        @if (form) {
+      <div class="dialog-actions-buttons-div">
+        @if (isConsent) {
           <button
             mat-raised-button
-            [disabled]="!form.formType.valid"
-            (click)="sendForm(form.formType)"
             class="dialog-actions-button"
+            (click)="onConsentConnect()"
           >
-            @if (isAdd) {
-              Add Row
+            Connect
+          </button>
+          <button
+            mat-raised-button
+            class="dialog-actions-button"
+            (click)="onConsentDismiss()"
+          >
+            Maybe later
+          </button>
+        } @else {
+          @if (form) {
+            <button
+              mat-raised-button
+              [disabled]="!form.formType.valid"
+              (click)="sendForm(form.formType)"
+              class="dialog-actions-button"
+            >
+              @if (isAdd) {
+                Add Row
+              } @else {
+                Edit Row
+              }
+            </button>
+          }
+          <button
+            mat-raised-button
+            class="dialog-actions-button"
+            (click)="closeDialog()"
+          >
+            @if (isSuccess) {
+              {{ "Continue" }}
+            } @else if (
+              data.form?.formTitle === formEnum.edit ||
+              data.form?.formTitle === formEnum.add
+            ) {
+              {{ "Cancel" }}
             } @else {
-              Edit Row
+              {{ "Close" }}
             }
           </button>
         }
-        <button
-          mat-raised-button
-          class="dialog-actions-button"
-          (click)="closeDialog()"
-        >
-          @if (isSuccess) {
-            {{ "Continue" }}
-          } @else if (
-            data.form?.formTitle === formEnum.edit ||
-            data.form?.formTitle === formEnum.add
-          ) {
-            {{ "Cancel" }}
-          } @else {
-            {{ "Close" }}
-          }
-        </button>
-      }
+      </div>
     </div>
   </div>
 </section>

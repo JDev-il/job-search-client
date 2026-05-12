@@ -34,16 +34,16 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/dashboard/dashboard.component').then((c) => c.DashboardComponent),
         children: [
-          { path: '', redirectTo: 'dashboard/data', pathMatch: 'full' },
+          { path: '', redirectTo: 'dashboard/insights', pathMatch: 'full' },
           {
-            path: 'dashboard/data',
+            path: 'dashboard/insights',
             loadComponent: () =>
               import('./pages/dashboard/data/dashboard-data.component').then((c) => c.DashboardDataComponent),
           },
           {
             path: 'dashboard/actions',
             loadComponent: () =>
-              import('./pages/dashboard/actions/dashboard-actions/dashboard-actions.component').then((c) => c.DashboardActionsComponent),
+              import('./pages/dashboard/actions/dashboard-actions.component').then((c) => c.DashboardActionsComponent),
           },
         ]
       },
