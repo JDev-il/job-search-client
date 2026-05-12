@@ -1,5 +1,8 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { ApplicationByStatusComponent } from "../../../shared/components/charts/application-by-status/application-by-status.component";
 import { StatusChartComponent } from '../../../shared/components/charts/status-chart/status-chart.component';
 import { TimelineChartComponent } from '../../../shared/components/charts/timeline-chart/timeline-chart.component';
@@ -13,6 +16,11 @@ import { CHART_ORDER_KEY, DEFAULT_ORDER } from '../../../shared/constants/charts
 })
 export class DashboardDataComponent {
   public chartOrder = signal<string[]>(this.loadChartOrder());
+  private bp = inject(BreakpointObserver);
+  public isMobile = toSignal(
+    this.bp.observe('(max-width: 992px)').pipe(map(r => r.matches)),
+    { initialValue: false }
+  );
 
   private loadChartOrder(): string[] {
     const saved = localStorage.getItem(CHART_ORDER_KEY);

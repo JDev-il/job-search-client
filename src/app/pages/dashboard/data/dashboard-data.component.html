@@ -5,7 +5,7 @@
   (cdkDropListDropped)="onChartDrop($event)"
 >
   @for (chart of chartOrder(); track chart) {
-    <div class="chart-drag-item" cdkDrag>
+    <div class="chart-drag-item" cdkDrag [cdkDragDisabled]="isMobile()">
       @switch (chart) {
         @case ("by-status") {
           <app-by-status-chart />
