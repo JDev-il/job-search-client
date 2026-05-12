@@ -39,9 +39,10 @@ export class StatusChartComponent extends ChartsBaseComponent {
     const color = STATUS_BUCKET_COLORS[status] ?? '#6B7280';
     const rect = chart.canvas.getBoundingClientRect();
 
+    const rawX = rect.left + tooltip.caretX + 12;
     this.tooltipState.set({
       status, count, color, companies,
-      x: rect.left + tooltip.caretX + 12,
+      x: Math.min(rawX, window.innerWidth - 216),
       y: rect.top + tooltip.caretY - 8,
     });
   };

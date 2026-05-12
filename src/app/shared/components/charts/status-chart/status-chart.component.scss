@@ -1,6 +1,7 @@
 .status-tooltip {
   position: fixed;
   pointer-events: none;
+  max-width: 200px;
   background: #1e293b;
   color: #f1f5f9;
   border-radius: 6px;
