@@ -8,9 +8,14 @@
   .routes-wrapper {
     display: flex;
     margin: 0 0 0 15px;
+    @media screen and (max-width: 1280px) {
+      margin: 25px 0;
+    }
+    @media screen and (max-width: 992px) and (min-height: 840px) {
+      margin: 15px 0;
+    }
     @media screen and (max-width: 992px) {
-      font-size: smaller;
-      margin: 0;
+      margin: 15px 0;
     }
     a {
       transition: all 0.15s cubic-bezier(0.455, 0.03, 0.515, 0.955);
@@ -29,6 +34,9 @@
         &:hover {
           color: rgba(8, 18, 38, 0.8);
         }
+      }
+      @media screen and (max-width: 1280px) {
+        font-size: large;
       }
       @media screen and (max-width: 992px) {
         font-size: larger;

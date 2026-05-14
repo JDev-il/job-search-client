@@ -9,8 +9,12 @@
     display: flex;
     flex-flow: column;
     align-items: center;
+    scroll-behavior: smooth;
     @media screen and (max-width: 1280px) {
       justify-content: flex-start;
+    }
+    @media screen and (max-width: 992px) {
+      max-height: 750px;
     }
     .dialog-header {
       h4 {
@@ -23,10 +27,13 @@
         overflow-x: hidden;
         max-height: 75vh;
         @media screen and (max-width: 1666px) {
-          max-height: 60vh;
+          max-height: 650px;
         }
         @media screen and (max-width: 1280px) {
-          max-height: 70vh;
+          max-height: 600px;
+        }
+        @media screen and (max-width: 992px) {
+          max-height: 500px;
         }
       }
     }
@@ -80,6 +87,7 @@
           @media screen and (max-width: 992px) {
             max-width: 125px;
             font-size: x-small;
+            max-height: fit-content;
           }
           @media screen and (max-width: 768px) {
             height: min-content;

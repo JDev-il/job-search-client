@@ -109,19 +109,28 @@
       max-height: 75vh;
       overflow-y: auto;
       scrollbar-width: thin;
+      scroll-behavior: smooth;
       border-radius: 1.2rem;
       @media screen and (max-width: 1880px) {
-        max-height: 75vh;
+        max-height: 65vh;
       }
       @media screen and (max-width: 1280px) {
         max-width: 95%;
-        max-height: 65vh;
+        max-height: 55vh;
         margin: auto;
       }
       @media screen and (max-width: 992px) {
         max-width: 100%;
         border-radius: 0;
-        max-height: 60vh;
+        max-height: 600px;
+      }
+      @media screen and (max-width: 768px) {
+        max-width: 100%;
+        border-radius: 0;
+        max-height: 550px;
+      }
+      @media screen and (max-width: 560px) {
+        max-height: 500px;
       }
       .selected {
         transition: all 0.08s ease-in;
@@ -381,7 +390,7 @@
         }
         @media screen and (max-width: 992px) {
           margin: 0;
-          padding: 0px 10px 8px;
+          scroll-behavior: smooth;
           .mat-mdc-header-cell,
           .mat-mdc-cell {
             padding: 2px;

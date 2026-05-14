@@ -76,6 +76,13 @@
   @media screen and (max-width: 1280px) {
     position: relative;
   }
+  @media screen and (max-width: 992px) {
+    scroll-behavior: smooth;
+    max-height: 700px;
+  }
+  @media screen and (max-height: 860px) {
+   max-height: 480px;
+ }
   .dashboard-components-div {
     width: 100%;
     max-height: 100%;
