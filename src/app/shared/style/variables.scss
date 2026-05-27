@@ -50,3 +50,10 @@
     }
   }
 }
+
+.google-wrapper {
+  width: 100%;
+  @media screen and (min-width: 1280px) {
+    width: 33%;
+  }
+}

@@ -8,9 +8,11 @@ export enum ActionLablesEnum {
 
 export enum ButtonsEnum {
   loginhover = "Register now",
-  loginunhover = "Don't have an account?",
+  loginunhover = "Don't have an account",
   registerhover = "Login now",
-  registerunhover = "I have an account"
+  registerunhover = "I have an account",
+  register = "Register",
+  login = "Login"
 }
 
 export enum FormEnum {

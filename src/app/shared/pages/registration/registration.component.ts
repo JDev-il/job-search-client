@@ -9,7 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, throwError } from 'rxjs';
 import { NotificationsStatusEnum } from '../../../core/models/enum/messages.enum';
-import { ActionLablesEnum } from '../../../core/models/enum/utils.enum';
+import { ActionLablesEnum, ButtonsEnum } from '../../../core/models/enum/utils.enum';
 import { UserRequest, UserToken } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiConfigService } from '../../../core/services/configuration.service';
@@ -43,6 +43,7 @@ import { RoutingService } from '../../services/routing.service';
 export class RegistrationComponent extends BaseDialogComponent {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
   public registerationForm!: FormGroup<RegisterFormModel>;
+  public registerText = ButtonsEnum.register;
 
   constructor(
     dialog: MatDialog,

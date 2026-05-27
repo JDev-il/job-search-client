@@ -1,13 +1,5 @@
-.to-register-button {
-  background-color: #a8feff !important;
-  color: #0000007e !important;
-  width: 180px;
+.cta-button {
   &:hover {
-    box-shadow: 0px 0px 12px 1px #7ffdff89 !important;
-    color: #fff !important;
+    box-shadow: 0px 0px 12px 1px rgba(255, 108, 128, 0.5) !important;
   }
-}
-
-.google-wrapper{
-  width: 33%;
 }
