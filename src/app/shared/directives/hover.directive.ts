@@ -1,3 +1,4 @@
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Directive, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonsEnum } from '../../core/models/enum/utils.enum';
@@ -9,7 +10,7 @@ import { DataService } from '../services/data.service';
 })
 
 export class HoverDirective implements OnInit {
-  constructor(private dataService: DataService, private router: Router) {
+  constructor(private dataService: DataService, private router: Router, private breakPointServer: BreakpointObserver) {
   }
   ngOnInit(): void {
     this.unSetText();
@@ -22,21 +23,23 @@ export class HoverDirective implements OnInit {
     this.unSetText();
   }
 
-
   private get isLogin(): boolean {
     return this.router.url.startsWith('/login');
   }
 
+  private get isMobile(): boolean {
+    return this.breakPointServer.isMatched(Breakpoints.Small)
+  }
+
   private setText(): void {
     this.dataService.setHoverText(
-      this.isLogin ? ButtonsEnum.loginhover : ButtonsEnum.registerhover
+      this.isLogin && !this.isMobile ? ButtonsEnum.loginhover : ButtonsEnum.registerhover
     );
   }
 
   private unSetText(): void {
     this.dataService.setHoverText(
-      this.isLogin ? ButtonsEnum.loginunhover : ButtonsEnum.registerunhover
+      this.isLogin && !this.isMobile ? ButtonsEnum.loginunhover : ButtonsEnum.registerunhover
     );
   }
-
 }

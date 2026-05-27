@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NotificationsStatusEnum } from '../../../core/models/enum/messages.enum';
-import { ActionLablesEnum } from '../../../core/models/enum/utils.enum';
+import { ActionLablesEnum, ButtonsEnum } from '../../../core/models/enum/utils.enum';
 import { LoginModel } from '../../../core/models/forms.interface';
 import { UserLogin } from '../../../core/models/users.interface';
 import { AuthService } from '../../../core/services/auth.service';
@@ -41,6 +41,7 @@ export class LoginComponent extends BaseDialogComponent implements OnInit {
   @ViewChild('snackBarRef') snackBar!: SnackBarDirective;
   private apiConfig = inject(ApiConfigService);
   public loginForm!: FormGroup<LoginModel>;
+  public loginText = ButtonsEnum.login;
 
   constructor(
     private fb: FormBuilder,

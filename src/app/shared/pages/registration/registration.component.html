@@ -76,14 +76,17 @@
         </mat-form-field>
       </div>
       <div class="buttons-div">
-        <button mat-raised-button [disabled]="registerationForm.invalid">
-          Register Now
+        <button
+          mat-raised-button
+          [disabled]="registerationForm.invalid"
+        >
+          {{ registerText }}
         </button>
         <button
           type="button"
           mat-raised-button
           (click)="toLogin()"
-          class="to-login-button"
+          class="cta-button"
           appHover
         >
           {{ loginbuttonText }}

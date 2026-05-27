@@ -1,6 +1,7 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ChartDataType1, TimelineChartData } from '../../core/models/chart.interface';
+import { ButtonsEnum } from '../../core/models/enum/utils.enum';
 import { AgentSuggestion } from './../../core/models/agent.interface';
 import { ChartTimeLine, City, Country, IFollowUpData } from './../../core/models/data.interface';
 import { JobSearchCriteria } from './../../core/models/job-search.interface';
@@ -29,7 +30,7 @@ export class StateService {
   public _currentCountryName: WritableSignal<string> = signal<string>('');
   public _isDataExists = signal<boolean>(false);
   public _isInitialData = signal<boolean>(true);
-  public _buttonText = signal<string>("Don't have an account?");
+  public _buttonText = signal<string>(ButtonsEnum.loginunhover);
   public _isFetchingCities = signal(false);
   public _isRegistrationError = signal(false);
   public _chronicalDates = signal<string[]>([]);
