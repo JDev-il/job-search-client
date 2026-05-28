@@ -192,5 +192,8 @@
       cdkAutosizeMinRows="3"
       cdkAutosizeMaxRows="3"
     ></textarea>
+    @if (incomingEditForm.get('notes')?.hasError('emptyNote')) {
+      <mat-error>Notes cannot contain only spaces</mat-error>
+    }
   </mat-form-field>
 </form>
