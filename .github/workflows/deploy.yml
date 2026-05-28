@@ -22,7 +22,8 @@ jobs:
 
             cd /var/www/cv-tracker/client
 
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
 
             npm install
 
