@@ -42,7 +42,7 @@ export class FormsService {
       positionStack: this.fb.control([''], Validators.required),
       applicationPlatform: this.fb.control('', Validators.required),
       applicationDate: this.fb.control('', [this.futureDateValidator, Validators.required]),
-      notes: this.fb.control(''),
+      notes: this.fb.control('', this.nonEmptyIfPresent),
       hunch: this.fb.control('')
     })
   }
@@ -59,7 +59,7 @@ export class FormsService {
       positionStack: this.fb.control(row?.positionStack ?? [''], Validators.required),
       applicationPlatform: this.fb.control(row?.applicationPlatform ?? '', Validators.required),
       applicationDate: this.fb.control(row?.applicationDate ?? null, [this.futureDateValidator, Validators.required]),
-      notes: this.fb.control(row?.notes ?? ''),
+      notes: this.fb.control(row?.notes ?? '', this.nonEmptyIfPresent),
       hunch: this.fb.control(row?.hunch ?? '')
     });
     form.controls.companyName.disable();
@@ -72,6 +72,11 @@ export class FormsService {
     const confirmPassword = form.get('confirm_password')?.value;
     return password === confirmPassword ? null : { isConfirmed: true };
   }
+
+  nonEmptyIfPresent: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null;
+    return control.value.trim().length > 0 ? null : { emptyNote: true };
+  };
 
   futureDateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) return null;

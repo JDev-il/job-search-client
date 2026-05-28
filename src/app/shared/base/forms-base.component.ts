@@ -155,7 +155,7 @@ export class FormsBaseComponent {
 
   protected get placeholderText(): string {
     return !this.dataService.isFetchingCities()
-      ? `Search a City in ${this.dataService.currentCountryName()}`
+      ? `Search a Location in ${this.dataService.currentCountryName()}`
       : 'Choose a Country'
   };
 
@@ -163,7 +163,6 @@ export class FormsBaseComponent {
     const today = new Date();
     return date ? date <= today : false;
   };
-
 
   private abstractControlSwitch(type: string): AbstractControl {
     let control!: AbstractControl;
