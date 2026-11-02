@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ApiConfigService } from '../../../core/services/configuration.service';
 import { BaseDialogComponent } from '../../base/dialog-base.component';
 import { GoogleComponent } from '../../components/google/google.component';
+import { LegalLinksComponent } from '../../components/legal-links/legal-links.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HoverDirective } from '../../directives/hover.directive';
 import { MaterialDirective } from '../../directives/material.directive';
@@ -31,6 +32,7 @@ import { RoutingService } from '../../services/routing.service';
     HoverDirective,
     SpinnerComponent,
     GoogleComponent,
+    LegalLinksComponent,
     SnackBarDirective
   ],
   templateUrl: './login.component.html',

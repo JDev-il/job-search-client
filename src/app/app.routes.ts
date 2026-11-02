@@ -19,6 +19,18 @@ export const routes: Routes = [
     canActivate: [loadGuard]
   },
 
+  // Public legal pages: reachable signed out (Google's consent screen links to them)
+  {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./shared/pages/legal/privacy-policy/privacy-policy.component').then((c) => c.PrivacyPolicyComponent)
+  },
+  {
+    path: 'terms',
+    loadComponent: () =>
+      import('./shared/pages/legal/terms-of-service/terms-of-service.component').then((c) => c.TermsOfServiceComponent)
+  },
+
   // Protected Routes
   {
     path: '',
