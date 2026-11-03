@@ -53,9 +53,13 @@
             border-radius: 0.6em;
             background-color: var(--main-element);
             color: #ffeee7;
-            &.refresh-button {
-              background-color: var(--main-element);
-              color: #ffeee7;
+          }
+          .refresh-button {
+            background-color: var(--main-element);
+            color: #ffeee7;
+          }
+          @media screen and (min-width: 992px) {
+            .refresh-button {
               &:hover {
                 color: var(--watermelon);
                 box-shadow: 0 1px 3px 0 var(--watermelon);
@@ -81,8 +85,8 @@
             }
           }
           &:disabled {
-            background-color: #08122680;
-            color: #d0cbd652;
+            background-color: #08122680 !important;
+            color: #d0cbd652 !important;
           }
           @media screen and (max-width: 992px) {
             margin: 5px 0;
