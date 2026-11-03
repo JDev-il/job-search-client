@@ -5,7 +5,7 @@ import { ChartTimeLine, City, Country } from '../models/data.interface';
 import { ParamsOrder, ParamsOrderBy } from '../models/enum/params.enum';
 import { CountriesEnum, FormEnum } from '../models/enum/utils.enum';
 import { IMCPRequest, IMCPResponse } from '../models/mcp.inrerface';
-import { CityReqParams } from '../models/requests.intefrace';
+import { CityReqParams, PendingActions } from '../models/requests.intefrace';
 import { AuthorizedUser, UserLogin, UserResponse, UserToken } from '../models/users.interface';
 import { ITableDataRow, ITableSaveRequest } from './../models/table.interface';
 import { UserRequest } from './../models/users.interface';
@@ -136,13 +136,18 @@ export class ApiService {
       }))
   }
 
+  public getPendingActionsReq(): Observable<PendingActions[]> {
+    const url = this.apiConfig.buildInternalUrl(this.apiConfig.internal.pendingActions.path);
+    return this.http.get<PendingActions[]>(url);
+  }
+
+
   public authUserDataReq(): Observable<ITableDataRow[]> { // After user is authenticated
     const user_id = this.currentUserData$()?.userId;
     // Use the new config service for job search endpoint
     const url = this.apiConfig.getJobSearchUrl(this.apiConfig.internal.jobSearch.getApplications);
     return this.http.get<ITableDataRow[]>(url, { params: { user_id } });
   }
-
 
   public addOrUpdateApplicationReq(row: ITableDataRow, formAction: FormEnum): Observable<ITableSaveRequest> {
     const payload = this.userPayload(row) as ITableDataRow;

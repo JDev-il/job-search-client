@@ -4,6 +4,7 @@ import { ChartDataType1, TimelineChartData } from "../../core/models/chart.inter
 import { ChartTimeLine, City, Country, IFollowUpData } from "../../core/models/data.interface";
 import { ErrorMessagesEnum, NotificationsStatusEnum, UserMessagesEnum } from "../../core/models/enum/messages.enum";
 import { CountriesEnum, FormEnum } from "../../core/models/enum/utils.enum";
+import { PendingActions } from "../../core/models/requests.intefrace";
 import { ITableDataRow, ITableSaveRequest } from "../../core/models/table.interface";
 import { AuthorizedUser, AuthUserResponse, IUserData, UserLogin, UserRequest, UserResponse, UserToken } from "../../core/models/users.interface";
 import { ApiService } from "../../core/services/api.service";
@@ -260,22 +261,18 @@ export class DataService {
 
   public authorizedUserDataRequest(): Observable<ITableDataRow[]> {
     if (this.stateService._isCachedRequest()) {
-      return this.apiService.authUserDataReq()
-        .pipe(
-          take(1),
-          tap((tableData: ITableDataRow[]) => {
-            if (tableData.length) {
-              const statuses = tableData.map(td => td.status);
-              this.stateService._statusPreviewList.set(statuses);
-              this.stateService._tableDataResponse.set(tableData);
-              this.stateService._lastSortedDataSource.set(tableData);
-              this.stateService._isCachedRequest.set(false);
-              this.stateService._isDataExists.set(true);
-            }
-          })
-        );
+      return this.authTableData$();
     }
     return of(this.stateService._tableDataResponse());
+  }
+
+  public refreshTableData(): Observable<ITableDataRow[]> {
+    return this.authTableData$();
+  };
+
+  public pendingActionsRequest(): Observable<PendingActions[]> {
+    return this.apiService.getPendingActionsReq()
+      .pipe(take(1));
   }
 
   public checkCompanyReapply(companyName: string, newDate: Date | string | null): 'blocked' | 'reapply' | null {
@@ -437,6 +434,23 @@ export class DataService {
 
   public compareAndSortData(a: number | string, b: number | string, isAsc?: boolean): number {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  private authTableData$(): Observable<ITableDataRow[]> {
+    return this.apiService.authUserDataReq()
+      .pipe(
+        take(1),
+        tap((tableData: ITableDataRow[]) => {
+          if (tableData.length) {
+            const statuses = tableData.map(td => td.status);
+            this.stateService._statusPreviewList.set(statuses);
+            this.stateService._tableDataResponse.set(tableData);
+            this.stateService._lastSortedDataSource.set(tableData);
+            this.stateService._isCachedRequest.set(false);
+            this.stateService._isDataExists.set(true);
+          }
+        })
+      );
   }
 
   private calcDaysDiff(newDate: Date | string | null, mostRecent: ITableDataRow): number {

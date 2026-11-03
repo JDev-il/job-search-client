@@ -42,6 +42,33 @@
         @media screen and (max-width: 1280px) {
           left: 30px;
         }
+        .data-buttons-actions {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          button {
+            transition: all 0.08s ease-in;
+            min-width: fit-content;
+            border-radius: 0.6em;
+            background-color: var(--main-element);
+            color: #ffeee7;
+            &.refresh-button {
+              background-color: var(--main-element);
+              color: #ffeee7;
+              &:hover {
+                color: var(--watermelon);
+                box-shadow: 0 1px 3px 0 var(--watermelon);
+              }
+            }
+          }
+          @media screen and (max-width: 992px) {
+            button {
+              width: 100%;
+              margin: 0 5px 5px;
+            }
+          }
+        }
         button {
           transition: all 0.08s ease-in;
           min-width: fit-content;
@@ -57,6 +84,9 @@
             background-color: #08122680;
             color: #d0cbd652;
           }
+          @media screen and (max-width: 992px) {
+            margin: 5px 0;
+          }
         }
         .remove-rows {
           background-color: var(--watermelon);
@@ -64,8 +94,10 @@
         }
         @media screen and (max-width: 992px) {
           left: 0;
-          width: 100%;
+          width: 85%;
+          flex-flow: column;
           justify-content: space-evenly;
+          margin: auto;
         }
       }
       @media screen and (max-width: 992px) {

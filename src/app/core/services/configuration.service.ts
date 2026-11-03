@@ -103,11 +103,16 @@ export class ApiConfigService {
     return url;
   }
 
+  public getPendingActionsUrl(endpoint?: string): string {
+    return this.buildInternalUrl(this.internal.pendingActions.path, endpoint);
+  }
+
   private buildEndpoints(): ApiEndpoints {
     const internalBase = this.getInternalApiBase();
     return {
       internal: {
         base: internalBase,
+        pendingActions: { path: 'pending-actions' },
         users: {
           path: 'users',
           login: '/login',
@@ -171,7 +176,7 @@ export class ApiConfigService {
             range: 'companies/:from-:to'
           }
         }
-      }
+      },
     };
   }
 

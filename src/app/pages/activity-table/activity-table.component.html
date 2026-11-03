@@ -2,14 +2,22 @@
   <div class="outer-table-container">
     <div class="actions-contiainer">
       <div class="action-buttons">
-        <button
-          mat-button
-          (click)="removeSelectedRows()"
-          [disabled]="selection.selected.length < 1"
-          [ngClass]="{ 'remove-rows': selection.selected.length > 0 }"
-        >
-          Remove {{ selection.selected.length }} Rows
-        </button>
+        <div class="data-buttons-actions">
+          <button
+            mat-button
+            (click)="removeSelectedRows()"
+            [disabled]="selection.selected.length < 1"
+            [ngClass]="{ 'remove-rows': selection.selected.length > 0 }"
+          >
+            Remove {{ selection.selected.length }} Rows
+          </button>
+          <button
+            mat-button (click)="refreshTable()"
+            class='refresh-button'
+            [disabled]="!isDataExistsComputed()">
+            Refresh Table
+          </button>
+        </div>
         <button mat-button (click)="addNewRow()">Add Application</button>
       </div>
     </div>

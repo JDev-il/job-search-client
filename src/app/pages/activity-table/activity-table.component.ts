@@ -12,7 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { debounceTime, filter, Subject, switchMap, tap, throwError, timer } from 'rxjs';
+import { catchError, debounceTime, filter, finalize, forkJoin, of, Subject, switchMap, tap, throwError, timer } from 'rxjs';
 import { ConsentDialogTitlesEnum, DialogBodyMessagesEnum, NoDataTextEnum } from '../../core/models/enum/messages.enum';
 import { PositionStackEnum } from '../../core/models/enum/table-data.enum';
 import { FormEnum } from '../../core/models/enum/utils.enum';
@@ -201,6 +201,15 @@ export class ActivityTableComponent extends BaseDialogComponent {
 
   public isHunchLength(length: number): boolean {
     return length > 250;
+  }
+
+  public refreshTable(): void {
+    this.localSpinner.set(true);
+    forkJoin({
+      table: this.dataService.refreshTableData(),
+      suggestions: this.dataService.pendingActionsRequest().pipe(catchError(() => of([]))),
+    }).pipe(finalize(() => this.localSpinner.set(false)))
+      .subscribe({ error: (e) => console.error(e) });
   }
 
   private get verifyLastSortedData(): boolean {
