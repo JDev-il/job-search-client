@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { LoginComponent } from './login.component';
 
@@ -8,7 +9,8 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoginComponent]
+      imports: [LoginComponent],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 
@@ -19,5 +21,11 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('links to the privacy policy and the terms', () => {
+    const page: HTMLElement = fixture.nativeElement;
+    expect(page.querySelector('a[href="/privacy"]')).not.toBeNull();
+    expect(page.querySelector('a[href="/terms"]')).not.toBeNull();
   });
 });
