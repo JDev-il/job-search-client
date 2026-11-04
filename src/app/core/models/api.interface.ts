@@ -2,6 +2,7 @@
 export interface ApiEndpoints {
   internal: {
     base: string;
+    pendingActions: { path: string },
     users: {
       path: string;
       login: string;
