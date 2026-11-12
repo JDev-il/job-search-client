@@ -12,10 +12,10 @@
             Remove {{ selection.selected.length }} Rows
           </button>
           <button
-            mat-button (click)="refreshTable()"
+            mat-button (click)="syncTable()"
             class='refresh-button'
             [disabled]="!isDataExistsComputed()">
-            Refresh Table
+            Sync Table
           </button>
         </div>
         <button mat-button (click)="addNewRow()">Add Application</button>

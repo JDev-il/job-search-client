@@ -203,7 +203,7 @@ export class ActivityTableComponent extends BaseDialogComponent {
     return length > 250;
   }
 
-  public refreshTable(): void {
+  public syncTable(): void {
     this.localSpinner.set(true);
     forkJoin({
       table: this.dataService.refreshTableData(),
