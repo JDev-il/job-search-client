@@ -125,6 +125,9 @@ export class ActivityTableComponent extends BaseDialogComponent {
     })
   }
 
+  public isGmailConnected(): string | null {
+    return this.dataService.isGmailState();
+  }
   public rowColorSwitch(row: ITableDataRow): string {
     return this.uiService.colorSwitch(row);
   };
@@ -204,12 +207,14 @@ export class ActivityTableComponent extends BaseDialogComponent {
   }
 
   public syncTable(): void {
-    this.localSpinner.set(true);
-    forkJoin({
-      table: this.dataService.refreshTableData(),
-      suggestions: this.dataService.pendingActionsRequest().pipe(catchError(() => of([]))),
-    }).pipe(finalize(() => this.localSpinner.set(false)))
-      .subscribe({ error: (e) => console.error(e) });
+    if (this.dataService.isGmailState()) {
+      this.localSpinner.set(true);
+      forkJoin({
+        table: this.dataService.refreshTableData(),
+        suggestions: this.dataService.pendingActionsRequest().pipe(catchError(() => of([]))),
+      }).pipe(finalize(() => this.localSpinner.set(false)))
+        .subscribe({ error: (e) => console.error(e) });
+    }
   }
 
   private get verifyLastSortedData(): boolean {

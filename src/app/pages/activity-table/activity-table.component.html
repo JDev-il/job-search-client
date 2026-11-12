@@ -14,8 +14,8 @@
           <button
             mat-button (click)="syncTable()"
             class='refresh-button'
-            [disabled]="!isDataExistsComputed()">
-            Sync Table
+            [disabled]="(!isGmailConnected() && isDataExistsComputed()) || !isDataExistsComputed()">
+            Sync Inbox to Table
           </button>
         </div>
         <button mat-button (click)="addNewRow()">Add Application</button>
